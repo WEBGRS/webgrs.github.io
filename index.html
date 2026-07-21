@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>H. Gu — CS @ UW–Madison</title>
+<meta name="description" content="CS undergraduate at UW–Madison. Offline-first tools for photos, course data, and maps. Open to Summer 2027 SWE / ML internships.">
+<meta name="color-scheme" content="dark light">
+<meta property="og:title" content="H. Gu — CS @ UW–Madison">
+<meta property="og:description" content="Offline-first tools for photos, course data, and maps.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>◆</text></svg>">
+
+<style>
+/* ---- tokens ---- */
+:root{
+  --bg:#0b0c0e; --bg-soft:#111318; --line:#22262e;
+  --fg:#e9eaee; --fg-dim:#9aa0ab; --fg-faint:#666c78;
+  --accent:#e0a94a; --accent-soft:rgba(224,169,74,.13);
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
+  --maxw:780px;
+}
+:root[data-theme="light"]{
+  --bg:#faf9f6; --bg-soft:#f2f0ea; --line:#e0ddd4;
+  --fg:#17181b; --fg-dim:#5b606a; --fg-faint:#8c919b;
+  --accent:#a06b12; --accent-soft:rgba(160,107,18,.10);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:400 16px/1.65 var(--sans);
+  letter-spacing:-.005em;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+::selection{background:var(--accent-soft); color:var(--fg)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+/* ---- layout ---- */
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+
+/* ---- nav ---- */
+nav{
+  position:sticky; top:0; z-index:10;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex; align-items:center; gap:20px; height:52px}
+nav .mark{font:600 13px/1 var(--mono); color:var(--accent); letter-spacing:.02em}
+nav ul{display:flex; gap:20px; list-style:none; margin:0 0 0 auto; padding:0}
+nav a{
+  font:500 12px/1 var(--mono); text-transform:uppercase; letter-spacing:.08em;
+  color:var(--fg-dim); text-decoration:none; transition:color .15s;
+}
+nav a:hover{color:var(--fg)}
+#theme{
+  background:none; border:1px solid var(--line); border-radius:6px;
+  color:var(--fg-dim); cursor:pointer; font-size:13px;
+  width:28px; height:28px; line-height:1; display:grid; place-items:center;
+  transition:border-color .15s,color .15s;
+}
+#theme:hover{color:var(--fg); border-color:var(--fg-faint)}
+@media(max-width:620px){ nav ul li:nth-child(n+3){display:none} }
+
+/* ---- hero ---- */
+.hero{padding:96px 0 72px}
+.badge{
+  display:inline-flex; align-items:center; gap:8px;
+  font:500 12px/1 var(--mono); letter-spacing:.04em;
+  color:var(--accent); background:var(--accent-soft);
+  border:1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius:100px; padding:7px 13px; margin-bottom:28px;
+}
+.dot{width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1{
+  margin:0 0 18px; font-size:clamp(2.6rem,8vw,4.1rem); line-height:1.02;
+  font-weight:700; letter-spacing:-.035em;
+}
+.lede{margin:0; font-size:clamp(1.05rem,2.6vw,1.24rem); line-height:1.55; color:var(--fg-dim); max-width:34em}
+.lede strong{color:var(--fg); font-weight:600}
+
+/* ---- facts ---- */
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; margin-top:48px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden}
+.fact{background:var(--bg); padding:16px 18px}
+.fact dt{font:500 10px/1 var(--mono); text-transform:uppercase; letter-spacing:.1em; color:var(--fg-faint); margin-bottom:7px}
+.fact dd{margin:0; font-size:14px; font-weight:500}
+
+/* ---- headings ---- */
+h2{
+  margin:0 0 8px; font:500 12px/1 var(--mono); text-transform:uppercase;
+  letter-spacing:.14em; color:var(--fg-faint);
+}
+.section-lede{margin:0 0 36px; font-size:15px; color:var(--fg-dim); max-width:36em}
+
+/* ---- projects ---- */
+.proj{padding:26px 0; border-top:1px dashed var(--line)}
+.proj:first-of-type{border-top:0; padding-top:4px}
+.proj-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px}
+.proj h3{margin:0; font-size:1.28rem; font-weight:650; letter-spacing:-.02em}
+.links{display:flex; gap:12px; margin-left:auto}
+.links a, .links span{font:500 11px/1 var(--mono); text-transform:uppercase; letter-spacing:.07em; text-decoration:none; color:var(--accent); border-bottom:1px solid transparent; padding-bottom:2px; transition:border-color .15s}
+.links a:hover{border-bottom-color:var(--accent)}
+.links span{color:var(--fg-faint)}
+.hook{margin:0 0 14px; font-size:15.5px; color:var(--fg-dim)}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px}
+.chip{font:500 11px/1 var(--mono); color:var(--fg-dim); background:var(--bg-soft); border:1px solid var(--line); border-radius:5px; padding:5px 8px}
+.proj ul{margin:0; padding-left:18px; font-size:14.5px; color:var(--fg-dim)}
+.proj li{margin-bottom:6px}
+.proj li::marker{color:var(--fg-faint)}
+
+/* ---- decisions ---- */
+.dec{border-left:2px solid var(--line); padding:2px 0 2px 20px; margin-bottom:28px; transition:border-color .2s}
+.dec:hover{border-left-color:var(--accent)}
+.dec h3{margin:0 0 7px; font-size:1rem; font-weight:600; letter-spacing:-.01em}
+.dec p{margin:0; font-size:14.5px; color:var(--fg-dim)}
+
+/* ---- stack ---- */
+.stack{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:26px 34px}
+.stack h3{margin:0 0 10px; font:500 10px/1 var(--mono); text-transform:uppercase; letter-spacing:.12em; color:var(--fg-faint)}
+.stack p{margin:0; font-size:14.5px; color:var(--fg-dim); font-family:var(--mono); line-height:1.9}
+
+/* ---- now ---- */
+.now{list-style:none; margin:0; padding:0}
+.now li{display:flex; gap:14px; padding:11px 0; border-bottom:1px solid var(--line); font-size:15px}
+.now li:last-child{border-bottom:0}
+.now b{font:500 11px/1.7 var(--mono); color:var(--accent); flex:0 0 62px; letter-spacing:.05em}
+
+/* ---- contact ---- */
+.contact{display:flex; flex-wrap:wrap; gap:10px; margin-top:4px}
+.btn{
+  display:inline-flex; align-items:center; gap:9px;
+  font:500 13px/1 var(--mono); text-decoration:none; color:var(--fg);
+  background:var(--bg-soft); border:1px solid var(--line); border-radius:8px;
+  padding:12px 16px; cursor:pointer; transition:border-color .15s, transform .15s;
+}
+.btn:hover{border-color:var(--accent); transform:translateY(-1px)}
+.btn svg{width:15px; height:15px; fill:currentColor; opacity:.7}
+
+footer{border-top:1px solid var(--line); padding:28px 0 56px; font:400 12px/1.7 var(--mono); color:var(--fg-faint); display:flex; flex-wrap:wrap; gap:12px}
+footer a{color:var(--fg-dim); text-decoration:none; border-bottom:1px solid var(--line)}
+footer a:hover{color:var(--fg)}
+footer .sep{margin-left:auto}
+
+/* ---- reveal ---- */
+.rv{opacity:0; transform:translateY(12px); transition:opacity .6s cubic-bezier(.2,.6,.2,1), transform .6s cubic-bezier(.2,.6,.2,1)}
+.rv.in{opacity:1; transform:none}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1; transform:none; transition:none}
+  .dot{animation:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="mark">◆ H.GU</span>
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#decisions">Decisions</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button id="theme" aria-label="Toggle color theme" title="Toggle theme">☀</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- edit: display name in h1 + nav mark + <title> -->
+  <header class="hero">
+    <span class="badge"><span class="dot"></span>Open to Summer 2027 SWE / ML internships</span>
+    <h1>H. Gu</h1>
+    <p class="lede">
+      Computer Science undergraduate at <strong>UW–Madison</strong>. I build small,
+      <strong>offline-first</strong> tools — a photo library that sorts itself on my own GPU,
+      a course lookup that runs on flat files, a map builder with no dependencies.
+      Everything ships as something you can actually run.
+    </p>
+
+    <dl class="facts rv">
+      <div class="fact"><dt>University</dt><dd>UW–Madison</dd></div>
+      <div class="fact"><dt>Degree</dt><dd>B.S. Computer Science</dd></div>
+      <div class="fact"><dt>Class of</dt><dd>2029</dd></div>
+      <div class="fact"><dt>Focus</dt><dd>Applied ML · Data tooling</dd></div>
+    </dl>
+  </header>
+
+  <section id="work">
+    <h2>Selected work</h2>
+    <p class="section-lede">Three projects, all built end to end and all still running.</p>
+
+    <article class="proj rv">
+      <div class="proj-head">
+        <h3>uw-course-lookup</h3>
+        <span class="links">
+          <a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live</a>
+          <a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a>
+        </span>
+      </div>
+      <p class="hook">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
+      <div class="chips"><span class="chip">Static site</span><span class="chip">Zero dependencies</span><span class="chip">GitHub Pages</span></div>
+      <ul>
+        <li>Resolves any course to its MadGrades GPA distribution and Rate My Professors page in one query.</li>
+        <li>Seeded with anonymized course-mention counts mined from a student chat archive — aggregates ship, records never do.</li>
+        <li>No backend to keep alive: flat JSON, served from a CDN edge, loads instantly on a phone.</li>
+      </ul>
+    </article>
+
+    <article class="proj rv">
+      <div class="proj-head">
+        <h3>photo-organizer</h3>
+        <span class="links">
+          <a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a>
+        </span>
+      </div>
+      <p class="hook">Sorts a 310&nbsp;GB travel photo library into people, scenery, and per-trip clusters — entirely on a local GPU. Nothing is uploaded.</p>
+      <div class="chips"><span class="chip">CLIP ViT-B/32</span><span class="chip">HDBSCAN</span><span class="chip">PyTorch + CUDA</span><span class="chip">FastAPI</span><span class="chip">7,346 files · 0 errors</span></div>
+      <ul>
+        <li>Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
+        <li>RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
+        <li>Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
+        <li>Local FastAPI web UI for browsing, renaming, and re-filing — reachable from a phone over LAN.</li>
+      </ul>
+    </article>
+
+    <article class="proj rv">
+      <div class="proj-head">
+        <h3>DataMap</h3>
+        <span class="links"><span>Source · publishing soon</span></span>
+      </div>
+      <p class="hook">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
+      <div class="chips"><span class="chip">OKLCH ramps</span><span class="chip">Quantile breaks</span><span class="chip">No dependencies</span><span class="chip">Playwright tested</span></div>
+      <ul>
+        <li>Sequential ramps are generated in OKLCH from a reference lightness/chroma trajectory with the hue swapped — perceptual monotonicity is structural, not eyeballed after the fact.</li>
+        <li>Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
+        <li>Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section id="decisions">
+    <h2>Decisions I'd defend</h2>
+    <p class="section-lede">The parts of these projects I actually think about.</p>
+
+    <div class="dec rv">
+      <h3>Show the gap, don't fake the data.</h3>
+      <p>Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</p>
+    </div>
+    <div class="dec rv">
+      <h3>Aggregates leave the machine; records don't.</h3>
+      <p>The course tool is built on a private chat archive. Only anonymized counts are published — the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</p>
+    </div>
+    <div class="dec rv">
+      <h3>Public repos are original work only.</h3>
+      <p>Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</p>
+    </div>
+  </section>
+
+  <section id="stack">
+    <h2>Stack</h2>
+    <div class="stack rv">
+      <div><h3>Languages</h3><p>Python · Java · JavaScript<br>SQL / SQLite · Bash</p></div>
+      <div><h3>ML</h3><p>PyTorch · open_clip<br>HDBSCAN · NumPy</p></div>
+      <div><h3>Web</h3><p>FastAPI · Flask<br>Vanilla JS · HTML/CSS</p></div>
+      <div><h3>Tooling</h3><p>Git · Playwright<br>Linux over SSH · CUDA</p></div>
+    </div>
+  </section>
+
+  <section id="now">
+    <h2>Now — July 2026</h2>
+    <ul class="now rv">
+      <li><b>Applying</b><span>Summer 2027 SWE / ML internships, first wave opens July–October.</span></li>
+      <li><b>Drilling</b><span>~150 pattern-based algorithm problems, grouped by technique rather than count.</span></li>
+      <li><b>Learning</b><span>Applied ML in depth — embeddings, retrieval, and the infrastructure around them.</span></li>
+      <li><b>Coursework</b><span>CS400 Programming III · CS540 Introduction to Artificial Intelligence.</span></li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p class="section-lede">Best reached by email. I answer within a day.</p>
+    <div class="contact rv">
+      <!-- edit: email address -->
+      <button class="btn" id="mail" data-mail="hgu72@wisc.edu">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5z"/></svg>
+        <span>hgu72@wisc.edu</span>
+      </button>
+      <a class="btn" href="https://github.com/WEBGRS" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 1.8 2.7 1.3 3.4 1 .1-.7.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11 11 0 016 0C17.5 4.6 18.5 5 18.5 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+        <span>github.com/WEBGRS</span>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>One HTML file. No frameworks, no trackers, no build step.</span>
+    <span class="sep"><a href="https://github.com/WEBGRS/webgrs.github.io" target="_blank" rel="noopener">View source</a></span>
+  </footer>
+
+</main>
+
+<script>
+// theme persist + toggle
+const root = document.documentElement, btn = document.getElementById('theme');
+const saved = localStorage.getItem('theme');
+if (saved) root.dataset.theme = saved;
+else if (matchMedia('(prefers-color-scheme: light)').matches) root.dataset.theme = 'light';
+const paint = () => btn.textContent = root.dataset.theme === 'light' ? '☾' : '☀';
+paint();
+btn.onclick = () => { root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light'; localStorage.setItem('theme', root.dataset.theme); paint(); };
+
+// reveal on scroll
+const io = new IntersectionObserver((es) => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('.rv').forEach((el, i) => { el.style.transitionDelay = (i % 4) * 60 + 'ms'; io.observe(el); });
+
+// copy email
+const mail = document.getElementById('mail'), label = mail.querySelector('span'), addr = mail.dataset.mail;
+mail.onclick = async () => {
+  try { await navigator.clipboard.writeText(addr); label.textContent = 'copied ✓'; setTimeout(() => label.textContent = addr, 1400); }
+  catch { location.href = 'mailto:' + addr; }
+};
+</script>
+</body>
+</html>
