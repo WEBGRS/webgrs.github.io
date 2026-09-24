@@ -1,353 +1,311 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>H. Gu — CS @ UW–Madison</title>
-<meta name="description" content="CS undergraduate at UW–Madison. Offline-first tools for photos, course data, and maps. Open to Summer 2027 SWE / ML internships.">
-<meta name="color-scheme" content="dark light">
-<meta property="og:title" content="H. Gu — CS @ UW–Madison">
-<meta property="og:description" content="Offline-first tools for photos, course data, and maps.">
+<title>H. Gu, CS at UW–Madison</title>
+<meta name="description" content="CS undergraduate at UW–Madison building offline-first tools for maps, photos, and course data. Open to Summer 2027 SWE / ML internships.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="H. Gu, CS at UW–Madison">
+<meta property="og:description" content="Offline-first tools for maps, photos, and course data.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>◆</text></svg>">
+<meta property="og:image" content="https://webgrs.github.io/assets/route-animator.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%231E5AA8' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%231E5AA8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..800;1,400&display=swap" rel="stylesheet">
 
 <style>
-/* ---- tokens ---- */
 :root{
-  --bg:#0b0c0e; --bg-soft:#111318; --line:#22262e;
-  --fg:#e9eaee; --fg-dim:#9aa0ab; --fg-faint:#666c78;
-  --accent:#e0a94a; --accent-soft:rgba(224,169,74,.13);
-  --mono:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
-  --maxw:780px;
+  --paper:#F6F7F5; --ink:#17212B; --muted:#5C6873; --rule:#DCE1E4;
+  --chart:#1E5AA8; --contour:#3F7D5B; --plate:#E9EDEF;
+  --font:"Schibsted Grotesk",-apple-system,"Segoe UI",Roboto,sans-serif;
 }
-:root[data-theme="light"]{
-  --bg:#faf9f6; --bg-soft:#f2f0ea; --line:#e0ddd4;
-  --fg:#17181b; --fg-dim:#5b606a; --fg-faint:#8c919b;
-  --accent:#a06b12; --accent-soft:rgba(160,107,18,.10);
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121A22; --ink:#E4EAEF; --muted:#93A1AD; --rule:#26323D;
+    --chart:#8AB8EE; --contour:#7CC39A; --plate:#1A242E;
+  }
 }
+:root[data-theme="dark"]{
+  --paper:#121A22; --ink:#E4EAEF; --muted:#93A1AD; --rule:#26323D;
+  --chart:#8AB8EE; --contour:#7CC39A; --plate:#1A242E;
+}
+
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0; background:var(--bg); color:var(--fg);
-  font:400 16px/1.65 var(--sans);
-  letter-spacing:-.005em;
-  -webkit-font-smoothing:antialiased;
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+body{margin:0; background:var(--paper); color:var(--ink); font:400 16px/1.6 var(--font); -webkit-font-smoothing:antialiased}
+a{color:var(--chart); text-decoration-thickness:1px; text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--chart); outline-offset:3px; border-radius:3px}
+::selection{background:color-mix(in srgb, var(--chart) 22%, transparent)}
+
+/* layout */
+.shell{max-width:1180px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:1fr; gap:0}
+.side{padding:56px 0 48px}
+@media (min-width:1024px){
+  .shell{grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:72px; padding:0 48px}
+  .side{position:sticky; top:0; height:100vh; display:flex; flex-direction:column; padding:88px 0 48px}
+  main{padding:88px 0 64px}
 }
-a{color:inherit}
-::selection{background:var(--accent-soft); color:var(--fg)}
-:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
 
-/* ---- layout ---- */
-.wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
-section{padding:64px 0; border-top:1px solid var(--line)}
-section:first-of-type{border-top:0}
+/* identity */
+h1{margin:0; font-size:clamp(2.4rem,5vw,3.1rem); line-height:1.05; font-weight:750; letter-spacing:-.03em}
+.role{margin:10px 0 0; font-size:1.15rem; font-weight:500}
+.intro{margin:18px 0 0; max-width:30em; color:var(--muted)}
+.avail{display:flex; align-items:center; gap:9px; margin:20px 0 0; font-size:.94rem; font-weight:500}
+.avail::before{content:""; width:8px; height:8px; border-radius:50%; background:var(--contour); flex:none}
 
-/* ---- nav ---- */
-nav{
-  position:sticky; top:0; z-index:10;
-  background:color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);
-}
-nav .wrap{display:flex; align-items:center; gap:20px; height:52px}
-nav .mark{font:600 13px/1 var(--mono); color:var(--accent); letter-spacing:.02em}
-nav ul{display:flex; gap:20px; list-style:none; margin:0 0 0 auto; padding:0}
-nav a{
-  font:500 12px/1 var(--mono); text-transform:uppercase; letter-spacing:.08em;
-  color:var(--fg-dim); text-decoration:none; transition:color .15s;
-}
-nav a:hover{color:var(--fg)}
-#theme{
-  background:none; border:1px solid var(--line); border-radius:6px;
-  color:var(--fg-dim); cursor:pointer; font-size:13px;
-  width:28px; height:28px; line-height:1; display:grid; place-items:center;
-  transition:border-color .15s,color .15s;
-}
-#theme:hover{color:var(--fg); border-color:var(--fg-faint)}
-@media(max-width:620px){ nav ul li:nth-child(n+3){display:none} }
+/* section nav */
+.toc{display:none; margin:52px 0 0; padding:0; list-style:none}
+@media (min-width:1024px){ .toc{display:block} }
+.toc a{display:flex; align-items:center; gap:14px; padding:7px 0; color:var(--muted); text-decoration:none; font-size:.95rem; font-weight:500}
+.toc a::before{content:""; height:1px; width:28px; background:currentColor; transition:width .2s ease}
+.toc a:hover, .toc a[aria-current="true"]{color:var(--ink)}
+.toc a[aria-current="true"]::before{width:60px}
 
-/* ---- hero ---- */
-.hero{padding:96px 0 72px}
-.badge{
-  display:inline-flex; align-items:center; gap:8px;
-  font:500 12px/1 var(--mono); letter-spacing:.04em;
-  color:var(--accent); background:var(--accent-soft);
-  border:1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  border-radius:100px; padding:7px 13px; margin-bottom:28px;
-}
-.dot{width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-h1{
-  margin:0 0 18px; font-size:clamp(2.6rem,8vw,4.1rem); line-height:1.02;
-  font-weight:700; letter-spacing:-.035em;
-}
-.lede{margin:0; font-size:clamp(1.05rem,2.6vw,1.24rem); line-height:1.55; color:var(--fg-dim); max-width:34em}
-.lede strong{color:var(--fg); font-weight:600}
+.reach{display:flex; flex-wrap:wrap; align-items:center; gap:10px 20px; margin-top:28px; font-size:.95rem}
+@media (min-width:1024px){ .reach{margin-top:auto} }
+.copy{font:inherit; color:var(--chart); background:none; border:0; padding:0; cursor:pointer; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px}
+.copy:hover{text-decoration-thickness:2px}
+#theme{margin-left:auto; font:inherit; font-size:.9rem; color:var(--muted); background:none; border:1px solid var(--rule); border-radius:999px; padding:4px 12px; cursor:pointer}
+#theme:hover{color:var(--ink)}
 
-/* ---- facts ---- */
-.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px; margin-top:48px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden}
-.fact{background:var(--bg); padding:16px 18px}
-.fact dt{font:500 10px/1 var(--mono); text-transform:uppercase; letter-spacing:.1em; color:var(--fg-faint); margin-bottom:7px}
-.fact dd{margin:0; font-size:14px; font-weight:500}
+/* sections */
+section{padding:0 0 72px; scroll-margin-top:32px}
+h2{margin:0 0 6px; font-size:1.35rem; font-weight:700; letter-spacing:-.015em}
+.lede{margin:0 0 32px; color:var(--muted)}
 
-/* ---- headings ---- */
-h2{
-  margin:0 0 8px; font:500 12px/1 var(--mono); text-transform:uppercase;
-  letter-spacing:.14em; color:var(--fg-faint);
-}
-.section-lede{margin:0 0 36px; font-size:15px; color:var(--fg-dim); max-width:36em}
+/* projects */
+.proj{margin:0 0 64px}
+.plate{display:block; margin:0 0 20px; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--plate); aspect-ratio:16/10}
+.plate img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
+.head{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 18px}
+h3{margin:0; font-size:1.25rem; font-weight:700; letter-spacing:-.01em}
+.links{display:flex; gap:16px; font-size:.95rem; font-weight:500}
+.hook{margin:8px 0 0; font-size:1.05rem}
+.built{margin:6px 0 0; font-size:.9rem; color:var(--muted)}
+.proj ul{margin:14px 0 0; padding-left:18px; color:var(--muted); max-width:62ch}
+.proj li{margin:0 0 6px}
+.proj li::marker{color:var(--rule)}
 
-/* ---- projects ---- */
-.proj{padding:26px 0; border-top:1px dashed var(--line)}
-.proj:first-of-type{border-top:0; padding-top:4px}
-.proj-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px}
-.proj h3{margin:0; font-size:1.28rem; font-weight:650; letter-spacing:-.02em}
-.links{display:flex; gap:12px; margin-left:auto}
-.links a, .links span{font:500 11px/1 var(--mono); text-transform:uppercase; letter-spacing:.07em; text-decoration:none; color:var(--accent); border-bottom:1px solid transparent; padding-bottom:2px; transition:border-color .15s}
-.links a:hover{border-bottom-color:var(--accent)}
-.links span{color:var(--fg-faint)}
-.hook{margin:0 0 14px; font-size:15.5px; color:var(--fg-dim)}
-.chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px}
-.chip{font:500 11px/1 var(--mono); color:var(--fg-dim); background:var(--bg-soft); border:1px solid var(--line); border-radius:5px; padding:5px 8px}
-.proj ul{margin:0; padding-left:18px; font-size:14.5px; color:var(--fg-dim)}
-.proj li{margin-bottom:6px}
-.proj li::marker{color:var(--fg-faint)}
+/* smaller tools */
+.small{display:grid; grid-template-columns:1fr; gap:36px}
+@media (min-width:640px){ .small{grid-template-columns:1fr 1fr; gap:28px} }
+.small .plate{margin-bottom:14px}
+.small h3{font-size:1.08rem}
+.small p{margin:6px 0 0; color:var(--muted); font-size:.95rem}
 
-/* ---- decisions ---- */
-.dec{border-left:2px solid var(--line); padding:2px 0 2px 20px; margin-bottom:28px; transition:border-color .2s}
-.dec:hover{border-left-color:var(--accent)}
-.dec h3{margin:0 0 7px; font-size:1rem; font-weight:600; letter-spacing:-.01em}
-.dec p{margin:0; font-size:14.5px; color:var(--fg-dim)}
+/* decisions */
+.dec{margin:0 0 28px; max-width:62ch}
+.dec h3{font-size:1.05rem}
+.dec p{margin:6px 0 0; color:var(--muted)}
 
-/* ---- stack ---- */
-.stack{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:26px 34px}
-.stack h3{margin:0 0 10px; font:500 10px/1 var(--mono); text-transform:uppercase; letter-spacing:.12em; color:var(--fg-faint)}
-.stack p{margin:0; font-size:14.5px; color:var(--fg-dim); font-family:var(--mono); line-height:1.9}
+/* stack + now */
+.grid2{display:grid; grid-template-columns:1fr; gap:20px 40px; margin:0}
+@media (min-width:640px){ .grid2{grid-template-columns:9em 1fr} }
+.grid2 dt{font-weight:600}
+.grid2 dd{margin:0; color:var(--muted)}
+@media (max-width:639px){ .grid2 dd{margin:-16px 0 0} }
 
-/* ---- now ---- */
-.now{list-style:none; margin:0; padding:0}
-.now li{display:flex; gap:14px; padding:11px 0; border-bottom:1px solid var(--line); font-size:15px}
-.now li:last-child{border-bottom:0}
-.now b{font:500 11px/1.7 var(--mono); color:var(--accent); flex:0 0 62px; letter-spacing:.05em}
+footer{border-top:1px solid var(--rule); padding:24px 0 0; font-size:.9rem; color:var(--muted)}
 
-/* ---- contact ---- */
-.contact{display:flex; flex-wrap:wrap; gap:10px; margin-top:4px}
-.btn{
-  display:inline-flex; align-items:center; gap:9px;
-  font:500 13px/1 var(--mono); text-decoration:none; color:var(--fg);
-  background:var(--bg-soft); border:1px solid var(--line); border-radius:8px;
-  padding:12px 16px; cursor:pointer; transition:border-color .15s, transform .15s;
-}
-.btn:hover{border-color:var(--accent); transform:translateY(-1px)}
-.btn svg{width:15px; height:15px; fill:currentColor; opacity:.7}
-
-footer{border-top:1px solid var(--line); padding:28px 0 56px; font:400 12px/1.7 var(--mono); color:var(--fg-faint); display:flex; flex-wrap:wrap; gap:12px}
-footer a{color:var(--fg-dim); text-decoration:none; border-bottom:1px solid var(--line)}
-footer a:hover{color:var(--fg)}
-footer .sep{margin-left:auto}
-
-/* ---- reveal ---- */
-.rv{opacity:0; transform:translateY(12px); transition:opacity .6s cubic-bezier(.2,.6,.2,1), transform .6s cubic-bezier(.2,.6,.2,1)}
-.rv.in{opacity:1; transform:none}
-@media(prefers-reduced-motion:reduce){
-  .rv{opacity:1; transform:none; transition:none}
-  .dot{animation:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .toc a::before{transition:none}
 }
 </style>
 </head>
 <body>
+<div class="shell">
 
-<nav>
-  <div class="wrap">
-    <span class="mark">◆ H.GU</span>
-    <ul>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#decisions">Decisions</a></li>
-      <li><a href="#stack">Stack</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <button id="theme" aria-label="Toggle color theme" title="Toggle theme">☀</button>
-  </div>
-</nav>
-
-<main class="wrap">
-
-  <!-- edit: display name in h1 + nav mark + <title> -->
-  <header class="hero">
-    <span class="badge"><span class="dot"></span>Open to Summer 2027 SWE / ML internships</span>
+  <header class="side">
     <h1>H. Gu</h1>
-    <p class="lede">
-      Computer Science undergraduate at <strong>UW–Madison</strong>. I build small,
-      <strong>offline-first</strong> tools — a photo library that sorts itself on my own GPU,
-      a course lookup that runs on flat files, a map builder with no dependencies.
-      Everything ships as something you can actually run.
-    </p>
+    <p class="role">Computer Science, UW–Madison, class of 2029</p>
+    <p class="intro">I build small, offline-first tools: a photo library that sorts itself on my own GPU, a course lookup that runs on flat files, maps that need no server. Everything here is something you can open and run.</p>
+    <p class="avail">Open to Summer 2027 SWE and ML internships</p>
 
-    <dl class="facts rv">
-      <div class="fact"><dt>University</dt><dd>UW–Madison</dd></div>
-      <div class="fact"><dt>Degree</dt><dd>B.S. Computer Science</dd></div>
-      <div class="fact"><dt>Class of</dt><dd>2029</dd></div>
-      <div class="fact"><dt>Focus</dt><dd>Applied ML · Data tooling</dd></div>
-    </dl>
+    <nav aria-label="Sections">
+      <ul class="toc">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#decisions">Decisions</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#now">Now</a></li>
+      </ul>
+    </nav>
+
+    <div class="reach" id="contact">
+      <button class="copy" id="mail" data-mail="hgu72@wisc.edu" title="Copy email address">hgu72@wisc.edu</button>
+      <a href="https://github.com/WEBGRS" target="_blank" rel="noopener">GitHub</a>
+      <button id="theme" type="button" aria-label="Switch color theme">Dark</button>
+    </div>
   </header>
 
-  <section id="work">
-    <h2>Selected work</h2>
-    <p class="section-lede">Four projects, all built end to end and all still running.</p>
+  <main>
+    <section id="work" aria-labelledby="work-h">
+      <h2 id="work-h">Work</h2>
+      <p class="lede">Built end to end, all still running.</p>
 
-    <article class="proj rv">
-      <div class="proj-head">
-        <h3>route-animator</h3>
-        <span class="links">
-          <a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live</a>
-          <a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a>
-        </span>
+      <article class="proj">
+        <a class="plate" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" aria-label="Open route-animator">
+          <img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator">
+        </a>
+        <div class="head">
+          <h3>route-animator</h3>
+          <span class="links"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></span>
+        </div>
+        <p class="hook">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
+        <p class="built">MapLibre GL, Canvas 2D, in-browser video capture</p>
+        <ul>
+          <li>Flies a vehicle along a multi-stop route over a satellite globe and records it with MediaRecorder. No server ever sees the clip.</li>
+          <li>Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</li>
+          <li>Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</li>
+        </ul>
+      </article>
+
+      <article class="proj">
+        <a class="plate" href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener" aria-label="Open uw-course-lookup">
+          <img src="assets/uw-course-lookup.jpg" width="1400" height="875" alt="Course list with Grades and Rate My Professors buttons for each UW–Madison course" loading="lazy">
+        </a>
+        <div class="head">
+          <h3>uw-course-lookup</h3>
+          <span class="links"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></span>
+        </div>
+        <p class="hook">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
+        <p class="built">Static site, zero dependencies, GitHub Pages</p>
+        <ul>
+          <li>Resolves any course to its MadGrades GPA distribution and Rate My Professors page in one query.</li>
+          <li>Seeded with anonymized course-mention counts mined from a student chat archive. Aggregates ship; records never do.</li>
+          <li>No backend to keep alive: flat JSON, served from a CDN edge, loads instantly on a phone.</li>
+        </ul>
+      </article>
+
+      <article class="proj">
+        <a class="plate" href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener" aria-label="Open photo-organizer on GitHub">
+          <img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy">
+        </a>
+        <div class="head">
+          <h3>photo-organizer</h3>
+          <span class="links"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></span>
+        </div>
+        <p class="hook">Sorts a 310&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
+        <p class="built">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. 7,346 files, 0 errors.</p>
+        <ul>
+          <li>Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
+          <li>RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
+          <li>Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
+          <li>Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN.</li>
+        </ul>
+      </article>
+
+      <article class="proj">
+        <a class="plate" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" aria-label="Open DataMap">
+          <img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy">
+        </a>
+        <div class="head">
+          <h3>DataMap</h3>
+          <span class="links"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></span>
+        </div>
+        <p class="hook">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
+        <p class="built">OKLCH ramps, quantile breaks, no dependencies, Playwright tests</p>
+        <ul>
+          <li>Sequential ramps are generated in OKLCH from a reference lightness/chroma trajectory with the hue swapped, so perceptual monotonicity is structural, not eyeballed after the fact.</li>
+          <li>Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
+          <li>Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
+        </ul>
+      </article>
+
+      <h3 style="margin:0 0 20px">Smaller tools</h3>
+      <div class="small">
+        <article>
+          <a class="plate" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" aria-label="Open geo-spoof on GitHub">
+            <img src="assets/geo-spoof.jpg" width="1400" height="822" alt="A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof" loading="lazy">
+          </a>
+          <div class="head"><h3>geo-spoof</h3><span class="links"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener">Source</a></span></div>
+          <p>Chrome extension that answers the Geolocation API with a point you pick on a map. Patched calls still pass native-type checks.</p>
+        </article>
+        <article>
+          <a class="plate" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" aria-label="Open tophat-watch on GitHub">
+            <img src="assets/tophat-watch.jpg" width="1400" height="700" alt="Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator" loading="lazy">
+          </a>
+          <div class="head"><h3>tophat-watch</h3><span class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></span></div>
+          <p>Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.</p>
+        </article>
       </div>
-      <p class="hook">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
-      <div class="chips"><span class="chip">MapLibre GL</span><span class="chip">Canvas 2D</span><span class="chip">In-browser capture</span></div>
-      <ul>
-        <li>Flies a vehicle along a multi-stop route over a satellite globe and records it with MediaRecorder — no server ever sees the clip.</li>
-        <li>Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</li>
-        <li>Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</li>
-      </ul>
-    </article>
+    </section>
 
-    <article class="proj rv">
-      <div class="proj-head">
-        <h3>uw-course-lookup</h3>
-        <span class="links">
-          <a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live</a>
-          <a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a>
-        </span>
+    <section id="decisions" aria-labelledby="dec-h">
+      <h2 id="dec-h">Decisions I'd defend</h2>
+      <p class="lede">The parts of these projects I actually think about.</p>
+      <div class="dec">
+        <h3>Show the gap, don't fake the data.</h3>
+        <p>Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</p>
       </div>
-      <p class="hook">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
-      <div class="chips"><span class="chip">Static site</span><span class="chip">Zero dependencies</span><span class="chip">GitHub Pages</span></div>
-      <ul>
-        <li>Resolves any course to its MadGrades GPA distribution and Rate My Professors page in one query.</li>
-        <li>Seeded with anonymized course-mention counts mined from a student chat archive — aggregates ship, records never do.</li>
-        <li>No backend to keep alive: flat JSON, served from a CDN edge, loads instantly on a phone.</li>
-      </ul>
-    </article>
-
-    <article class="proj rv">
-      <div class="proj-head">
-        <h3>photo-organizer</h3>
-        <span class="links">
-          <a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a>
-        </span>
+      <div class="dec">
+        <h3>Aggregates leave the machine; records don't.</h3>
+        <p>The course tool is built on a private chat archive. Only anonymized counts are published; the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</p>
       </div>
-      <p class="hook">Sorts a 310&nbsp;GB travel photo library into people, scenery, and per-trip clusters — entirely on a local GPU. Nothing is uploaded.</p>
-      <div class="chips"><span class="chip">CLIP ViT-B/32</span><span class="chip">HDBSCAN</span><span class="chip">PyTorch + CUDA</span><span class="chip">FastAPI</span><span class="chip">7,346 files · 0 errors</span></div>
-      <ul>
-        <li>Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
-        <li>RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
-        <li>Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
-        <li>Local FastAPI web UI for browsing, renaming, and re-filing — reachable from a phone over LAN.</li>
-      </ul>
-    </article>
-
-    <article class="proj rv">
-      <div class="proj-head">
-        <h3>DataMap</h3>
-        <span class="links">
-          <a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live</a>
-          <a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a>
-        </span>
+      <div class="dec">
+        <h3>Public repos are original work only.</h3>
+        <p>Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</p>
       </div>
-      <p class="hook">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
-      <div class="chips"><span class="chip">OKLCH ramps</span><span class="chip">Quantile breaks</span><span class="chip">No dependencies</span><span class="chip">Playwright tested</span></div>
-      <ul>
-        <li>Sequential ramps are generated in OKLCH from a reference lightness/chroma trajectory with the hue swapped — perceptual monotonicity is structural, not eyeballed after the fact.</li>
-        <li>Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
-        <li>Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
-      </ul>
-    </article>
-  </section>
+    </section>
 
-  <section id="decisions">
-    <h2>Decisions I'd defend</h2>
-    <p class="section-lede">The parts of these projects I actually think about.</p>
+    <section id="stack" aria-labelledby="stack-h">
+      <h2 id="stack-h">Stack</h2>
+      <dl class="grid2" style="margin-top:20px">
+        <dt>Languages</dt><dd>Python, Java, JavaScript, SQL / SQLite, Bash</dd>
+        <dt>ML</dt><dd>PyTorch, open_clip, HDBSCAN, NumPy</dd>
+        <dt>Web</dt><dd>FastAPI, Flask, vanilla JS, HTML/CSS</dd>
+        <dt>Tooling</dt><dd>Git, Playwright, Linux over SSH, CUDA</dd>
+      </dl>
+    </section>
 
-    <div class="dec rv">
-      <h3>Show the gap, don't fake the data.</h3>
-      <p>Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</p>
-    </div>
-    <div class="dec rv">
-      <h3>Aggregates leave the machine; records don't.</h3>
-      <p>The course tool is built on a private chat archive. Only anonymized counts are published — the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</p>
-    </div>
-    <div class="dec rv">
-      <h3>Public repos are original work only.</h3>
-      <p>Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</p>
-    </div>
-  </section>
+    <section id="now" aria-labelledby="now-h">
+      <h2 id="now-h">Now</h2>
+      <p class="lede">September 2026</p>
+      <dl class="grid2">
+        <dt>Applying</dt><dd>Summer 2027 SWE and ML internships.</dd>
+        <dt>Drilling</dt><dd>About 150 pattern-based algorithm problems, grouped by technique rather than count.</dd>
+        <dt>Learning</dt><dd>Applied ML in depth: embeddings, retrieval, and the infrastructure around them.</dd>
+        <dt>Coursework</dt><dd>CS 577 Introduction to Algorithms, CS 354 Machine Organization and Programming.</dd>
+      </dl>
+    </section>
 
-  <section id="stack">
-    <h2>Stack</h2>
-    <div class="stack rv">
-      <div><h3>Languages</h3><p>Python · Java · JavaScript<br>SQL / SQLite · Bash</p></div>
-      <div><h3>ML</h3><p>PyTorch · open_clip<br>HDBSCAN · NumPy</p></div>
-      <div><h3>Web</h3><p>FastAPI · Flask<br>Vanilla JS · HTML/CSS</p></div>
-      <div><h3>Tooling</h3><p>Git · Playwright<br>Linux over SSH · CUDA</p></div>
-    </div>
-  </section>
+    <footer>One HTML file, no framework, no trackers. <a href="https://github.com/WEBGRS/webgrs.github.io" target="_blank" rel="noopener">View source</a></footer>
+  </main>
 
-  <section id="now">
-    <h2>Now — July 2026</h2>
-    <ul class="now rv">
-      <li><b>Applying</b><span>Summer 2027 SWE / ML internships, first wave opens July–October.</span></li>
-      <li><b>Drilling</b><span>~150 pattern-based algorithm problems, grouped by technique rather than count.</span></li>
-      <li><b>Learning</b><span>Applied ML in depth — embeddings, retrieval, and the infrastructure around them.</span></li>
-      <li><b>Coursework</b><span>CS400 Programming III · CS540 Introduction to Artificial Intelligence.</span></li>
-    </ul>
-  </section>
-
-  <section id="contact">
-    <h2>Contact</h2>
-    <p class="section-lede">Best reached by email. I answer within a day.</p>
-    <div class="contact rv">
-      <!-- edit: email address -->
-      <button class="btn" id="mail" data-mail="hgu72@wisc.edu">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5z"/></svg>
-        <span>hgu72@wisc.edu</span>
-      </button>
-      <a class="btn" href="https://github.com/WEBGRS" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 1.8 2.7 1.3 3.4 1 .1-.7.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11 11 0 016 0C17.5 4.6 18.5 5 18.5 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
-        <span>github.com/WEBGRS</span>
-      </a>
-    </div>
-  </section>
-
-  <footer>
-    <span>One HTML file. No frameworks, no trackers, no build step.</span>
-    <span class="sep"><a href="https://github.com/WEBGRS/webgrs.github.io" target="_blank" rel="noopener">View source</a></span>
-  </footer>
-
-</main>
+</div>
 
 <script>
-// theme persist + toggle
-const root = document.documentElement, btn = document.getElementById('theme');
-const saved = localStorage.getItem('theme');
+// Theme toggle
+const root = document.documentElement, themeBtn = document.getElementById('theme');
+let saved = null;
+try { saved = localStorage.getItem('theme'); } catch {}
 if (saved) root.dataset.theme = saved;
-else if (matchMedia('(prefers-color-scheme: light)').matches) root.dataset.theme = 'light';
-const paint = () => btn.textContent = root.dataset.theme === 'light' ? '☾' : '☀';
-paint();
-btn.onclick = () => { root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light'; localStorage.setItem('theme', root.dataset.theme); paint(); };
+const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+const label = () => themeBtn.textContent = isDark() ? 'Light' : 'Dark';
+label();
+themeBtn.onclick = () => {
+  root.dataset.theme = isDark() ? 'light' : 'dark';
+  try { localStorage.setItem('theme', root.dataset.theme); } catch {}
+  label();
+};
 
-// reveal on scroll
-const io = new IntersectionObserver((es) => es.forEach(e => {
-  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-}), { rootMargin: '0px 0px -8% 0px' });
-document.querySelectorAll('.rv').forEach((el, i) => { el.style.transitionDelay = (i % 4) * 60 + 'ms'; io.observe(el); });
-
-// copy email
-const mail = document.getElementById('mail'), label = mail.querySelector('span'), addr = mail.dataset.mail;
+// Copy email
+const mail = document.getElementById('mail'), addr = mail.dataset.mail;
 mail.onclick = async () => {
-  try { await navigator.clipboard.writeText(addr); label.textContent = 'copied ✓'; setTimeout(() => label.textContent = addr, 1400); }
+  try { await navigator.clipboard.writeText(addr); mail.textContent = 'Copied'; setTimeout(() => mail.textContent = addr, 1400); }
   catch { location.href = 'mailto:' + addr; }
 };
+
+// Highlight current section in nav
+const links = [...document.querySelectorAll('.toc a')];
+const spy = new IntersectionObserver((es) => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  links.forEach(a => a.setAttribute('aria-current', a.hash === '#' + e.target.id ? 'true' : 'false'));
+}), { rootMargin: '-35% 0px -60% 0px' });
+document.querySelectorAll('main section').forEach(s => spy.observe(s));
 </script>
 </body>
 </html>

@@ -10,7 +10,7 @@ Personal portfolio site: **<https://webgrs.github.io>**
 
 </details>
 
-One `index.html` with no framework, trackers, or build step. It follows the system light/dark setting, and a toggle overrides it.
+One `index.html` plus project screenshots in `assets/`; no framework, trackers, or build step. It follows the system light/dark setting, and a toggle overrides it. The two-column layout with a sticky side panel takes after [Brittany Chiang's v4](https://github.com/bchiang7/v4).
 
 ## Projects linked
 
@@ -18,6 +18,8 @@ One `index.html` with no framework, trackers, or build step. It follows the syst
 - [uw-course-lookup](https://github.com/WEBGRS/uw-course-lookup): UW–Madison course lookup, linking to MadGrades and Rate My Professors
 - [photo-organizer](https://github.com/WEBGRS/photo-organizer): offline CLIP photo sorter
 - [datamap](https://github.com/WEBGRS/datamap): paste data, get a choropleth map
+- [geo-spoof](https://github.com/WEBGRS/geo-spoof): Chrome extension that overrides the Geolocation API
+- [tophat-watch](https://github.com/WEBGRS/tophat-watch): Chrome extension that alerts when a Top Hat question opens
 
 ## Run locally
 
