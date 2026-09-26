@@ -94,7 +94,10 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .index .nm{font-size:clamp(1.7rem,4.2vw,3.5rem); line-height:1; font-weight:720; letter-spacing:-.035em; font-stretch:100%; transition:font-stretch .5s var(--out), color .2s}
 .index .ds{color:var(--muted); line-height:1.45}
 .index .kd{color:var(--faint); font-size:.92rem; text-align:right}
+.index a{position:relative; isolation:isolate}
+.index a::before{content:""; position:absolute; inset:0 -14px; z-index:-1; background:color-mix(in srgb, var(--accent) 7%, transparent); clip-path:inset(0 100% 0 0); transition:clip-path .5s var(--out)}
 @media (hover:hover){
+  .index a:hover::before{clip-path:inset(0)}
   .index:hover a{opacity:.32}
   .index a:hover,.index a:focus-visible{opacity:1}
   .index a:hover .nm{font-stretch:118%}
@@ -133,9 +136,10 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 }
 .plate{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); aspect-ratio:16/10; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--plate); box-shadow:0 30px 70px -40px rgba(20,35,50,.35)}
 .cap{position:absolute; left:0; right:0; top:calc(50% + 31.25cqw + 16px); display:flex; align-items:flex-start; gap:24px; font-size:.86rem; color:var(--muted)}
-.cap-t{flex:1; min-width:0; transition:opacity .3s var(--out)}
+.cap-t{flex:1; min-width:0; clip-path:inset(0); transition:clip-path .4s var(--io)}
+.cap-t.out{clip-path:inset(0 0 0 100%)}
+.cap-t.pre{clip-path:inset(0 100% 0 0); transition:none}
 .cap-t b{color:var(--ink); font-weight:600; margin-right:8px; font-variant-numeric:tabular-nums}
-.cap-t.swap{opacity:0}
 .ticks{display:flex; gap:5px; padding-top:7px}
 .ticks i{width:14px; height:3px; border-radius:2px; background:var(--rule); transition:width .5s var(--out), background-color .3s}
 .ticks i.on{width:30px; background:var(--accent)}
@@ -178,7 +182,8 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 /* decisions */
 .decs{display:grid; grid-template-columns:1fr; gap:40px}
 @media (min-width:860px){ .decs{grid-template-columns:repeat(3,1fr); gap:48px} }
-.dec{border-top:2px solid var(--ink); padding-top:20px}
+.dec{position:relative; padding-top:22px}
+.dec::before{content:""; position:absolute; left:0; right:0; top:0; height:2px; background:var(--ink); transform-origin:left}
 .dec h3{margin:0; font-size:1.4rem; line-height:1.2; font-weight:720; letter-spacing:-.018em}
 .dec p{margin:14px 0 0; color:var(--muted)}
 
@@ -197,21 +202,51 @@ dl.kv dd{margin:0; color:var(--muted)}
 .big{display:inline-block; margin:clamp(20px,3vw,36px) 0 0; padding:0 0 .08em; border:0; background:linear-gradient(currentColor,currentColor) left bottom/0 3px no-repeat; color:var(--ink); font:800 clamp(2.1rem,8.2vw,7.4rem)/1 var(--font); font-stretch:118%; letter-spacing:-.045em; cursor:pointer; text-align:left; transition:background-size .5s var(--out), transform .15s var(--out)}
 .big:hover{background-size:100% 3px}
 .big:active{transform:scale(.985)}
-.big span{display:inline-block; transition:opacity .25s var(--out), filter .25s var(--out), transform .25s var(--out)}
-.big.swap span{opacity:0; filter:blur(4px); transform:translateY(8px)}
 .after{display:flex; flex-wrap:wrap; gap:14px 28px; margin-top:28px; font-weight:560}
 footer{margin-top:clamp(88px,10vw,140px); padding:22px 0 30px; border-top:1px solid var(--rule); display:flex; flex-wrap:wrap; gap:8px 28px; color:var(--muted); font-size:.88rem}
 footer .src{margin-left:auto}
 
-/* load sequence */
-@keyframes rise{from{transform:translateY(106%)}}
-@keyframes lift{from{opacity:0; transform:translateY(14px)}}
+/* type motion */
+.hero h1 .l{display:inline-block}
+.blk{background:linear-gradient(var(--accent),var(--accent)) no-repeat 0 0/0% 100%; -webkit-box-decoration-break:clone; box-decoration-break:clone}
+.bar-s{transform-origin:left}
+.ch{position:relative}
+.ch.w,.ch.x{color:transparent}
+.ch.x::after{content:attr(data-g); content:attr(data-g) / ""; position:absolute; left:0; top:0; line-height:normal; color:var(--accent)}
+.ch.k::before{content:""; position:absolute; left:-.03em; right:-.03em; top:.1em; bottom:.04em; background:var(--accent)}
+.ch.k::after{color:var(--paper)}
+.cur{display:inline-block; width:.42em; height:.68em; margin-left:.1em; background:var(--accent); animation:blink .8s steps(1) both}
+.measuring .hero h1 .l{animation:none !important}
+@keyframes rise{from{transform:translateY(108%); font-stretch:62%}}
 @keyframes show{from{opacity:0}}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes blink{0%,50%{opacity:1}25%,75%,100%{opacity:0}}
+@keyframes led{0%,20%,40%{opacity:1}10%,30%{opacity:.15}}
+@keyframes flash{0%{opacity:0}10%{opacity:.5}11%{opacity:0}20%{opacity:.5}21%{opacity:0}40%{opacity:.5}41%{opacity:0}100%{opacity:1}}
+@keyframes wipe{
+  0%{background-size:0% 100%; background-position:0 0; color:transparent}
+  50%{background-size:100% 100%; background-position:0 0; color:transparent}
+  50.1%{background-size:100% 100%; background-position:100% 0; color:var(--ink)}
+  100%{background-size:0% 100%; background-position:100% 0; color:var(--ink)}
+}
 @media (prefers-reduced-motion:no-preference){
-  .js .hero h1 .mask>span{animation:rise 1.1s var(--out) .25s both paused}
-  .js .hero .up{animation:lift .9s var(--out) both paused; animation-delay:calc(.55s + var(--i,0) * 90ms)}
-  .js .legend, .js .bar{animation:show .8s ease-out 1.05s both paused}
-  .go .hero h1 .mask>span, .go .hero .up, .go .legend, .go .bar{animation-play-state:running}
+  .js .hero h1 .l{animation:rise 1.2s var(--out) both paused; animation-delay:calc(.15s + var(--i) * 75ms)}
+  .js .hero .lede .blk{animation:wipe 1.05s var(--io) .6s both paused}
+  .js .hero .who, .js .hero .avail{animation:flash .9s ease-out both paused; animation-delay:calc(1.05s + var(--i) * 160ms)}
+  .js .hero .avail::before{animation:led 1.2s steps(1) 1.5s both paused}
+  .js .legend{animation:show .5s ease-out 1.1s both paused}
+  .js .legend .bar-s{animation:grow .9s var(--io) 1.2s both paused}
+  .js .legend .note{animation:flash .9s ease-out 1.35s both paused}
+  .js .bar{animation:show .8s ease-out 1.05s both paused}
+  .go .hero h1 .l, .go .hero .lede .blk, .go .hero .who, .go .hero .avail, .go .hero .avail::before,
+  .go .legend, .go .legend .bar-s, .go .legend .note, .go .bar{animation-play-state:running}
+  .js [data-dec]:not(.on){color:transparent}
+  .js .shead p{opacity:0}
+  .js .shead.on p{animation:flash 1s ease-out .45s both}
+  .js .dec::before{transform:scaleX(0)}
+  .js .dec .blk{color:transparent}
+  .js .decs.seen .dec::before{transform:none; transition:transform .9s var(--io) calc(var(--i) * 140ms)}
+  .js .decs.seen .dec .blk{animation:wipe .95s var(--io) both; animation-delay:calc(.3s + var(--i) * 140ms)}
 }
 @supports (animation-timeline:scroll()){
   @media (prefers-reduced-motion:no-preference){
@@ -247,21 +282,21 @@ footer .src{margin-left:auto}
   <section class="hero" aria-labelledby="name">
     <div class="map" id="map"><canvas id="terrain" role="img" aria-label="Contour map of Madison, Wisconsin, with Lake Mendota and Lake Monona"></canvas></div>
     <div class="wrap">
-      <h1 id="name"><span class="mask"><span>H. Gu</span></span></h1>
-      <p class="lede up" style="--i:0">I build small, offline-first tools for maps, photos, and course data.</p>
-      <p class="who up" style="--i:1">Computer Science at UW–Madison, class of 2029.</p>
-      <p class="avail up" style="--i:2">Open to Summer 2027 SWE and ML internships</p>
+      <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0">H</span><span class="l" style="--i:1">.</span> <span class="l" style="--i:2">G</span><span class="l" style="--i:3">u</span></span></h1>
+      <p class="lede"><span class="blk">I build small, offline-first tools for maps, photos, and course data.</span></p>
+      <p class="who" style="--i:0">Computer Science at UW–Madison, class of 2029.</p>
+      <p class="avail" style="--i:1">Open to Summer 2027 SWE and ML internships</p>
       <div class="legend">
         <div class="scale" aria-hidden="true"><div class="bar-s" id="sbar"><i></i><i></i><i></i><i></i></div><div class="ticks"><span>0</span><span id="shalf"></span><span id="sfull"></span></div></div>
-        <span>Madison, Wisconsin<br>Contour interval 5 m</span>
-        <span class="readout" id="readout" aria-live="off"><b id="ro-a">Bascom Hill</b><span id="ro-b"></span></span>
+        <span class="note">Madison, Wisconsin<br>Contour interval 5 m</span>
+        <span class="readout" id="readout" aria-live="off"><b id="ro-a" data-dec="manual">Bascom Hill</b><span id="ro-b" data-dec="manual"></span></span>
       </div>
     </div>
   </section>
 
   <section class="block" id="work" aria-labelledby="work-h">
     <div class="wrap">
-      <div class="shead"><h2 id="work-h">Selected work</h2><p>Built end to end, all still running.</p></div>
+      <div class="shead"><h2 id="work-h"><span data-dec>Selected work</span></h2><p>Built end to end, all still running.</p></div>
       <ul class="index" id="index">
         <li><a href="#route-animator" data-i="0"><span class="nm">route-animator</span><span class="ds">Flies a route over a satellite globe and records the video in the browser</span><span class="kd">Web app</span></a></li>
         <li><a href="#uw-course-lookup" data-i="1"><span class="nm">uw-course-lookup</span><span class="ds">Every UW–Madison course, linked to grade history and instructor ratings</span><span class="kd">Static site</span></a></li>
@@ -276,7 +311,7 @@ footer .src{margin-left:auto}
         <div>
           <article class="case" id="route-animator" data-src="assets/route-animator.jpg" data-pos="center">
             <a class="shot" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy"></a>
-            <h3>route-animator</h3>
+            <h3><span data-dec>route-animator</span></h3>
             <p class="links"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></p>
             <p class="hook">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
             <p class="built">MapLibre GL, Canvas 2D, in-browser video capture</p>
@@ -308,7 +343,7 @@ footer .src{margin-left:auto}
 
           <article class="case" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg">
             <a class="shot" href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/uw-course-lookup.jpg" width="1400" height="875" alt="Course list with Grades and Rate My Professors buttons for each UW–Madison course" loading="lazy"></a>
-            <h3>uw-course-lookup</h3>
+            <h3><span data-dec>uw-course-lookup</span></h3>
             <p class="links"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></p>
             <p class="hook">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
             <p class="built">Static site, zero dependencies, GitHub Pages</p>
@@ -347,7 +382,7 @@ footer .src{margin-left:auto}
 
           <article class="case" id="photo-organizer" data-src="assets/photo-organizer.jpg">
             <a class="shot" href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener" tabindex="-1"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy"></a>
-            <h3>photo-organizer</h3>
+            <h3><span data-dec>photo-organizer</span></h3>
             <p class="links"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
             <p class="hook">Sorts a 310&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
             <p class="built">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. 7,346 files, 0 errors.</p>
@@ -420,7 +455,7 @@ footer .src{margin-left:auto}
 
           <article class="case" id="datamap" data-src="assets/datamap.jpg">
             <a class="shot" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy"></a>
-            <h3>DataMap</h3>
+            <h3><span data-dec>DataMap</span></h3>
             <p class="links"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></p>
             <p class="hook">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
             <p class="built">OKLCH ramps, quantile breaks, no dependencies, Playwright tests</p>
@@ -470,7 +505,7 @@ footer .src{margin-left:auto}
 
           <article class="case" id="geo-spoof" data-src="assets/geo-spoof.jpg">
             <a class="shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof" loading="lazy"></a>
-            <h3>geo-spoof</h3>
+            <h3><span data-dec>geo-spoof</span></h3>
             <p class="links"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener">Source</a></p>
             <p class="hook">Chrome extension that answers the Geolocation API with a point you pick on a map.</p>
             <p class="built">Manifest V3, content-script patching</p>
@@ -503,7 +538,7 @@ footer .src{margin-left:auto}
 
           <article class="case" id="tophat-watch" data-src="assets/tophat-watch.jpg">
             <a class="shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator" loading="lazy"></a>
-            <h3>tophat-watch</h3>
+            <h3><span data-dec>tophat-watch</span></h3>
             <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
             <p class="hook">Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.</p>
             <p class="built">Chrome extension, ntfy push</p>
@@ -535,18 +570,18 @@ footer .src{margin-left:auto}
 
   <section class="block" id="decisions" aria-labelledby="dec-h">
     <div class="wrap">
-      <div class="shead"><h2 id="dec-h">Decisions I'd defend</h2><p>The parts of these projects I actually think about.</p></div>
+      <div class="shead"><h2 id="dec-h"><span data-dec>Decisions I'd defend</span></h2><p>The parts of these projects I actually think about.</p></div>
       <div class="decs">
-        <div class="dec">
-          <h3>Show the gap, don't fake the data.</h3>
+        <div class="dec" style="--i:0">
+          <h3><span class="blk">Show the gap, don't fake the data.</span></h3>
           <p>Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</p>
         </div>
-        <div class="dec">
-          <h3>Aggregates leave the machine; records don't.</h3>
+        <div class="dec" style="--i:1">
+          <h3><span class="blk">Aggregates leave the machine; records don't.</span></h3>
           <p>The course tool is built on a private chat archive. Only anonymized counts are published; the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</p>
         </div>
-        <div class="dec">
-          <h3>Public repos are original work only.</h3>
+        <div class="dec" style="--i:2">
+          <h3><span class="blk">Public repos are original work only.</span></h3>
           <p>Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</p>
         </div>
       </div>
@@ -556,7 +591,7 @@ footer .src{margin-left:auto}
   <section class="block" id="now" aria-labelledby="now-h">
     <div class="wrap two">
       <div>
-        <h2 id="stack-h">Stack</h2>
+        <h2 id="stack-h"><span data-dec>Stack</span></h2>
         <dl class="kv">
           <dt>Languages</dt><dd>Python, Java, JavaScript, SQL / SQLite, Bash</dd>
           <dt>ML</dt><dd>PyTorch, open_clip, HDBSCAN, NumPy</dd>
@@ -565,7 +600,7 @@ footer .src{margin-left:auto}
         </dl>
       </div>
       <div>
-        <h2 id="now-h">Now<span class="when">September 2026</span></h2>
+        <h2 id="now-h"><span data-dec>Now</span><span class="when">September 2026</span></h2>
         <dl class="kv">
           <dt>Applying</dt><dd>Summer 2027 SWE and ML internships.</dd>
           <dt>Drilling</dt><dd>About 150 pattern-based algorithm problems, grouped by technique rather than count.</dd>
@@ -578,9 +613,9 @@ footer .src{margin-left:auto}
 
   <section class="block contact" id="contact" aria-labelledby="contact-h">
     <div class="wrap">
-      <h2 id="contact-h">Contact</h2>
+      <h2 id="contact-h"><span data-dec>Contact</span></h2>
       <p style="margin-top:14px">Email is the fastest way to reach me. Click the address to copy it.</p>
-      <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span>hgu72@wisc.edu</span></button>
+      <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-dec>hgu72@wisc.edu</span></button>
       <p class="sr" id="mail-status" role="status"></p>
       <div class="after"><a href="mailto:hgu72@wisc.edu">Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener">GitHub</a></div>
       <footer>
@@ -615,14 +650,62 @@ themeBtn.onclick = () => {
   syncTheme(); terrain.repaint();
 };
 
+// Text decode: glyphs resolve left to right behind a block cursor.
+// Real characters stay in the DOM; the random glyph is only painted by ::after.
+// Glyphs are drawn from the same class as the real character, so widths stay close
+const POOL = { u: 'ABCDEFGHJKLNPRSTUVXYZ', l: 'abcdefghknopqrsuvxyz', d: '0123456789', s: '/<>=+-' };
+const pick = (c) => { const p = /[A-Z]/.test(c) ? POOL.u : /[a-z]/.test(c) ? POOL.l : /[0-9]/.test(c) ? POOL.d : POOL.s; return p[(Math.random() * p.length) | 0]; };
+const decode = (el, o = {}) => {
+  const text = o.text ?? el._txt ?? el.textContent;
+  el._txt = text; el.classList.add('on');
+  if (reduce) { el.textContent = text; return; }
+  const { step = 34, settle = 240, lead = 70, cursor = false } = o, tok = el._tok = {}, arr = [...text];
+  el.textContent = '';
+  const chars = arr.map(c => { const s = document.createElement('span'); s.className = 'ch w'; s.textContent = c; el.append(s); return s; });
+  const t0 = performance.now(); let last = 0;
+  const tick = (t) => {
+    if (el._tok !== tok) return;
+    const e = t - t0, shuffle = t - last > 50; if (shuffle) last = t;
+    let done = true;
+    for (let i = 0; i < chars.length; i++) {
+      const s = chars[i], a = i * step;
+      if (e >= a + settle || arr[i] === ' ') { if (s.className !== 'ch') s.className = 'ch'; continue; }
+      done = false;
+      if (e < a) continue;
+      s.className = e < a + lead ? 'ch x k' : 'ch x';
+      if (shuffle || !s.dataset.g) s.dataset.g = pick(arr[i]);
+    }
+    if (!done) { requestAnimationFrame(tick); return; }
+    el.textContent = text; el._tok = null;
+    if (cursor) { const c = document.createElement('span'); c.className = 'cur'; c.setAttribute('aria-hidden', 'true'); el.append(c); setTimeout(() => c.remove(), 820); }
+  };
+  requestAnimationFrame(tick);
+};
+
+// Headings decode once as they come into view
+const decIO = new IntersectionObserver((es) => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  decIO.unobserve(e.target);
+  const sh = e.target.closest('.shead'); if (sh) sh.classList.add('on');
+  decode(e.target, { cursor: !e.target.closest('h3') });
+}), { threshold: .9 });
+document.querySelectorAll('[data-dec]:not([data-dec="manual"])').forEach(el => decIO.observe(el));
+const decsIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); decsIO.unobserve(e.target); } }), { threshold: .3 });
+document.querySelectorAll('.decs').forEach(d => decsIO.observe(d));
+
+// Quick decode on hover for nav links and project names
+if (fine) {
+  document.querySelectorAll('.nav a').forEach(a => a.addEventListener('pointerenter', () => { if (!a._tok) decode(a, { step: 18, settle: 120, lead: 40 }); }));
+  document.querySelectorAll('.index a').forEach(a => { const n = a.querySelector('.nm'); a.addEventListener('pointerenter', () => { if (!n._tok) decode(n, { step: 16, settle: 130, lead: 40 }); }); });
+}
+
 // Copy email
 const mail = document.getElementById('mail'), mailTxt = mail.firstElementChild, status = document.getElementById('mail-status');
 mail.onclick = async () => {
   const addr = mail.dataset.mail;
   try { await navigator.clipboard.writeText(addr); } catch { location.href = 'mailto:' + addr; return; }
-  const swap = (t) => { mail.classList.add('swap'); setTimeout(() => { mailTxt.textContent = t; mail.classList.remove('swap'); }, 180); };
-  swap('Copied'); status.textContent = 'Email address copied';
-  clearTimeout(mail.t); mail.t = setTimeout(() => { swap(addr); status.textContent = ''; }, 1600);
+  decode(mailTxt, { text: 'Copied', step: 40, settle: 160 }); status.textContent = 'Email address copied';
+  clearTimeout(mail.t); mail.t = setTimeout(() => { decode(mailTxt, { text: addr, step: 22, settle: 160 }); status.textContent = ''; }, 1600);
 };
 
 // Header: solid after hero, hide on scroll down
@@ -680,8 +763,11 @@ const plate = document.getElementById('plate');
   });
   const capT = document.getElementById('cap-t'), ticks = [...document.querySelectorAll('#ticks i')];
   const caption = (i) => {
-    capT.classList.add('swap');
-    setTimeout(() => { capT.innerHTML = `<b>${i + 1}/${cases.length}</b>` + cases[i].querySelector('.shot img').alt; capT.classList.remove('swap'); }, 160);
+    capT.classList.add('out');
+    setTimeout(() => {
+      capT.innerHTML = `<b>${i + 1}/${cases.length}</b>` + cases[i].querySelector('.shot img').alt;
+      capT.classList.replace('out', 'pre'); capT.offsetWidth; capT.classList.remove('pre');
+    }, 380);
     ticks.forEach((t, k) => t.classList.toggle('on', k === i));
   };
   let cur = -1, py = scrollY;
@@ -778,11 +864,14 @@ const terrain = (() => {
   let boxes = [];
   const measure = () => {
     const c = cv.getBoundingClientRect();
+    // Measure the name at its final width, not mid-animation
+    root.classList.add('measuring');
     boxes = [...hero.querySelectorAll('.mask, .lede, .who, .avail, .legend')].map(el => {
-      const rg = document.createRange(); rg.selectNodeContents(el.classList.contains('mask') ? el.firstElementChild : el);
+      const rg = document.createRange(); rg.selectNodeContents(el);
       const t = rg.getBoundingClientRect(), b = el.getBoundingClientRect();
       return { l: t.left - c.left - 16, r: t.right - c.left + 16, t: b.top - c.top - 12, b: b.bottom - c.top + 12 };
     });
+    root.classList.remove('measuring');
   };
   const blocked = (l, t, r, b) => boxes.some(q => l < q.r && r > q.l && t < q.b && b > q.t);
 
@@ -882,6 +971,7 @@ const terrain = (() => {
 
   const read = (i, j, name) => {
     const e = at(i, j), [lat, lon] = toLatLon(i, j);
+    roA._tok = roB._tok = null; roA.classList.add('on'); roB.classList.add('on');
     roA.textContent = name || (e < SHORE + .6 ? 'Lake surface' : `Elevation ${Math.round(e)} m`);
     roB.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
     return e;
@@ -926,6 +1016,7 @@ const terrain = (() => {
     layout(); ready = true; setTimeout(paintBg, 60);
     const [fi, fj] = toGrid(FOCUS.lat, FOCUS.lon); read(fi, fj, FOCUS.name);
     root.classList.add('go'); intro();
+    setTimeout(() => { decode(roA, { step: 30 }); decode(roB, { step: 14, settle: 200 }); }, 1350);
   };
   img.onerror = () => root.classList.add('go');
   img.src = DEM;

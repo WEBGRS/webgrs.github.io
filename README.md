@@ -18,9 +18,10 @@ One `index.html` plus project screenshots in `assets/`; no framework, trackers, 
 - **Work index:** hovering a project shows its screenshot beside the cursor, following it with frame-rate independent damping.
 - **Case studies:** on wide screens the screenshot stays pinned while the text scrolls, and wipes to the next project. Each project has a small figure of how it works, drawn from its own code: route-animator's altitude profile, DataMap's actual color ramps, geo-spoof's two-world message path.
 - **Background:** the same terrain continues behind the page as a faint sheet that scrolls slower than the content.
+- **Type:** the name rises letter by letter while Archivo's width axis opens from 62% to 125%. Headings decode from random glyphs of the same case behind a block cursor, the intro line is revealed by a sweeping block, and small print flickers on. The real text stays in the DOM throughout, so screen readers never hear the glyphs.
 - Motion respects `prefers-reduced-motion`.
 
-Motion patterns borrowed from Olivier Larose's [awwwards-landing-page](https://github.com/olivierlarose/awwwards-landing-page) (hover preview), [Lenis](https://github.com/darkroomengineering/lenis) (the `damp` function), Emil Kowalski's [animation tips](https://emilkowal.ski/ui/7-practical-animation-tips), and Vercel's [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines).
+Motion patterns borrowed from Olivier Larose's [awwwards-landing-page](https://github.com/olivierlarose/awwwards-landing-page) (hover preview), [Lenis](https://github.com/darkroomengineering/lenis) (the `damp` function), Emil Kowalski's [animation tips](https://emilkowal.ski/ui/7-practical-animation-tips), and Vercel's [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines). The decode, flicker and block-wipe type effects take cues from the [Arknights: Endfield](https://endfield.hypergryph.com/) site.
 
 ## Projects linked
 
