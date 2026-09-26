@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>H. Gu, CS at UW–Madison</title>
 <meta name="description" content="CS undergraduate at UW–Madison building offline-first tools for maps, photos, and course data. Open to Summer 2027 SWE / ML internships.">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <meta property="og:title" content="H. Gu, CS at UW–Madison">
 <meta property="og:description" content="Offline-first tools for maps, photos, and course data.">
 <meta property="og:type" content="website">
@@ -18,22 +18,15 @@
 
 <style>
 :root{
-  --paper:#F5F7F4; --ink:#16202A; --muted:#56626E; --faint:#8A949D; --rule:#D8DEE1;
-  --accent:#1E5AA8; --signal:#2E7D55; --plate:#E8ECEE;
+  --paper:#FBFCFB; --ink:#16202A; --muted:#56626E; --faint:#8A949D; --rule:#DCE1E4; --edge:#B9C2C9;
+  --accent:#1E5AA8; --signal:#2E7D55; --plate:#EDF0F2;
   --line:22,32,42; --water:30,90,168;
   --font:"Archivo",-apple-system,"Segoe UI",Roboto,sans-serif;
   --out:cubic-bezier(.23,1,.32,1); --io:cubic-bezier(.76,0,.24,1);
   --gut:clamp(16px,4vw,56px);
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --paper:#0F161D; --ink:#E2E8ED; --muted:#98A5B0; --faint:#66727D; --rule:#24303B;
-    --accent:#8AB8EE; --signal:#6FC495; --plate:#18222C;
-    --line:226,232,237; --water:138,184,238;
-  }
-}
 :root[data-theme="dark"]{
-  --paper:#0F161D; --ink:#E2E8ED; --muted:#98A5B0; --faint:#66727D; --rule:#24303B;
+  --paper:#0F161D; --ink:#E2E8ED; --muted:#98A5B0; --faint:#66727D; --rule:#24303B; --edge:#3A4754;
   --accent:#8AB8EE; --signal:#6FC495; --plate:#18222C;
   --line:226,232,237; --water:138,184,238;
 }
@@ -65,7 +58,7 @@ a:hover{text-decoration-thickness:2px}
 :root[data-dark="1"] .tog svg{transform:rotate(180deg)}
 
 /* hero */
-.hero{position:relative; overflow:clip; min-height:max(640px,100svh); display:flex; flex-direction:column; justify-content:flex-end; padding:96px 0 0}
+.hero{position:relative; overflow:clip; background:var(--paper); min-height:max(640px,100svh); display:flex; flex-direction:column; justify-content:flex-end; padding:96px 0 0}
 .map{position:absolute; inset:0; overflow:hidden}
 .map canvas{display:block; width:100%; height:100%}
 .map::after{content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(120% 70% at 0% 100%, var(--paper) 18%, transparent 62%)}
@@ -120,7 +113,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 @media (hover:none),(pointer:coarse){ .peek{display:none} }
 
 /* case studies */
-.cases{display:grid; grid-template-columns:1fr; gap:0; margin-top:clamp(40px,6vw,80px)}
+.cases{display:grid; grid-template-columns:minmax(0,1fr); gap:0; margin-top:clamp(40px,6vw,80px)}
 .stage{display:none}
 .case{padding:0 0 72px}
 .case .shot{display:block; margin:0 0 22px; aspect-ratio:16/10; border:1px solid var(--rule); border-radius:6px; overflow:hidden; background:var(--plate)}
@@ -134,11 +127,47 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .case li::marker{color:var(--faint)}
 @media (min-width:1024px){
   .js .cases{grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:72px}
-  .js .stage{display:block; position:sticky; top:0; height:100vh; align-self:start}
+  .js .stage{display:block; position:sticky; top:0; height:100vh; align-self:start; container-type:inline-size}
   .js .case .shot{display:none}
-  .js .case{min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding:0}
+  .js .case{min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:48px 0}
 }
-.plate{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); aspect-ratio:16/10; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--plate)}
+.plate{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); aspect-ratio:16/10; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--plate); box-shadow:0 30px 70px -40px rgba(20,35,50,.35)}
+.cap{position:absolute; left:0; right:0; top:calc(50% + 31.25cqw + 16px); display:flex; align-items:flex-start; gap:24px; font-size:.86rem; color:var(--muted)}
+.cap-t{flex:1; min-width:0; transition:opacity .3s var(--out)}
+.cap-t b{color:var(--ink); font-weight:600; margin-right:8px; font-variant-numeric:tabular-nums}
+.cap-t.swap{opacity:0}
+.ticks{display:flex; gap:5px; padding-top:7px}
+.ticks i{width:14px; height:3px; border-radius:2px; background:var(--rule); transition:width .5s var(--out), background-color .3s}
+.ticks i.on{width:30px; background:var(--accent)}
+
+/* figures */
+.fig{margin:32px 0 0; max-width:520px}
+.fig svg{display:block; width:100%; height:auto; overflow:visible}
+@media (max-width:520px){ .fig{overflow-x:auto; scrollbar-width:thin} .fig svg{min-width:440px; margin-bottom:6px} }
+.fig figcaption{margin-top:14px; font-size:.86rem; line-height:1.5; color:var(--muted); max-width:52ch}
+.fig text{font-family:var(--font); font-size:14px; fill:var(--muted)}
+.fig text.k{fill:var(--ink); font-weight:560}
+.fig text.s{font-size:12px}
+.fig text.a{fill:var(--accent)}
+.fig .n rect{fill:var(--paper); stroke:var(--edge)}
+.fig .n.acc rect{stroke:var(--accent); stroke-width:1.5}
+.fig .e{fill:none; stroke:var(--edge); stroke-width:1.3; stroke-linejoin:round}
+.fig .e.acc{stroke:var(--accent); stroke-width:1.8}
+.fig .dash{stroke-dasharray:4 4}
+.fig .tip{fill:var(--edge)}
+.fig .tip.acc{fill:var(--accent)}
+.fig .dot{fill:var(--ink); fill-opacity:.72}
+.fig .dot.faint{fill:var(--faint)}
+.fig figcaption code{font:.94em ui-monospace,Consolas,monospace; color:var(--ink)}
+@media (prefers-reduced-motion:no-preference){
+  .js .fig .draw{stroke-dasharray:1 1; stroke-dashoffset:1; transition:stroke-dashoffset 1.2s var(--out); transition-delay:calc(var(--d,0) * 110ms)}
+  .js .fig .n{opacity:0; transition:opacity .55s var(--out); transition-delay:calc(var(--d,0) * 110ms)}
+  .js .fig.seen .draw{stroke-dashoffset:0}
+  .js .fig.seen .n{opacity:1}
+}
+
+/* background sheet */
+#bgmap{position:fixed; left:0; top:0; z-index:-1; pointer-events:none; will-change:transform}
 .plate figure{position:absolute; inset:0; margin:0; clip-path:inset(100% 0 0 0); transition:clip-path .9s var(--io)}
 .plate figure.from-top{clip-path:inset(0 0 100% 0)}
 .plate figure.on{clip-path:inset(0); z-index:2}
@@ -197,6 +226,7 @@ footer .src{margin-left:auto}
 </style>
 </head>
 <body id="top">
+<canvas id="bgmap" aria-hidden="true"></canvas>
 
 <header class="bar" id="bar">
   <div class="wrap">
@@ -242,7 +272,7 @@ footer .src{margin-left:auto}
       </ul>
 
       <div class="cases" id="cases">
-        <div class="stage" aria-hidden="true"><div class="plate" id="plate"></div></div>
+        <div class="stage" aria-hidden="true"><div class="plate" id="plate"></div><div class="cap"><span class="cap-t" id="cap-t"></span><span class="ticks" id="ticks"><i></i><i></i><i></i><i></i><i></i><i></i></span></div></div>
         <div>
           <article class="case" id="route-animator" data-src="assets/route-animator.jpg" data-pos="center">
             <a class="shot" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy"></a>
@@ -255,6 +285,25 @@ footer .src{margin-left:auto}
               <li>Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</li>
               <li>Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</li>
             </ul>
+            <figure class="fig"><!-- fig:route-animator -->
+<svg viewBox="0 0 520 230" role="img" aria-label="Altitude over one flying leg, keyed to time versus keyed to eased distance">
+<path class="e draw" style="--d:0" d="M58.0 180.0 L512.0 180.0" pathLength="1"/>
+<text class="s n" style="--d:0" x="48.0" y="56.0" text-anchor="end">cruise</text>
+<text class="s n" style="--d:0" x="48.0" y="184.0" text-anchor="end">ground</text>
+<text class="s n" style="--d:0" x="58.0" y="206.0" text-anchor="start">leg start</text>
+<text class="s n" style="--d:0" x="512.0" y="206.0" text-anchor="end">leg end</text>
+<path class="e draw" style="--d:2" d="M58.0 180.0 L59.1 180.0 L60.3 180.0 L61.4 180.0 L62.5 180.0 L63.7 180.0 L64.8 180.0 L65.9 180.0 L67.1 180.0 L68.2 180.0 L69.3 180.0 L70.5 180.0 L71.6 180.0 L72.8 180.0 L73.9 180.0 L75.0 180.0 L76.2 180.0 L77.3 180.0 L78.4 180.0 L79.6 180.0 L80.7 180.0 L81.8 180.0 L83.0 180.0 L84.1 180.0 L85.2 180.0 L86.4 180.0 L87.5 180.0 L88.6 180.0 L89.8 180.0 L90.9 180.0 L92.0 180.0 L93.2 180.0 L94.3 180.0 L95.5 180.0 L96.6 180.0 L97.7 180.0 L98.9 180.0 L100.0 180.0 L101.1 180.0 L102.3 180.0 L103.4 180.0 L104.5 180.0 L105.7 180.0 L106.8 180.0 L107.9 180.0 L109.1 180.0 L110.2 180.0 L111.3 180.0 L112.5 180.0 L113.6 180.0 L114.8 180.0 L115.9 180.0 L117.0 180.0 L118.2 180.0 L119.3 180.0 L120.4 180.0 L121.6 180.0 L122.7 180.0 L123.8 180.0 L125.0 180.0 L126.1 180.0 L127.2 180.0 L128.4 180.0 L129.5 180.0 L130.6 180.0 L131.8 180.0 L132.9 180.0 L134.0 180.0 L135.2 180.0 L136.3 180.0 L137.4 180.0 L138.6 180.0 L139.7 179.9 L140.9 179.9 L142.0 179.7 L143.1 179.6 L144.3 179.4 L145.4 179.1 L146.5 178.8 L147.7 178.5 L148.8 178.1 L149.9 177.7 L151.1 177.2 L152.2 176.6 L153.3 176.1 L154.5 175.4 L155.6 174.7 L156.7 174.0 L157.9 173.2 L159.0 172.3 L160.2 171.4 L161.3 170.5 L162.4 169.5 L163.6 168.4 L164.7 167.2 L165.8 166.0 L167.0 164.8 L168.1 163.5 L169.2 162.1 L170.4 160.7 L171.5 159.2 L172.6 157.6 L173.8 156.0 L174.9 154.3 L176.0 152.6 L177.2 150.8 L178.3 149.0 L179.4 147.1 L180.6 145.1 L181.7 143.1 L182.9 141.1 L184.0 139.0 L185.1 136.8 L186.3 134.6 L187.4 132.4 L188.5 130.1 L189.7 127.8 L190.8 125.4 L191.9 123.0 L193.1 120.5 L194.2 118.1 L195.3 115.6 L196.5 113.0 L197.6 110.5 L198.7 107.9 L199.9 105.4 L201.0 102.8 L202.1 100.2 L203.3 97.6 L204.4 95.0 L205.6 92.5 L206.7 89.9 L207.8 87.4 L209.0 84.8 L210.1 82.4 L211.2 79.9 L212.4 77.5 L213.5 75.2 L214.6 72.9 L215.8 70.7 L216.9 68.6 L218.0 66.5 L219.2 64.6 L220.3 62.7 L221.4 61.0 L222.6 59.4 L223.7 57.9 L224.8 56.5 L226.0 55.3 L227.1 54.3 L228.2 53.5 L229.4 52.8 L230.5 52.3 L231.7 52.1 L232.8 52.0 L233.9 52.0 L235.1 52.0 L236.2 52.0 L237.3 52.0 L238.5 52.0 L239.6 52.0 L240.7 52.0 L241.9 52.0 L243.0 52.0 L244.1 52.0 L245.3 52.0 L246.4 52.0 L247.5 52.0 L248.7 52.0 L249.8 52.0 L250.9 52.0 L252.1 52.0 L253.2 52.0 L254.4 52.0 L255.5 52.0 L256.6 52.0 L257.8 52.0 L258.9 52.0 L260.0 52.0 L261.2 52.0 L262.3 52.0 L263.4 52.0 L264.6 52.0 L265.7 52.0 L266.8 52.0 L268.0 52.0 L269.1 52.0 L270.2 52.0 L271.4 52.0 L272.5 52.0 L273.6 52.0 L274.8 52.0 L275.9 52.0 L277.1 52.0 L278.2 52.0 L279.3 52.0 L280.5 52.0 L281.6 52.0 L282.7 52.0 L283.9 52.0 L285.0 52.0 L286.1 52.0 L287.3 52.0 L288.4 52.0 L289.5 52.0 L290.7 52.0 L291.8 52.0 L292.9 52.0 L294.1 52.0 L295.2 52.0 L296.4 52.0 L297.5 52.0 L298.6 52.0 L299.8 52.0 L300.9 52.0 L302.0 52.0 L303.2 52.0 L304.3 52.0 L305.4 52.0 L306.6 52.0 L307.7 52.0 L308.8 52.0 L310.0 52.0 L311.1 52.0 L312.2 52.0 L313.4 52.0 L314.5 52.0 L315.6 52.0 L316.8 52.0 L317.9 52.0 L319.0 52.0 L320.2 52.0 L321.3 52.0 L322.5 52.0 L323.6 52.0 L324.7 52.0 L325.9 52.0 L327.0 52.0 L328.1 52.0 L329.3 52.0 L330.4 52.0 L331.5 52.0 L332.7 52.0 L333.8 52.0 L334.9 52.0 L336.1 52.0 L337.2 52.0 L338.3 52.1 L339.5 52.3 L340.6 52.8 L341.8 53.5 L342.9 54.3 L344.0 55.3 L345.2 56.5 L346.3 57.9 L347.4 59.4 L348.6 61.0 L349.7 62.7 L350.8 64.6 L352.0 66.5 L353.1 68.6 L354.2 70.7 L355.4 72.9 L356.5 75.2 L357.6 77.5 L358.8 79.9 L359.9 82.4 L361.0 84.8 L362.2 87.4 L363.3 89.9 L364.5 92.5 L365.6 95.0 L366.7 97.6 L367.9 100.2 L369.0 102.8 L370.1 105.4 L371.3 107.9 L372.4 110.5 L373.5 113.0 L374.7 115.6 L375.8 118.1 L376.9 120.5 L378.1 123.0 L379.2 125.4 L380.3 127.8 L381.5 130.1 L382.6 132.4 L383.7 134.6 L384.9 136.8 L386.0 139.0 L387.1 141.1 L388.3 143.1 L389.4 145.1 L390.6 147.1 L391.7 149.0 L392.8 150.8 L394.0 152.6 L395.1 154.3 L396.2 156.0 L397.4 157.6 L398.5 159.2 L399.6 160.7 L400.8 162.1 L401.9 163.5 L403.0 164.8 L404.2 166.0 L405.3 167.2 L406.4 168.4 L407.6 169.5 L408.7 170.5 L409.9 171.4 L411.0 172.3 L412.1 173.2 L413.3 174.0 L414.4 174.7 L415.5 175.4 L416.7 176.1 L417.8 176.6 L418.9 177.2 L420.1 177.7 L421.2 178.1 L422.3 178.5 L423.5 178.8 L424.6 179.1 L425.7 179.4 L426.9 179.6 L428.0 179.7 L429.1 179.9 L430.3 179.9 L431.4 180.0 L432.5 180.0 L433.7 180.0 L434.8 180.0 L436.0 180.0 L437.1 180.0 L438.2 180.0 L439.4 180.0 L440.5 180.0 L441.6 180.0 L442.8 180.0 L443.9 180.0 L445.0 180.0 L446.2 180.0 L447.3 180.0 L448.4 180.0 L449.6 180.0 L450.7 180.0 L451.8 180.0 L453.0 180.0 L454.1 180.0 L455.2 180.0 L456.4 180.0 L457.5 180.0 L458.7 180.0 L459.8 180.0 L460.9 180.0 L462.1 180.0 L463.2 180.0 L464.3 180.0 L465.5 180.0 L466.6 180.0 L467.7 180.0 L468.9 180.0 L470.0 180.0 L471.1 180.0 L472.3 180.0 L473.4 180.0 L474.5 180.0 L475.7 180.0 L476.8 180.0 L478.0 180.0 L479.1 180.0 L480.2 180.0 L481.4 180.0 L482.5 180.0 L483.6 180.0 L484.8 180.0 L485.9 180.0 L487.0 180.0 L488.2 180.0 L489.3 180.0 L490.4 180.0 L491.6 180.0 L492.7 180.0 L493.8 180.0 L495.0 180.0 L496.1 180.0 L497.2 180.0 L498.4 180.0 L499.5 180.0 L500.6 180.0 L501.8 180.0 L502.9 180.0 L504.1 180.0 L505.2 180.0 L506.3 180.0 L507.5 180.0 L508.6 180.0 L509.7 180.0 L510.9 180.0 L512.0 180.0" pathLength="1"/>
+<path class="e acc draw" style="--d:1" d="M58.0 180.0 L59.1 180.0 L60.3 180.0 L61.4 180.0 L62.5 180.0 L63.7 180.0 L64.8 180.0 L65.9 180.0 L67.1 180.0 L68.2 180.0 L69.3 180.0 L70.5 180.0 L71.6 180.0 L72.8 180.0 L73.9 180.0 L75.0 180.0 L76.2 180.0 L77.3 180.0 L78.4 180.0 L79.6 180.0 L80.7 180.0 L81.8 180.0 L83.0 179.8 L84.1 179.6 L85.2 179.3 L86.4 178.9 L87.5 178.4 L88.6 177.9 L89.8 177.3 L90.9 176.6 L92.0 175.8 L93.2 174.9 L94.3 174.0 L95.5 173.1 L96.6 172.0 L97.7 170.9 L98.9 169.7 L100.0 168.5 L101.1 167.2 L102.3 165.9 L103.4 164.5 L104.5 163.0 L105.7 161.5 L106.8 160.0 L107.9 158.4 L109.1 156.8 L110.2 155.1 L111.3 153.4 L112.5 151.6 L113.6 149.9 L114.8 148.0 L115.9 146.2 L117.0 144.3 L118.2 142.4 L119.3 140.5 L120.4 138.5 L121.6 136.5 L122.7 134.5 L123.8 132.5 L125.0 130.5 L126.1 128.5 L127.2 126.4 L128.4 124.3 L129.5 122.3 L130.6 120.2 L131.8 118.1 L132.9 116.0 L134.0 113.9 L135.2 111.8 L136.3 109.7 L137.4 107.7 L138.6 105.6 L139.7 103.5 L140.9 101.5 L142.0 99.5 L143.1 97.5 L144.3 95.5 L145.4 93.5 L146.5 91.5 L147.7 89.6 L148.8 87.7 L149.9 85.8 L151.1 84.0 L152.2 82.1 L153.3 80.4 L154.5 78.6 L155.6 76.9 L156.7 75.2 L157.9 73.6 L159.0 72.0 L160.2 70.5 L161.3 69.0 L162.4 67.5 L163.6 66.1 L164.7 64.8 L165.8 63.5 L167.0 62.3 L168.1 61.1 L169.2 60.0 L170.4 58.9 L171.5 58.0 L172.6 57.1 L173.8 56.2 L174.9 55.4 L176.0 54.7 L177.2 54.1 L178.3 53.6 L179.4 53.1 L180.6 52.7 L181.7 52.4 L182.9 52.2 L184.0 52.0 L185.1 52.0 L186.3 52.0 L187.4 52.0 L188.5 52.0 L189.7 52.0 L190.8 52.0 L191.9 52.0 L193.1 52.0 L194.2 52.0 L195.3 52.0 L196.5 52.0 L197.6 52.0 L198.7 52.0 L199.9 52.0 L201.0 52.0 L202.1 52.0 L203.3 52.0 L204.4 52.0 L205.6 52.0 L206.7 52.0 L207.8 52.0 L209.0 52.0 L210.1 52.0 L211.2 52.0 L212.4 52.0 L213.5 52.0 L214.6 52.0 L215.8 52.0 L216.9 52.0 L218.0 52.0 L219.2 52.0 L220.3 52.0 L221.4 52.0 L222.6 52.0 L223.7 52.0 L224.8 52.0 L226.0 52.0 L227.1 52.0 L228.2 52.0 L229.4 52.0 L230.5 52.0 L231.7 52.0 L232.8 52.0 L233.9 52.0 L235.1 52.0 L236.2 52.0 L237.3 52.0 L238.5 52.0 L239.6 52.0 L240.7 52.0 L241.9 52.0 L243.0 52.0 L244.1 52.0 L245.3 52.0 L246.4 52.0 L247.5 52.0 L248.7 52.0 L249.8 52.0 L250.9 52.0 L252.1 52.0 L253.2 52.0 L254.4 52.0 L255.5 52.0 L256.6 52.0 L257.8 52.0 L258.9 52.0 L260.0 52.0 L261.2 52.0 L262.3 52.0 L263.4 52.0 L264.6 52.0 L265.7 52.0 L266.8 52.0 L268.0 52.0 L269.1 52.0 L270.2 52.0 L271.4 52.0 L272.5 52.0 L273.6 52.0 L274.8 52.0 L275.9 52.0 L277.1 52.0 L278.2 52.0 L279.3 52.0 L280.5 52.0 L281.6 52.0 L282.7 52.0 L283.9 52.0 L285.0 52.0 L286.1 52.0 L287.3 52.0 L288.4 52.0 L289.5 52.0 L290.7 52.0 L291.8 52.0 L292.9 52.0 L294.1 52.0 L295.2 52.0 L296.4 52.0 L297.5 52.0 L298.6 52.0 L299.8 52.0 L300.9 52.0 L302.0 52.0 L303.2 52.0 L304.3 52.0 L305.4 52.0 L306.6 52.0 L307.7 52.0 L308.8 52.0 L310.0 52.0 L311.1 52.0 L312.2 52.0 L313.4 52.0 L314.5 52.0 L315.6 52.0 L316.8 52.0 L317.9 52.0 L319.0 52.0 L320.2 52.0 L321.3 52.0 L322.5 52.0 L323.6 52.0 L324.7 52.0 L325.9 52.0 L327.0 52.0 L328.1 52.0 L329.3 52.0 L330.4 52.0 L331.5 52.0 L332.7 52.0 L333.8 52.0 L334.9 52.0 L336.1 52.0 L337.2 52.0 L338.3 52.0 L339.5 52.0 L340.6 52.0 L341.8 52.0 L342.9 52.0 L344.0 52.0 L345.2 52.0 L346.3 52.0 L347.4 52.0 L348.6 52.0 L349.7 52.0 L350.8 52.0 L352.0 52.0 L353.1 52.0 L354.2 52.0 L355.4 52.0 L356.5 52.0 L357.6 52.0 L358.8 52.0 L359.9 52.0 L361.0 52.0 L362.2 52.0 L363.3 52.0 L364.5 52.0 L365.6 52.0 L366.7 52.0 L367.9 52.0 L369.0 52.0 L370.1 52.0 L371.3 52.0 L372.4 52.0 L373.5 52.0 L374.7 52.0 L375.8 52.0 L376.9 52.0 L378.1 52.0 L379.2 52.0 L380.3 52.0 L381.5 52.0 L382.6 52.0 L383.7 52.0 L384.9 52.0 L386.0 52.0 L387.1 52.2 L388.3 52.4 L389.4 52.7 L390.6 53.1 L391.7 53.6 L392.8 54.1 L394.0 54.7 L395.1 55.4 L396.2 56.2 L397.4 57.1 L398.5 58.0 L399.6 58.9 L400.8 60.0 L401.9 61.1 L403.0 62.3 L404.2 63.5 L405.3 64.8 L406.4 66.1 L407.6 67.5 L408.7 69.0 L409.9 70.5 L411.0 72.0 L412.1 73.6 L413.3 75.2 L414.4 76.9 L415.5 78.6 L416.7 80.4 L417.8 82.1 L418.9 84.0 L420.1 85.8 L421.2 87.7 L422.3 89.6 L423.5 91.5 L424.6 93.5 L425.7 95.5 L426.9 97.5 L428.0 99.5 L429.1 101.5 L430.3 103.5 L431.4 105.6 L432.5 107.7 L433.7 109.7 L434.8 111.8 L436.0 113.9 L437.1 116.0 L438.2 118.1 L439.4 120.2 L440.5 122.3 L441.6 124.3 L442.8 126.4 L443.9 128.5 L445.0 130.5 L446.2 132.5 L447.3 134.5 L448.4 136.5 L449.6 138.5 L450.7 140.5 L451.8 142.4 L453.0 144.3 L454.1 146.2 L455.2 148.0 L456.4 149.9 L457.5 151.6 L458.7 153.4 L459.8 155.1 L460.9 156.8 L462.1 158.4 L463.2 160.0 L464.3 161.5 L465.5 163.0 L466.6 164.5 L467.7 165.9 L468.9 167.2 L470.0 168.5 L471.1 169.7 L472.3 170.9 L473.4 172.0 L474.5 173.1 L475.7 174.0 L476.8 174.9 L478.0 175.8 L479.1 176.6 L480.2 177.3 L481.4 177.9 L482.5 178.4 L483.6 178.9 L484.8 179.3 L485.9 179.6 L487.0 179.8 L488.2 180.0 L489.3 180.0 L490.4 180.0 L491.6 180.0 L492.7 180.0 L493.8 180.0 L495.0 180.0 L496.1 180.0 L497.2 180.0 L498.4 180.0 L499.5 180.0 L500.6 180.0 L501.8 180.0 L502.9 180.0 L504.1 180.0 L505.2 180.0 L506.3 180.0 L507.5 180.0 L508.6 180.0 L509.7 180.0 L510.9 180.0 L512.0 180.0" pathLength="1"/>
+<path class="e dash n acc" style="--d:6" d="M185.1 46 L185.1 180"/>
+<text class="k a n" style="--d:6" x="185.1" y="40.0" text-anchor="middle">28%</text>
+<path class="e dash n" style="--d:6" d="M232.4 46 L232.4 180"/>
+<text class="k n" style="--d:6" x="232.4" y="40.0" text-anchor="middle">38%</text>
+<path class="e acc n" style="--d:7" d="M300 14 L324 14"/>
+<text class="s n" style="--d:7" x="332.0" y="18.0" text-anchor="start">keyed to time (shipped)</text>
+<path class="e n" style="--d:7" d="M300 34 L324 34"/>
+<text class="s n" style="--d:7" x="332.0" y="38.0" text-anchor="start">keyed to eased distance</text>
+</svg>
+<!-- /fig:route-animator --><figcaption>Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%.</figcaption></figure>
           </article>
 
           <article class="case" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg">
@@ -268,6 +317,32 @@ footer .src{margin-left:auto}
               <li>Seeded with anonymized course-mention counts mined from a student chat archive. Aggregates ship; records never do.</li>
               <li>No backend to keep alive: flat JSON, served from a CDN edge, loads instantly on a phone.</li>
             </ul>
+            <figure class="fig"><!-- fig:uw-course-lookup -->
+<svg viewBox="0 0 520 206" role="img" aria-label="Build pipeline from chat counts and public APIs to a static page">
+<g class="n" style="--d:0"><rect x="104" y="8" width="124" height="34" rx="6"/><text x="117" y="30" class="k">MadGrades API</text></g>
+<g class="n" style="--d:0"><rect x="254" y="8" width="154" height="34" rx="6"/><text x="267" y="30" class="k">Course Search API</text></g>
+<g class="n" style="--d:1"><rect x="0" y="82" width="108" height="34" rx="6"/><text x="13" y="104" class="k">chat counts</text></g>
+<g class="n" style="--d:2"><rect x="146" y="82" width="108" height="34" rx="6"/><text x="159" y="104" class="k">build_db.py</text></g>
+<g class="n" style="--d:4"><rect x="300" y="82" width="116" height="34" rx="6"/><text x="313" y="104" class="k">uwcourses.db</text></g>
+<g class="n" style="--d:5"><rect x="270" y="158" width="124" height="34" rx="6"/><text x="283" y="180" class="k">build_site.py</text></g>
+<g class="n acc" style="--d:7"><rect x="412" y="158" width="108" height="34" rx="6"/><text x="425" y="180" class="k">static page</text></g>
+<path class="e draw" style="--d:1" d="M170.0 42.0 L170.0 82.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M170.0 82.0 L167.0 75.7 L173.0 75.7Z"/>
+<path class="e draw" style="--d:1" d="M330.0 42.0 L330.0 62.0 L230.0 62.0 L230.0 82.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M230.0 82.0 L227.0 75.7 L233.0 75.7Z"/>
+<path class="e draw" style="--d:2" d="M108.0 99.0 L146.0 99.0" pathLength="1"/>
+<path class="tip n" style="--d:6" d="M146.0 99.0 L139.7 102.0 L139.7 96.0Z"/>
+<path class="e draw" style="--d:3" d="M254.5 99.0 L300.0 99.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M300.0 99.0 L293.7 102.0 L293.7 96.0Z"/>
+<path class="e draw" style="--d:5" d="M340.0 116.0 L340.0 158.0" pathLength="1"/>
+<path class="tip n" style="--d:9" d="M340.0 158.0 L337.0 151.7 L343.0 151.7Z"/>
+<path class="e acc draw" style="--d:6" d="M394.0 175.0 L412.0 175.0" pathLength="1"/>
+<path class="tip n acc" style="--d:10" d="M412.0 175.0 L405.7 178.0 L405.7 172.0Z"/>
+<path class="e dash n" style="--d:4" d="M200 116 L200 150"/>
+<text class="s n" style="--d:0" x="146.0" y="170.0" text-anchor="start">26 codes that are</text>
+<text class="s n" style="--d:0" x="146.0" y="188.0" text-anchor="start">not real courses</text>
+</svg>
+<!-- /fig:uw-course-lookup --><figcaption>Build pipeline. Course codes from the chat archive are checked against the real catalog before anything ships; the database holds 290 courses and 6,847 instructors.</figcaption></figure>
           </article>
 
           <article class="case" id="photo-organizer" data-src="assets/photo-organizer.jpg">
@@ -282,6 +357,65 @@ footer .src{margin-left:auto}
               <li>Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
               <li>Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN.</li>
             </ul>
+            <figure class="fig"><!-- fig:photo-organizer -->
+<svg viewBox="0 0 520 214" role="img" aria-label="Photos are embedded with CLIP, split into people and scenery, and scenery is clustered">
+<g class="n" style="--d:0"><rect x="0" y="4" width="206" height="34" rx="6"/><text x="13" y="26" class="k">7,346 files</text></g>
+<g class="n" style="--d:2"><rect x="0" y="70" width="206" height="50" rx="6"/><text x="13" y="92" class="k">CLIP ViT-B/32</text><text x="13" y="109" class="s">cached by path, size, mtime</text></g>
+<g class="n" style="--d:4"><rect x="0" y="152" width="206" height="50" rx="6"/><text x="13" y="174" class="k">people or scenery</text><text x="13" y="191" class="s">zero-shot text prompts</text></g>
+<path class="e draw" style="--d:1" d="M40.0 38.0 L40.0 70.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M40.0 70.0 L37.0 63.7 L43.0 63.7Z"/>
+<path class="e draw" style="--d:3" d="M40.0 120.0 L40.0 152.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M40.0 152.0 L37.0 145.7 L43.0 145.7Z"/>
+<path class="e draw" style="--d:5" d="M206.0 177.0 L262.0 177.0 L262.0 110.0 L286.0 110.0" pathLength="1"/>
+<path class="tip n" style="--d:9" d="M286.0 110.0 L279.7 113.0 L279.7 107.0Z"/>
+<text class="s n" style="--d:0" x="274.0" y="204.0" text-anchor="middle">scenery only</text>
+<ellipse class="e dash acc n" style="--d:8" cx="338" cy="58" rx="34" ry="26"/>
+<circle class="dot n" style="--d:6" cx="334.8" cy="62.0" r="3"/>
+<circle class="dot n" style="--d:7" cx="335.3" cy="55.6" r="3"/>
+<circle class="dot n" style="--d:8" cx="326.3" cy="56.3" r="3"/>
+<circle class="dot n" style="--d:9" cx="351.7" cy="61.3" r="3"/>
+<circle class="dot n" style="--d:10" cx="351.0" cy="60.0" r="3"/>
+<circle class="dot n" style="--d:6" cx="342.7" cy="59.4" r="3"/>
+<circle class="dot n" style="--d:7" cx="320.5" cy="63.7" r="3"/>
+<circle class="dot n" style="--d:8" cx="344.4" cy="62.0" r="3"/>
+<circle class="dot n" style="--d:9" cx="323.2" cy="48.3" r="3"/>
+<ellipse class="e dash acc n" style="--d:8" cx="430" cy="44" rx="38" ry="24"/>
+<circle class="dot n" style="--d:10" cx="416.8" cy="40.8" r="3"/>
+<circle class="dot n" style="--d:6" cx="434.1" cy="43.7" r="3"/>
+<circle class="dot n" style="--d:7" cx="437.8" cy="39.6" r="3"/>
+<circle class="dot n" style="--d:8" cx="434.4" cy="46.6" r="3"/>
+<circle class="dot n" style="--d:9" cx="421.7" cy="53.9" r="3"/>
+<circle class="dot n" style="--d:10" cx="437.9" cy="51.9" r="3"/>
+<circle class="dot n" style="--d:6" cx="420.8" cy="38.9" r="3"/>
+<circle class="dot n" style="--d:7" cx="425.3" cy="43.3" r="3"/>
+<circle class="dot n" style="--d:8" cx="439.4" cy="45.7" r="3"/>
+<ellipse class="e dash acc n" style="--d:8" cx="402" cy="132" rx="36" ry="28"/>
+<circle class="dot n" style="--d:9" cx="395.9" cy="123.3" r="3"/>
+<circle class="dot n" style="--d:10" cx="395.2" cy="142.7" r="3"/>
+<circle class="dot n" style="--d:6" cx="390.9" cy="134.3" r="3"/>
+<circle class="dot n" style="--d:7" cx="407.3" cy="119.6" r="3"/>
+<circle class="dot n" style="--d:8" cx="402.6" cy="143.5" r="3"/>
+<circle class="dot n" style="--d:9" cx="380.1" cy="129.7" r="3"/>
+<circle class="dot n" style="--d:10" cx="400.5" cy="124.5" r="3"/>
+<circle class="dot n" style="--d:6" cx="408.6" cy="131.4" r="3"/>
+<circle class="dot n" style="--d:7" cx="384.3" cy="138.7" r="3"/>
+<ellipse class="e dash acc n" style="--d:8" cx="482" cy="150" rx="30" ry="23"/>
+<circle class="dot n" style="--d:8" cx="488.8" cy="155.8" r="3"/>
+<circle class="dot n" style="--d:9" cx="495.7" cy="152.1" r="3"/>
+<circle class="dot n" style="--d:10" cx="483.2" cy="142.2" r="3"/>
+<circle class="dot n" style="--d:6" cx="488.4" cy="146.1" r="3"/>
+<circle class="dot n" style="--d:7" cx="477.6" cy="142.4" r="3"/>
+<circle class="dot n" style="--d:8" cx="472.1" cy="146.7" r="3"/>
+<circle class="dot n" style="--d:9" cx="491.3" cy="141.0" r="3"/>
+<circle class="dot n" style="--d:10" cx="468.1" cy="151.4" r="3"/>
+<circle class="dot n" style="--d:6" cx="495.5" cy="153.3" r="3"/>
+<circle class="dot faint n" style="--d:9" cx="310" cy="118" r="3"/>
+<circle class="dot faint n" style="--d:9" cx="370" cy="176" r="3"/>
+<circle class="dot faint n" style="--d:9" cx="500" cy="88" r="3"/>
+<text class="s n" style="--d:9" x="430.0" y="14.0" text-anchor="middle">trip clusters</text>
+<text class="s n" style="--d:9" x="372.0" y="196.0" text-anchor="middle">misc</text>
+</svg>
+<!-- /fig:photo-organizer --><figcaption>Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</figcaption></figure>
           </article>
 
           <article class="case" id="datamap" data-src="assets/datamap.jpg">
@@ -295,6 +429,43 @@ footer .src{margin-left:auto}
               <li>Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
               <li>Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
             </ul>
+            <figure class="fig"><!-- fig:datamap -->
+<svg viewBox="0 0 520 168" role="img" aria-label="Blue, teal and orange seven-class ramps that share one lightness track">
+<text class="k n" style="--d:0" x="0.0" y="27.0" text-anchor="start">blue</text>
+<rect class="n" style="--d:0" x="70" y="6" width="60" height="32" rx="3" fill="#c9defa"/>
+<rect class="n" style="--d:1" x="134" y="6" width="60" height="32" rx="3" fill="#9ec3f4"/>
+<rect class="n" style="--d:2" x="198" y="6" width="60" height="32" rx="3" fill="#71a7ed"/>
+<rect class="n" style="--d:3" x="262" y="6" width="60" height="32" rx="3" fill="#408ae6"/>
+<rect class="n" style="--d:4" x="326" y="6" width="60" height="32" rx="3" fill="#266fc6"/>
+<rect class="n" style="--d:5" x="390" y="6" width="60" height="32" rx="3" fill="#17559f"/>
+<rect class="n" style="--d:6" x="454" y="6" width="60" height="32" rx="3" fill="#0b3e78"/>
+<text class="k n" style="--d:0" x="0.0" y="67.0" text-anchor="start">teal</text>
+<rect class="n" style="--d:0" x="70" y="46" width="60" height="32" rx="3" fill="#c3e6d3"/>
+<rect class="n" style="--d:1" x="134" y="46" width="60" height="32" rx="3" fill="#90d1b0"/>
+<rect class="n" style="--d:2" x="198" y="46" width="60" height="32" rx="3" fill="#55bb8e"/>
+<rect class="n" style="--d:3" x="262" y="46" width="60" height="32" rx="3" fill="#00a26f"/>
+<rect class="n" style="--d:4" x="326" y="46" width="60" height="32" rx="3" fill="#00845a"/>
+<rect class="n" style="--d:5" x="390" y="46" width="60" height="32" rx="3" fill="#006745"/>
+<rect class="n" style="--d:6" x="454" y="46" width="60" height="32" rx="3" fill="#004b31"/>
+<text class="k n" style="--d:0" x="0.0" y="107.0" text-anchor="start">orange</text>
+<rect class="n" style="--d:0" x="70" y="86" width="60" height="32" rx="3" fill="#f7d3c6"/>
+<rect class="n" style="--d:1" x="134" y="86" width="60" height="32" rx="3" fill="#eeaf98"/>
+<rect class="n" style="--d:2" x="198" y="86" width="60" height="32" rx="3" fill="#e28a6a"/>
+<rect class="n" style="--d:3" x="262" y="86" width="60" height="32" rx="3" fill="#d56236"/>
+<rect class="n" style="--d:4" x="326" y="86" width="60" height="32" rx="3" fill="#b64819"/>
+<rect class="n" style="--d:5" x="390" y="86" width="60" height="32" rx="3" fill="#91340a"/>
+<rect class="n" style="--d:6" x="454" y="86" width="60" height="32" rx="3" fill="#6d2301"/>
+<text class="k n" style="--d:0" x="0.0" y="150.0" text-anchor="start">L</text>
+<text class="s n" style="--d:0" x="100.0" y="150.0" text-anchor="middle">0.89</text>
+<text class="s n" style="--d:1" x="164.0" y="150.0" text-anchor="middle">0.81</text>
+<text class="s n" style="--d:2" x="228.0" y="150.0" text-anchor="middle">0.72</text>
+<text class="s n" style="--d:3" x="292.0" y="150.0" text-anchor="middle">0.63</text>
+<text class="s n" style="--d:4" x="356.0" y="150.0" text-anchor="middle">0.54</text>
+<text class="s n" style="--d:5" x="420.0" y="150.0" text-anchor="middle">0.45</text>
+<text class="s n" style="--d:6" x="484.0" y="150.0" text-anchor="middle">0.37</text>
+<path class="e draw" style="--d:3" d="M70.0 132.0 L514.0 132.0" pathLength="1"/>
+</svg>
+<!-- /fig:datamap --><figcaption>Seven-class ramps exactly as DataMap&rsquo;s <code>color.js</code> builds them. Every hue reuses one lightness track, so each column shares an L value.</figcaption></figure>
           </article>
 
           <article class="case" id="geo-spoof" data-src="assets/geo-spoof.jpg">
@@ -306,6 +477,28 @@ footer .src{margin-left:auto}
             <ul>
               <li>Patched calls still pass native-type checks, so pages that probe for tampering see ordinary functions.</li>
             </ul>
+            <figure class="fig"><!-- fig:geo-spoof -->
+<svg viewBox="0 0 520 214" role="img" aria-label="Settings flow from the popup through bridge.js to inject.js, which answers the page">
+<g class="n" style="--d:0"><rect x="0" y="8" width="146" height="34" rx="6"/><text x="13" y="30" class="k">popup map picker</text></g>
+<g class="n" style="--d:1"><rect x="196" y="8" width="140" height="34" rx="6"/><text x="209" y="30" class="k">chrome.storage</text></g>
+<g class="n" style="--d:3"><rect x="196" y="72" width="140" height="50" rx="6"/><text x="209" y="94" class="k">bridge.js</text><text x="209" y="111" class="s">isolated world</text></g>
+<g class="n acc" style="--d:5"><rect x="196" y="156" width="140" height="50" rx="6"/><text x="209" y="178" class="k">inject.js</text><text x="209" y="195" class="s">main world</text></g>
+<g class="n" style="--d:6"><rect x="374" y="156" width="146" height="50" rx="6"/><text x="387" y="178" class="k">web page</text><text x="387" y="195" class="s">calls geolocation</text></g>
+<path class="e draw" style="--d:1" d="M146.0 25.0 L196.0 25.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M196.0 25.0 L189.7 28.0 L189.7 22.0Z"/>
+<path class="e draw" style="--d:2" d="M266.0 42.0 L266.0 72.0" pathLength="1"/>
+<path class="tip n" style="--d:6" d="M266.0 72.0 L263.0 65.7 L269.0 65.7Z"/>
+<path class="e draw" style="--d:4" d="M266.0 122.0 L266.0 156.0" pathLength="1"/>
+<path class="tip n" style="--d:8" d="M266.0 156.0 L263.0 149.7 L269.0 149.7Z"/>
+<text class="s n" style="--d:4" x="276.0" y="144.0" text-anchor="start">CustomEvent</text>
+<path class="e draw" style="--d:6" d="M374.0 172.0 L336.0 172.0" pathLength="1"/>
+<path class="tip n" style="--d:10" d="M336.0 172.0 L342.3 169.0 L342.3 175.0Z"/>
+<path class="e acc draw" style="--d:7" d="M336.0 192.0 L374.0 192.0" pathLength="1"/>
+<path class="tip n acc" style="--d:11" d="M374.0 192.0 L367.7 195.0 L367.7 189.0Z"/>
+<text class="s n" style="--d:7" x="184.0" y="176.0" text-anchor="end">returns a spoofed fix</text>
+<text class="s n" style="--d:7" x="184.0" y="194.0" text-anchor="end">toString(): [native code]</text>
+</svg>
+<!-- /fig:geo-spoof --><figcaption><code>bridge.js</code> reads settings in the isolated world and hands them to <code>inject.js</code>, which patches the page&rsquo;s own <code>navigator.geolocation</code> before any page script runs.</figcaption></figure>
           </article>
 
           <article class="case" id="tophat-watch" data-src="assets/tophat-watch.jpg">
@@ -314,6 +507,26 @@ footer .src{margin-left:auto}
             <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
             <p class="hook">Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.</p>
             <p class="built">Chrome extension, ntfy push</p>
+            <figure class="fig"><!-- fig:tophat-watch -->
+<svg viewBox="0 0 520 222" role="img" aria-label="The content script reports to the service worker, which alerts through three channels">
+<g class="n" style="--d:0"><rect x="0" y="4" width="196" height="34" rx="6"/><text x="13" y="26" class="k">Classroom tab</text></g>
+<g class="n" style="--d:2"><rect x="0" y="68" width="196" height="50" rx="6"/><text x="13" y="90" class="k">content.js</text><text x="13" y="107" class="s">DOM observer, 5 s rescan</text></g>
+<g class="n acc" style="--d:4"><rect x="0" y="160" width="196" height="50" rx="6"/><text x="13" y="182" class="k">service worker</text><text x="13" y="199" class="s">alerts once per opening</text></g>
+<path class="e draw" style="--d:1" d="M40.0 38.0 L40.0 68.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M40.0 68.0 L37.0 61.7 L43.0 61.7Z"/>
+<path class="e draw" style="--d:3" d="M40.0 118.0 L40.0 160.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M40.0 160.0 L37.0 153.7 L43.0 153.7Z"/>
+<g class="n" style="--d:7"><rect x="318" y="40" width="202" height="34" rx="6"/><text x="331" y="62" class="k">desktop notification</text></g>
+<path class="e draw" style="--d:5" d="M196.0 185.0 L258.0 185.0 L258.0 57.0 L318.0 57.0" pathLength="1"/>
+<path class="tip n" style="--d:9" d="M318.0 57.0 L311.7 60.0 L311.7 54.0Z"/>
+<g class="n" style="--d:8"><rect x="318" y="104" width="202" height="34" rx="6"/><text x="331" y="126" class="k">beep, offscreen page</text></g>
+<path class="e draw" style="--d:6" d="M196.0 185.0 L258.0 185.0 L258.0 121.0 L318.0 121.0" pathLength="1"/>
+<path class="tip n" style="--d:10" d="M318.0 121.0 L311.7 124.0 L311.7 118.0Z"/>
+<g class="n" style="--d:9"><rect x="318" y="168" width="202" height="34" rx="6"/><text x="331" y="190" class="k">ntfy push to phone</text></g>
+<path class="e acc draw" style="--d:7" d="M196.0 185.0 L258.0 185.0 L258.0 185.0 L318.0 185.0" pathLength="1"/>
+<path class="tip n acc" style="--d:11" d="M318.0 185.0 L311.7 188.0 L311.7 182.0Z"/>
+</svg>
+<!-- /fig:tophat-watch --><figcaption>The content script reports on every DOM change and every 5&nbsp;s. The service worker remembers what has already alerted, so an item alerts once each time it opens.</figcaption></figure>
           </article>
         </div>
       </div>
@@ -389,15 +602,18 @@ const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 // Theme toggle
 const themeBtn = document.getElementById('theme');
 try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch {}
-const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-const syncTheme = () => { root.dataset.dark = isDark() ? '1' : '0'; themeBtn.setAttribute('aria-label', isDark() ? 'Switch to light theme' : 'Switch to dark theme'); };
+const isDark = () => root.dataset.theme === 'dark';
+const syncTheme = () => {
+  root.dataset.dark = isDark() ? '1' : '0';
+  document.querySelector('meta[name="color-scheme"]').content = isDark() ? 'dark' : 'light';
+  themeBtn.setAttribute('aria-label', isDark() ? 'Switch to light theme' : 'Switch to dark theme');
+};
 syncTheme();
 themeBtn.onclick = () => {
   root.dataset.theme = isDark() ? 'light' : 'dark';
   try { localStorage.setItem('theme', root.dataset.theme); } catch {}
   syncTheme(); terrain.repaint();
 };
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { syncTheme(); terrain.repaint(); });
 
 // Copy email
 const mail = document.getElementById('mail'), mailTxt = mail.firstElementChild, status = document.getElementById('mail-status');
@@ -462,6 +678,12 @@ const plate = document.getElementById('plate');
     if (c.dataset.pos) im.style.objectPosition = c.dataset.pos;
     f.append(im); plate.append(f); return f;
   });
+  const capT = document.getElementById('cap-t'), ticks = [...document.querySelectorAll('#ticks i')];
+  const caption = (i) => {
+    capT.classList.add('swap');
+    setTimeout(() => { capT.innerHTML = `<b>${i + 1}/${cases.length}</b>` + cases[i].querySelector('.shot img').alt; capT.classList.remove('swap'); }, 160);
+    ticks.forEach((t, k) => t.classList.toggle('on', k === i));
+  };
   let cur = -1, py = scrollY;
   const show = (i) => {
     if (i === cur) return;
@@ -472,12 +694,16 @@ const plate = document.getElementById('plate');
     f.classList.toggle('from-top', !down);
     f.getBoundingClientRect();
     f.classList.add('on');
-    cur = i;
+    cur = i; caption(i);
   };
   const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) show(cases.indexOf(e.target)); }), { rootMargin: '-50% 0px -50% 0px' });
   cases.forEach(c => io.observe(c));
   show(0);
 }
+
+// Figures draw in once they scroll into view
+const figIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); figIO.unobserve(e.target); } }), { threshold: .35 });
+document.querySelectorAll('.fig').forEach(f => figIO.observe(f));
 
 // Terrain: Madison contour map from USGS elevation
 const terrain = (() => {
@@ -493,7 +719,7 @@ const terrain = (() => {
   const cv = document.getElementById('terrain'), ctx = cv.getContext('2d');
   const hero = cv.closest('.hero');
   const roA = document.getElementById('ro-a'), roB = document.getElementById('ro-b');
-  let g = null, W = 0, H = 0, dpr = 1, s = 1, ox = 0, oy = 0, levels = [], shore = null, base = null, waterImg = null;
+  let g = null, W = 0, H = 0, dpr = 1, s = 1, ox = 0, oy = 0, levels = [], shore = null, base = null;
   let hl = null, reveal = reduce ? 1 : 0, ready = false;
 
   const toGrid = (lat, lon) => {
@@ -512,11 +738,11 @@ const terrain = (() => {
     return (g[k] * (1 - fx) + g[k + 1] * fx) * (1 - fy) + (g[k + w] * (1 - fx) + g[k + w + 1] * fx) * fy;
   };
 
-  // Marching squares into one Path2D per level
-  const trace = () => {
+  // Marching squares into one Path2D per level, for view v = {s, ox, oy, W, H}
+  const trace = ({ s, ox, oy, W, H }) => {
     const { w, h } = META, maxL = Math.floor((META.hi - BASE) / STEP);
-    levels = Array.from({ length: maxL + 1 }, (_, k) => ({ v: BASE + k * STEP, p: new Path2D() }));
-    shore = new Path2D();
+    const levels = Array.from({ length: maxL + 1 }, (_, k) => ({ v: BASE + k * STEP, p: new Path2D() }));
+    const shore = new Path2D();
     const seg = (p, L, a, b, c, d, i, j) => {
       const idx = (a > L ? 8 : 0) | (b > L ? 4 : 0) | (c > L ? 2 : 0) | (d > L ? 1 : 0);
       if (idx === 0 || idx === 15) return;
@@ -545,6 +771,7 @@ const terrain = (() => {
       if (mn < SHORE && mx > SHORE) seg(shore, SHORE, a, b, c, d, i, j);
       for (let q = Math.max(0, Math.ceil((mn - BASE) / STEP)); q <= maxL && BASE + q * STEP < mx; q++) seg(levels[q].p, BASE + q * STEP, a, b, c, d, i, j);
     }
+    return { levels, shore };
   };
 
   // Text boxes the map furniture must avoid, in canvas coordinates
@@ -579,7 +806,7 @@ const terrain = (() => {
     s = Math.min(s, cover * 1.7);
     ox = Math.min(0, Math.max(W - (w - 1) * s, wx - fi * s));
     oy = Math.min(0, Math.max(H - (h - 1) * s, wy - fj * s));
-    trace(); scaleBar(); paintBase();
+    ({ levels, shore } = trace({ s, ox, oy, W, H })); scaleBar(); paintBase();
   };
 
   const scaleBar = () => {
@@ -592,24 +819,29 @@ const terrain = (() => {
   };
 
   const css = (n) => getComputedStyle(root).getPropertyValue(n).trim();
+  // Water tint, contours and shoreline; a = opacities
+  const paintLayers = (b, t, v, a) => {
+    const line = css('--line'), water = css('--water');
+    const { w, h } = META, m = new ImageData(w, h), [wr, wg, wb] = water.split(',').map(Number);
+    for (let k = 0; k < w * h; k++) { const q = Math.max(0, Math.min(1, (SHORE + .9 - g[k]) / 1.4)); m.data[k * 4] = wr; m.data[k * 4 + 1] = wg; m.data[k * 4 + 2] = wb; m.data[k * 4 + 3] = q * a.water * 255; }
+    const mc = document.createElement('canvas'); mc.width = w; mc.height = h; mc.getContext('2d').putImageData(m, 0, 0);
+    b.imageSmoothingEnabled = true; b.imageSmoothingQuality = 'high';
+    b.drawImage(mc, v.ox, v.oy, w * v.s, h * v.s);
+    b.lineJoin = 'round'; b.lineCap = 'round';
+    t.levels.forEach(L => {
+      const idx = L.v % 25 === 0;
+      b.strokeStyle = `rgba(${line},${idx ? a.index : a.minor})`;
+      b.lineWidth = idx ? 1.3 : .8; b.stroke(L.p);
+    });
+    b.strokeStyle = `rgba(${water},${a.shore})`; b.lineWidth = 1.1; b.stroke(t.shore);
+  };
+
   const paintBase = () => {
-    const line = css('--line'), water = css('--water'), dark = isDark();
+    const water = css('--water'), dark = isDark();
     base = document.createElement('canvas'); base.width = cv.width; base.height = cv.height;
     const b = base.getContext('2d');
     b.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // Water fill from elevation mask
-    const { w, h } = META, m = new ImageData(w, h), [wr, wg, wb] = water.split(',').map(Number);
-    for (let k = 0; k < w * h; k++) { const t = Math.max(0, Math.min(1, (SHORE + .9 - g[k]) / 1.4)); m.data[k * 4] = wr; m.data[k * 4 + 1] = wg; m.data[k * 4 + 2] = wb; m.data[k * 4 + 3] = t * (dark ? 34 : 26); }
-    const mc = document.createElement('canvas'); mc.width = w; mc.height = h; mc.getContext('2d').putImageData(m, 0, 0);
-    b.imageSmoothingEnabled = true; b.imageSmoothingQuality = 'high';
-    b.drawImage(mc, ox, oy, w * s, h * s);
-    b.lineJoin = 'round'; b.lineCap = 'round';
-    levels.forEach(L => {
-      const idx = L.v % 25 === 0;
-      b.strokeStyle = `rgba(${line},${idx ? (dark ? .34 : .36) : (dark ? .15 : .16)})`;
-      b.lineWidth = idx ? 1.3 : .8; b.stroke(L.p);
-    });
-    b.strokeStyle = `rgba(${water},.7)`; b.lineWidth = 1.1; b.stroke(shore);
+    paintLayers(b, { levels, shore }, { s, ox, oy }, dark ? { water: .13, minor: .15, index: .34, shore: .7 } : { water: .1, minor: .16, index: .36, shore: .7 });
     // Lake labels
     b.fillStyle = `rgba(${water},${dark ? .85 : .9})`; b.textAlign = 'center'; b.textBaseline = 'middle';
     LABELS.forEach(l => {
@@ -662,6 +894,25 @@ const terrain = (() => {
     requestAnimationFrame(step);
   };
 
+  // Background sheet: faint contours behind the page, scrolling slower than content
+  const bg = document.getElementById('bgmap'), bctx = bg.getContext('2d');
+  let K = 0;
+  const paintBg = () => {
+    const vw = root.clientWidth, vh = innerHeight, docH = root.scrollHeight;
+    K = reduce ? 0 : (vw < 700 ? .06 : .12);
+    const SH = Math.ceil(vh + Math.max(0, docH - vh) * K), bd = Math.min(devicePixelRatio || 1, 1.5);
+    bg.width = Math.round(vw * bd); bg.height = Math.round(SH * bd);
+    bg.style.width = vw + 'px'; bg.style.height = SH + 'px';
+    const { w, h } = META, bs = Math.max(vw / (w - 1), SH / (h - 1)), [fi] = toGrid(FOCUS.lat, FOCUS.lon);
+    const v = { s: bs, ox: Math.min(0, Math.max(vw - (w - 1) * bs, vw * .5 - fi * bs)), oy: Math.min(0, (SH - (h - 1) * bs) / 2), W: vw, H: SH };
+    bctx.setTransform(bd, 0, 0, bd, 0, 0); bctx.clearRect(0, 0, vw, SH);
+    paintLayers(bctx, trace(v), v, isDark() ? { water: .05, minor: .06, index: .11, shore: .2 } : { water: .045, minor: .065, index: .12, shore: .22 });
+    scrollBg();
+  };
+  const scrollBg = () => { bg.style.transform = `translate3d(0,${-scrollY * K}px,0)`; };
+  let sp = 0;
+  addEventListener('scroll', () => { if (!sp) sp = requestAnimationFrame(() => { sp = 0; scrollBg(); }); }, { passive: true });
+
   const img = new Image();
   img.onload = async () => {
     const { w, h, lo, hi } = META, c = document.createElement('canvas'); c.width = w; c.height = h;
@@ -669,7 +920,7 @@ const terrain = (() => {
     const d = x.getImageData(0, 0, w, h).data; g = new Float32Array(w * h);
     for (let k = 0; k < w * h; k++) g[k] = lo + d[k * 4] / 255 * (hi - lo);
     await Promise.race([document.fonts.load('italic 500 14px Archivo'), new Promise(r => setTimeout(r, 900))]);
-    layout(); ready = true;
+    layout(); ready = true; setTimeout(paintBg, 60);
     const [fi, fj] = toGrid(FOCUS.lat, FOCUS.lon); read(fi, fj, FOCUS.name);
     root.classList.add('go'); intro();
   };
@@ -691,8 +942,11 @@ const terrain = (() => {
     hl = null; draw(); const [fi, fj] = toGrid(FOCUS.lat, FOCUS.lon); read(fi, fj, FOCUS.name);
   });
   let rt = 0;
-  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (ready) { layout(); draw(); } }, 150); });
-  return { repaint: () => { if (ready) { paintBase(); draw(); } } };
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (ready) { layout(); draw(); paintBg(); } }, 150); });
+  // Page height can change after fonts settle
+  let lastH = 0;
+  new ResizeObserver(() => { const H2 = root.scrollHeight; if (ready && Math.abs(H2 - lastH) > 150) { lastH = H2; clearTimeout(rt); rt = setTimeout(paintBg, 200); } }).observe(document.body);
+  return { repaint: () => { if (ready) { paintBase(); draw(); paintBg(); } } };
 })();
 setTimeout(() => root.classList.add('go'), 2500);
 </script>

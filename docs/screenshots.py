@@ -9,11 +9,22 @@ with sync_playwright() as p:
     b = p.chromium.launch(headless=True, args=["--lang=en-US"])
     for theme in ["light", "dark"]:
         page = b.new_page(viewport={"width": 1440, "height": 900}, locale="en-US", color_scheme=theme)
+        # Dark is opt-in via the toggle, stored in localStorage
+        page.add_init_script(f"localStorage.setItem('theme', '{theme}')")
         page.goto((ROOT / "index.html").as_uri())
         # Wait for the terrain reveal and intro to finish
         page.wait_for_timeout(3500)
         page.screenshot(path=str(OUT / f"{theme}.png"), full_page=False)
         page.close()
+        if theme == "light":
+            # Case study with its figure drawn in
+            page = b.new_page(viewport={"width": 1440, "height": 900}, locale="en-US")
+            page.goto((ROOT / "index.html").as_uri())
+            page.wait_for_timeout(1500)
+            page.evaluate("scrollTo({top: document.getElementById('datamap').getBoundingClientRect().top + scrollY, behavior: 'instant'})")
+            page.wait_for_timeout(2500)
+            page.screenshot(path=str(OUT / "work.png"), full_page=False)
+            page.close()
     b.close()
 
 # Shrink PNGs
