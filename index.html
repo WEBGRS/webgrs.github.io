@@ -44,7 +44,7 @@ a:hover{text-decoration-thickness:2px}
 /* header */
 .bar{position:fixed; inset:0 0 auto; z-index:20; transition:transform .35s var(--out), background-color .25s, box-shadow .25s}
 .bar .wrap{display:flex; align-items:center; gap:28px; height:64px}
-.bar.solid{background:color-mix(in srgb, var(--paper) 86%, transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 1px 0 var(--rule)}
+.bar.solid{background:color-mix(in srgb, var(--paper) 96%, transparent); box-shadow:0 1px 0 var(--rule)}
 .bar.away{transform:translateY(-100%)}
 .mark{color:var(--ink); text-decoration:none; font-weight:800; font-stretch:118%; letter-spacing:-.02em; font-size:1.05rem}
 .nav{display:flex; gap:24px; margin:0 0 0 auto; padding:0; list-style:none; font-size:.95rem; font-weight:500}
@@ -894,24 +894,27 @@ const terrain = (() => {
     requestAnimationFrame(step);
   };
 
-  // Background sheet: faint contours behind the page, scrolling slower than content
+  // Background sheet: faint contours behind the page, scrolling slower than content.
+  // A ScrollTimeline runs the offset on the compositor, in step with native scrolling;
+  // without one the sheet stays still.
   const bg = document.getElementById('bgmap'), bctx = bg.getContext('2d');
-  let K = 0;
+  const linked = !reduce && typeof ScrollTimeline === 'function';
+  let bgAnim = null;
   const paintBg = () => {
     const vw = root.clientWidth, vh = innerHeight, docH = root.scrollHeight;
-    K = reduce ? 0 : (vw < 700 ? .06 : .12);
-    const SH = Math.ceil(vh + Math.max(0, docH - vh) * K), bd = Math.min(devicePixelRatio || 1, 1.5);
+    const K = linked ? (vw < 700 ? .06 : .12) : 0, travel = Math.round(Math.max(0, docH - vh) * K);
+    const SH = vh + travel, bd = Math.min(devicePixelRatio || 1, 1.5);
     bg.width = Math.round(vw * bd); bg.height = Math.round(SH * bd);
     bg.style.width = vw + 'px'; bg.style.height = SH + 'px';
     const { w, h } = META, bs = Math.max(vw / (w - 1), SH / (h - 1)), [fi] = toGrid(FOCUS.lat, FOCUS.lon);
     const v = { s: bs, ox: Math.min(0, Math.max(vw - (w - 1) * bs, vw * .5 - fi * bs)), oy: Math.min(0, (SH - (h - 1) * bs) / 2), W: vw, H: SH };
     bctx.setTransform(bd, 0, 0, bd, 0, 0); bctx.clearRect(0, 0, vw, SH);
     paintLayers(bctx, trace(v), v, isDark() ? { water: .05, minor: .06, index: .11, shore: .2 } : { water: .045, minor: .065, index: .12, shore: .22 });
-    scrollBg();
+    if (bgAnim) bgAnim.cancel();
+    if (travel) bgAnim = bg.animate(
+      [{ transform: 'translate3d(0,0,0)' }, { transform: `translate3d(0,${-travel}px,0)` }],
+      { timeline: new ScrollTimeline({ source: root, axis: 'block' }), easing: 'linear', fill: 'both' });
   };
-  const scrollBg = () => { bg.style.transform = `translate3d(0,${-scrollY * K}px,0)`; };
-  let sp = 0;
-  addEventListener('scroll', () => { if (!sp) sp = requestAnimationFrame(() => { sp = 0; scrollBg(); }); }, { passive: true });
 
   const img = new Image();
   img.onload = async () => {
