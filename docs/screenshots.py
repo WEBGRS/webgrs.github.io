@@ -10,8 +10,8 @@ with sync_playwright() as p:
     for theme in ["light", "dark"]:
         page = b.new_page(viewport={"width": 1440, "height": 900}, locale="en-US", color_scheme=theme)
         page.goto((ROOT / "index.html").as_uri())
-        page.evaluate("document.querySelectorAll('.rv').forEach(e => e.classList.add('in'))")
-        page.wait_for_timeout(1500)
+        # Wait for the terrain reveal and intro to finish
+        page.wait_for_timeout(3500)
         page.screenshot(path=str(OUT / f"{theme}.png"), full_page=False)
         page.close()
     b.close()
