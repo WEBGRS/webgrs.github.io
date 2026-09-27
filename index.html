@@ -127,7 +127,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 }
 
 .peek{position:fixed; left:0; top:0; z-index:15; width:clamp(280px,26vw,420px); aspect-ratio:16/10; pointer-events:none; will-change:transform}
-.peek-in{width:100%; height:100%; overflow:hidden; border-radius:8px; background:var(--paper); box-shadow:0 26px 56px -30px rgba(20,35,50,.32); opacity:0; transform:scale(.94) translateY(8px); transition:opacity .25s var(--out), transform .5s var(--out)}
+.peek-in{width:100%; height:100%; overflow:hidden; border-radius:20px; background:var(--paper); box-shadow:0 26px 56px -30px rgba(20,35,50,.32); opacity:0; transform:scale(.94) translateY(8px); transition:opacity .25s var(--out), transform .5s var(--out)}
 .peek.on .peek-in{opacity:1; transform:none}
 .peek-rail{height:100%; transition:transform .6s var(--io)}
 .peek-rail img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
@@ -165,7 +165,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 /* A liquid orb in the corner that follows the panels' colours */
 .stage{position:sticky; top:0; height:100vh; margin-bottom:-100vh; overflow:clip; pointer-events:none}
 /* Painted above the colour fields but below every panel, since the panels come later */
-.corb{position:absolute; right:0; bottom:0; width:clamp(380px,38vw,620px); aspect-ratio:1; translate:30% 26%; opacity:.42; mix-blend-mode:screen}
+.corb{position:absolute; right:0; bottom:0; width:clamp(620px,60vw,980px); aspect-ratio:1; translate:50% 50%; opacity:.42; mix-blend-mode:screen}
 @media (max-width:760px){ .stage{display:none} }
 .case .shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
 .case h3{margin:0; font-size:clamp(1.9rem,3.2vw,2.8rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em; --w:760}
@@ -341,7 +341,7 @@ footer .src{margin-left:auto}
 #now .two > div{position:relative}
 #now{position:relative; isolation:isolate; overflow-x:clip}
 #now .two{position:relative}
-.orb{position:absolute; z-index:-1; top:58%; right:calc((min(100vw, 1320px) - 100vw) / 2); width:clamp(420px,46vw,720px); aspect-ratio:1; translate:48% -50%; opacity:.45; pointer-events:none}
+.orb{position:absolute; z-index:-1; top:58%; right:calc((min(100vw, 1320px) - 100vw) / 2); width:clamp(560px,58vw,900px); aspect-ratio:1; translate:62% -50%; opacity:.45; pointer-events:none}
 @media (max-width:760px){ .orb{display:none} }
 .sine{display:block; width:100%; height:90px; margin-top:clamp(60px,8vw,110px)}
 .sine + footer{margin-top:0}
@@ -1027,16 +1027,16 @@ void main(){
   vec2 q = (a - .5) * B * S;
   // Slow travelling waves along the edges; the middle stays put, so it still reads as a rectangle
   vec2 e = (a - .5) * 2.;
-  q.x += (5. * sin(a.y * 5.5 + T * 1.2) + 2.5 * sin(a.y * 11. - T * 1.9)) * e.x * abs(e.x);
-  q.y += (4. * sin(a.x * 4.5 - T * 1.) + 2. * sin(a.x * 9.5 + T * 1.7)) * e.y * abs(e.y);
+  q.x += (2. * sin(a.y * 5.5 + T * 1.2) + .8 * sin(a.y * 11. - T * 1.9)) * e.x * abs(e.x);
+  q.y += (1.6 * sin(a.x * 4.5 - T * 1.) + .7 * sin(a.x * 9.5 + T * 1.7)) * e.y * abs(e.y);
   vec2 px = C * .5 + q;
   gl_Position = vec4(px.x / C.x * 2. - 1., 1. - px.y / C.y * 2., 0., 1.);
 }`));
     gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision highp float; uniform sampler2D X0, X1; uniform vec4 F0, F1; uniform vec2 B, O; uniform float M, A; varying vec2 v;
 void main(){
   // Rounded corners from the rest shape
-  vec2 d = abs(v - .5) * B - (B * .5 - 9.);
-  float r = length(max(d, 0.)) - 9., k = 1. - smoothstep(-.8, .8, r);
+  vec2 d = abs(v - .5) * B - (B * .5 - 20.);
+  float r = length(max(d, 0.)) - 20., k = 1. - smoothstep(-.8, .8, r);
   vec2 u0 = v * F0.xy + F0.zw, u1 = v * F1.xy + F1.zw;
   vec3 c0 = texture2D(X0, u0).rgb, c1 = texture2D(X1, u1).rgb;
   float m = smoothstep(0., 1., clamp(M * 1.4 - (1. - v.y) * .4, 0., 1.));
