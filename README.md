@@ -14,8 +14,8 @@ Personal portfolio site: **<https://webgrs.github.io>**
 
 One `index.html` plus project screenshots in `assets/`; no framework, trackers, or build step. It opens in the light theme; a toggle switches to dark and remembers the choice.
 
-- **Hero:** a contour map of Madison drawn from real USGS 3DEP elevation data (5 m interval, marching squares in a worker on an OffscreenCanvas). It reveals outward from campus on load. On capable machines the map sits under a WebGL height-field water simulation: the pointer leaves ripples that bend the contours, and a click drops a larger one. Hovering also reads out coordinates and elevation.
-- **Effects tier:** 2 (WebGL water), 1 (canvas) or 0 (static), chosen from CPU threads, device memory, save-data, reduced motion and the GPU; a frame-time guard can lower it. `?fx=0`, `?fx=1` or `?fx=2` forces a tier.
+- **Hero:** a contour map of Madison drawn from real USGS 3DEP elevation data (5 m interval, marching squares in a worker on an OffscreenCanvas). It reveals outward from campus on load. Moving the pointer onto a new elevation lights that contour from the pointer outward, like a ripple, with a brighter band at the front; on the WebGL tier the contours 5 m above and below spread with it, fainter, and the old level fades. A click sends the current level out again. Hovering also reads out coordinates and elevation.
+- **Effects tier:** 2 (WebGL), 1 (canvas) or 0 (lite), chosen from CPU threads, device memory, save-data, reduced motion and the GPU; a software GPU falls back to canvas. The console logs the tier and why. `?fx=0`, `?fx=1` or `?fx=2` forces a tier.
 - **Work index:** hovering a project shows its screenshot beside the cursor, following it with frame-rate independent damping.
 - **Case studies:** on wide screens the screenshot stays pinned while the text scrolls, and wipes to the next project. Each project has a small figure of how it works, drawn from its own code: route-animator's altitude profile, DataMap's actual color ramps, geo-spoof's two-world message path.
 - **Background:** the same terrain continues behind the page as a faint sheet that scrolls slower than the content.
