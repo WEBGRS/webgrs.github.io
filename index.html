@@ -15,18 +15,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
 <script>
-// Effects tier: 2 WebGL water, 1 canvas, 0 basic. ?fx=0|1|2 overrides.
+// Map renderer: 2 WebGL water, 1 canvas, 0 static. ?fx=0|1|2 overrides.
+// data-lite marks weak devices, where the text effects are dropped as well.
 (function () {
-  var r = document.documentElement, n = navigator, t = 2, q = /[?&]fx=([012])/.exec(location.search);
+  var r = document.documentElement, n = navigator, t = 2, why = 'default', q = /[?&]fx=([012])/.exec(location.search);
   r.classList.add('js');
   try {
     var c = n.hardwareConcurrency || 4, m = n.deviceMemory || 8;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches || (n.connection && n.connection.saveData) || c <= 2 || m <= 2) t = 0;
-    else if (c <= 4 || m <= 4) t = 1;
-    var cap = localStorage.getItem('fxCap');
-    if (cap !== null) t = Math.min(t, +cap);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { t = 0; why = 'reduced motion'; }
+    else if (n.connection && n.connection.saveData) { t = 0; why = 'save-data'; }
+    else if (c <= 2 || m <= 2) { t = 0; why = c + ' threads, ' + m + ' GB'; }
+    else if (c <= 4 || m <= 4) { t = 1; why = c + ' threads, ' + m + ' GB'; }
+    if (t === 0) r.dataset.lite = '';
+    localStorage.removeItem('fxCap');
   } catch (e) {}
-  r.dataset.fx = q ? q[1] : t;
+  if (q) { t = +q[1]; why = '?fx override'; }
+  r.dataset.fx = t; r.dataset.fxWhy = why;
 })();
 </script>
 
@@ -262,7 +266,7 @@ footer .src{margin-left:auto}
 .measuring .hero h1 .l{animation:none !important}
 @keyframes rise{from{transform:translateY(108%); font-stretch:62%}}
 @keyframes rise0{from{transform:translateY(108%)}}
-:root[data-fx="0"] .hero h1 .l{animation-name:rise0}
+:root[data-lite] .hero h1 .l{animation-name:rise0}
 @keyframes show{from{opacity:0}}
 @keyframes grow{from{transform:scaleX(0)}}
 @keyframes blink{0%,50%{opacity:1}25%,75%,100%{opacity:0}}
@@ -684,7 +688,7 @@ footer .src{margin-left:auto}
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-const basic = () => root.dataset.fx === '0';
+const basic = () => root.hasAttribute('data-lite');
 
 // Text intro waits for the display face only, never for the map
 let goAt = 0;
@@ -1249,7 +1253,7 @@ const terrain = (() => {
 
   let colors = null;
   const setTier = (n, why) => {
-    if (why) console.info(`[fx] tier ${tier} -> ${n}: ${why}`);
+    if (why) { console.info(`[fx] tier ${tier} -> ${n}: ${why}`); root.dataset.fxWhy = why; }
     tier = n; root.dataset.fx = n;
     if (n < 2 && water) { water.destroy(); water = null; }
     showWater(false);
@@ -1301,24 +1305,11 @@ const terrain = (() => {
   };
 
   // Frame loop: runs only while revealing or recently touched, and only on screen
-  let raf = 0, last = 0, tx = null, ty = null, px = 0, py = 0, dropX = null, dropY = null, lastInput = -1e9, heroOn = true, warm = 0;
-  const times = [];
-  const guard = (raw) => {
-    if (forced || tier === 0 || raw > 250 || ++warm < 15) return;
-    times.push(raw);
-    if (times.length < 45) return;
-    const avg = times.reduce((a, b) => a + b, 0) / times.length; times.length = 0;
-    if (avg > 34) {
-      try { localStorage.setItem('fxCap', String(tier - 1)); } catch {}
-      setTier(tier - 1, `${avg.toFixed(0)} ms per frame`);
-      draw2D();
-    }
-  };
-  const kick = () => { if (!raf && ready && heroOn && !document.hidden && tier > 0) { last = performance.now(); warm = 0; raf = requestAnimationFrame(frame); } };
+  let raf = 0, last = 0, tx = null, ty = null, px = 0, py = 0, dropX = null, dropY = null, lastInput = -1e9, heroOn = true;
+  const kick = () => { if (!raf && ready && heroOn && !document.hidden && tier > 0) { last = performance.now(); raf = requestAnimationFrame(frame); } };
   const frame = (t) => {
     raf = 0;
-    const raw = t - last, dt = Math.min(.05, Math.max(.001, raw / 1000)); last = t;
-    guard(raw);
+    const dt = Math.min(.05, Math.max(.001, (t - last) / 1000)); last = t;
     // The reveal clock starts on the first drawn frame, so a slow first upload cannot make it jump
     if (reveal < 1) { if (!revealT0) revealT0 = t; const p = Math.max(0, Math.min(1, (t - revealT0) / 1900)); reveal = 1 - Math.pow(1 - p, 4); }
     if (tx !== null) { px = damp(px, tx, 14, dt); py = damp(py, ty, 14, dt); }
@@ -1410,13 +1401,15 @@ const terrain = (() => {
     wc = mapEl.insertBefore(Object.assign(document.createElement('canvas'), { className: 'water' }), cv);
     wc.setAttribute('aria-hidden', 'true'); wc.style.display = 'none';
     const w = makeWater(wc, forced), r = mapEl.getBoundingClientRect();
-    if (w === 'soft') setTier(0, 'software GPU');
+    if (w === 'soft') setTier(0, 'software rendering; is hardware acceleration off in the browser?');
     else if (!w) setTier(1, 'no WebGL2 float render targets');
     else {
       water = w; water.resize(r.width, r.height, Math.min(devicePixelRatio || 1, 2));
       wc.addEventListener('webglcontextlost', (e) => { e.preventDefault(); water = null; setTier(1, 'context lost'); kick(); });
     }
   }
+
+  console.info(`[fx] tier ${tier}${water ? ' (WebGL water on ' + water.gpu + ')' : ''}; ${root.dataset.fxWhy}`);
 
   // Start once the grid and the display face are ready; the text intro does not wait for this
   Promise.all([fontReady, gridReady]).then(async () => {
