@@ -32,6 +32,12 @@
   if (q) { t = +q[1]; why = '?fx override'; }
   r.dataset.fx = t; r.dataset.fxWhy = why;
 })();
+// Transition between case panels: ?tr=flow|stack|curtain|liquid|zoom, and ?lab shows a switcher
+(function () {
+  var r = document.documentElement, q = new URLSearchParams(location.search), v = q.get('tr'), ok = ['flow', 'stack', 'curtain', 'liquid', 'zoom'];
+  r.dataset.tr = ok.indexOf(v) >= 0 ? v : ok[0];
+  if (q.has('lab')) r.dataset.lab = '';
+})();
 </script>
 
 <style>
@@ -136,7 +142,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 
 /* case studies: full-screen panels that stack. Each sticks once its bottom reaches the
    viewport, the next slides over it, and its colors come from its own screenshot. */
-.cases{position:relative; isolation:isolate; margin-top:clamp(64px,8vw,110px); background:#05080B; timeline-scope:--p1,--p2,--p3,--p4,--p5,--p6}
+.cases{position:relative; isolation:isolate; margin-top:clamp(40px,5vw,72px); background:#05080B; timeline-scope:--p1,--p2,--p3,--p4,--p5,--p6,--bout}
 .case{--pad:max(var(--gut), calc((100vw - 1320px) / 2 + var(--gut)));
   position:sticky; top:min(0px, calc(100vh - var(--h, 100vh))); z-index:var(--z);
   min-height:100vh; box-sizing:border-box; padding:clamp(96px,12vh,140px) var(--pad) clamp(72px,10vh,120px);
@@ -158,8 +164,22 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
   background:radial-gradient(34% 38% at 24% 30%, var(--a1), transparent 72%), radial-gradient(32% 36% at 76% 66%, var(--a2), transparent 72%), radial-gradient(26% 30% at 62% 20%, color-mix(in oklab, var(--a1) 55%, var(--a2)), transparent 72%);
   opacity:.9}
 .case::after{content:""; position:absolute; inset:0; z-index:5; background:#05080B; opacity:0; pointer-events:none}
-.case .media{margin:0; min-width:0}
-.case .shot{position:relative; display:block; aspect-ratio:16/10; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--plate); box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
+.case .media{position:relative; isolation:isolate; margin:0; min-width:0}
+.case .shot{position:relative; display:block; aspect-ratio:16/10; border:1px solid rgba(255,255,255,.14); border-radius:14px; overflow:hidden; background:var(--plate); box-shadow:0 40px 90px -40px rgba(0,0,0,.55)}
+/* The screenshot's own colours, blurred, glow out from behind it into the panel */
+.case .amb{position:absolute; z-index:-1; left:5%; top:8%; width:90%; height:92%; object-fit:cover; filter:blur(56px) saturate(1.35); opacity:.6; pointer-events:none}
+/* White to the first panel's colour on the way in, and back to white on the way out */
+.bridge{display:block; height:55vh; pointer-events:none}
+.bridge.in{background:linear-gradient(to bottom, var(--paper), color-mix(in oklab, var(--paper) 55%, #0A2630) 45%, #0A2630)}
+.bridge.out{position:relative; z-index:7; height:90vh; background:linear-gradient(to bottom, transparent, color-mix(in oklab, var(--paper) 40%, transparent) 40%, var(--paper) 78%)}
+/* A liquid orb in the corner that follows the panels' colours */
+.stage{position:sticky; top:0; z-index:8; height:100vh; margin-bottom:-100vh; overflow:clip; pointer-events:none}
+.corb{position:absolute; right:0; bottom:0; width:clamp(340px,34vw,560px); aspect-ratio:1; translate:34% 30%; mix-blend-mode:screen}
+@media (max-width:760px){ .stage{display:none} }
+.lab{position:fixed; z-index:40; left:16px; bottom:16px; display:flex; flex-wrap:wrap; align-items:center; gap:6px; max-width:calc(100vw - 32px); padding:10px 12px; background:var(--paper); color:var(--muted); border:1px solid var(--rule); border-radius:10px; box-shadow:0 16px 40px -20px rgba(20,35,50,.35); font:500 .8rem var(--font)}
+.lab b{margin-right:4px; color:var(--ink); font-weight:600}
+.lab button{padding:3px 10px; border:1px solid var(--rule); border-radius:999px; background:none; color:inherit; font:inherit; cursor:pointer}
+.lab button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper)}
 .case .shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
 .case h3{margin:0; font-size:clamp(1.9rem,3.2vw,2.8rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em; --w:760}
 .links{display:flex; gap:18px; margin:12px 0 0; font-weight:560}
@@ -200,13 +220,40 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
   @media (prefers-reduced-motion:no-preference){
     #route-animator{view-timeline:--p1 block} #uw-course-lookup{view-timeline:--p2 block} #photo-organizer{view-timeline:--p3 block}
     #datamap{view-timeline:--p4 block} #geo-spoof{view-timeline:--p5 block} #tophat-watch{view-timeline:--p6 block}
-    /* While the next panel slides in, this one sinks back and darkens */
-    #route-animator, #route-animator::after{animation-timeline:--p2} #uw-course-lookup, #uw-course-lookup::after{animation-timeline:--p3}
-    #photo-organizer, #photo-organizer::after{animation-timeline:--p4} #datamap, #datamap::after{animation-timeline:--p5} #geo-spoof, #geo-spoof::after{animation-timeline:--p6}
-    .case:not(#tophat-watch){animation-name:sink; animation-duration:auto; animation-timing-function:linear; animation-fill-mode:both; animation-range:entry 0% entry 100%}
-    .case:not(#tophat-watch)::after{animation-name:dim; animation-duration:auto; animation-timing-function:linear; animation-fill-mode:both; animation-range:entry 0% entry 100%}
+    /* Each panel runs two animations: an entrance on its own view timeline, and an exit on the
+       timeline of the panel after it. ?tr= picks the pair. */
+    .case{animation-name:var(--tr-in), var(--tr-out); animation-duration:auto, auto; animation-timing-function:linear, linear; animation-fill-mode:both, both; animation-range:entry 0% entry 100%, entry 0% entry 100%}
+    .case::after{animation-name:var(--tr-dim); animation-duration:auto; animation-timing-function:linear; animation-fill-mode:both; animation-range:entry 0% entry 100%}
+    #route-animator{animation-timeline:view(), --p2} #uw-course-lookup{animation-timeline:view(), --p3} #photo-organizer{animation-timeline:view(), --p4}
+    #datamap{animation-timeline:view(), --p5} #geo-spoof{animation-timeline:view(), --p6} #tophat-watch{animation-timeline:view(), none}
+    #route-animator::after{animation-timeline:--p2} #uw-course-lookup::after{animation-timeline:--p3} #photo-organizer::after{animation-timeline:--p4}
+    #datamap::after{animation-timeline:--p5} #geo-spoof::after{animation-timeline:--p6} #tophat-watch::after{animation-timeline:none}
+    [data-tr="stack"]{--tr-in:none; --tr-out:sink; --tr-dim:dim}
+    [data-tr="curtain"]{--tr-in:dome; --tr-out:lift; --tr-dim:dim}
+    [data-tr="liquid"]{--tr-in:pour; --tr-out:settle; --tr-dim:dim}
+    [data-tr="zoom"]{--tr-in:zin; --tr-out:zout; --tr-dim:none}
+    [data-tr="flow"]{--tr-in:none; --tr-out:none; --tr-dim:none}
+    /* Nothing follows the last panel, so it has no exit */
+    #tophat-watch{--tr-out:none; --tr-dim:none}
     @keyframes sink{to{transform:scale(.9) translateY(-2vh)}}
-    @keyframes dim{to{opacity:.7}}
+    @keyframes dim{to{opacity:.72}}
+    @keyframes dome{from{clip-path:inset(0 round 50% 50% 0 0 / 42vh 42vh 0 0)}to{clip-path:inset(0 round 0 0 0 0 / 0 0 0 0)}}
+    @keyframes lift{to{transform:translateY(-16vh)}}
+    @keyframes pour{from{clip-path:circle(8% at 50% 108%)}to{clip-path:circle(145% at 50% 108%)}}
+    @keyframes settle{to{transform:scale(.95); filter:blur(6px)}}
+    @keyframes zin{from{transform:scale(.72) translateY(6vh); border-radius:64px}to{transform:none; border-radius:0}}
+    @keyframes zout{to{transform:scale(1.14); opacity:0}}
+    /* flow: panels scroll normally over one dark backdrop; each panel's colour field fades in
+       as it arrives and out as it leaves, so the colour changes continuously */
+    [data-tr="flow"] .case{position:relative; top:auto; z-index:auto; background:transparent; overflow:visible}
+    [data-tr="flow"] .case[data-covered]{visibility:visible}
+    [data-tr="flow"] .case::before{inset:-45vh 0; background:radial-gradient(34% 30% at 24% 42%, var(--a1), transparent 72%), radial-gradient(32% 28% at 76% 60%, var(--a2), transparent 72%), linear-gradient(transparent, var(--bg) 30%, var(--bg) 70%, transparent);
+      opacity:0; animation:field linear both; animation-timeline:view(); animation-range:cover 0% cover 100%}
+    @keyframes field{0%{opacity:0}30%,70%{opacity:1}100%{opacity:0}}
+    .bridge.out{view-timeline:--bout block}
+    .stage{animation:stage-in linear both, stage-out linear both; animation-timeline:--p1, --bout; animation-range:entry 30% entry 100%, entry 0% entry 60%}
+    @keyframes stage-in{from{opacity:0}}
+    @keyframes stage-out{to{opacity:0}}
     /* The arriving panel's content rises into place */
     .case.feature .media{animation:grow-in linear both; animation-timeline:view(); animation-range:entry 0% entry 85%}
     .case.right .media, .case.band .media{animation:from-right linear both; animation-timeline:view(); animation-range:entry 0% entry 80%}
@@ -336,7 +383,7 @@ footer .src{margin-left:auto}
 #now .two > div{position:relative}
 #now{position:relative; isolation:isolate; overflow-x:clip}
 #now .two{position:relative}
-.orb{position:absolute; z-index:-1; top:50%; right:calc((min(100vw, 1320px) - 100vw) / 2); width:clamp(340px,38vw,580px); aspect-ratio:1; translate:64% -50%; pointer-events:none}
+.orb{position:absolute; z-index:-1; top:58%; right:calc((min(100vw, 1320px) - 100vw) / 2); width:clamp(420px,46vw,720px); aspect-ratio:1; translate:52% -50%; pointer-events:none}
 @media (max-width:760px){ .orb{display:none} }
 .sine{display:block; width:100%; height:90px; margin-top:clamp(60px,8vw,110px)}
 .sine + footer{margin-top:0}
@@ -481,6 +528,8 @@ h2{--w:780}
     </div>
 
     <div class="cases" id="cases">
+      <div class="stage" aria-hidden="true"><canvas class="corb" id="corb"></canvas></div>
+      <i class="bridge in" aria-hidden="true"></i>
           <article class="case feature" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg">
             <div class="media"><a class="shot" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy"></a></div>
             <div class="globe-wrap" aria-hidden="true"><canvas class="globe" id="globe"></canvas><p class="globe-cap">In blue, the route in the screenshot: Madison, Reykjavík, Paris</p></div>
@@ -743,6 +792,7 @@ h2{--w:780}
 <!-- /fig:tophat-watch --><figcaption>The content script reports on every DOM change and every 5&nbsp;s. The service worker remembers what has already alerted, so an item alerts once each time it opens.</figcaption></figure>
             </div>
           </article>
+      <i class="bridge out" aria-hidden="true"></i>
     </div>
   </section>
 
@@ -1000,9 +1050,8 @@ const spy = new IntersectionObserver((es) => es.forEach(e => {
 // Frame-rate independent damping (after Lenis)
 const damp = (x, y, lambda, dt) => x + (y - x) * (1 - Math.exp(-lambda * dt));
 
-// Work index: cursor-following preview. With WebGL it is a textured plane that bends with the
-// pointer's velocity and ripples a little at rest, so the rectangle flows (after Clément Roche's
-// motion hover effects on Codrops); without it, a plain box.
+// Work index: cursor-following preview. With WebGL it is a textured plane on a fine grid whose
+// edges keep flowing in slow waves, so the rectangle moves on its own; without it, a plain box.
 const cases = [...document.querySelectorAll('.case')];
 if (fine && !reduce && !basic()) {
   const peek = document.getElementById('peek'), rail = document.getElementById('rail'), list = document.getElementById('index');
@@ -1018,10 +1067,10 @@ if (fine && !reduce && !basic()) {
 void main(){
   v = a;
   vec2 q = (a - .5) * B * S;
-  // Bend: the middle of each edge trails the pointer, the corners less
-  q.x += sin(a.y * 3.14159) * O.x; q.y += sin(a.x * 3.14159) * O.y;
-  // Rest: a slow travelling wave along the edges
-  q.x += 3.5 * sin(a.y * 6.5 + T * 1.3) * (a.x - .5) * 2.; q.y += 3. * sin(a.x * 5.5 - T * 1.1) * (a.y - .5) * 2.;
+  // Slow travelling waves along the edges; the middle stays put, so it still reads as a rectangle
+  vec2 e = (a - .5) * 2.;
+  q.x += (5. * sin(a.y * 5.5 + T * 1.2) + 2.5 * sin(a.y * 11. - T * 1.9)) * e.x * abs(e.x);
+  q.y += (4. * sin(a.x * 4.5 - T * 1.) + 2. * sin(a.x * 9.5 + T * 1.7)) * e.y * abs(e.y);
   vec2 px = C * .5 + q;
   gl_Position = vec4(px.x / C.x * 2. - 1., 1. - px.y / C.y * 2., 0., 1.);
 }`));
@@ -1030,11 +1079,8 @@ void main(){
   // Rounded corners from the rest shape
   vec2 d = abs(v - .5) * B - (B * .5 - 9.);
   float r = length(max(d, 0.)) - 9., k = 1. - smoothstep(-.8, .8, r);
-  vec2 s = O / B * .05;
   vec2 u0 = v * F0.xy + F0.zw, u1 = v * F1.xy + F1.zw;
-  // A slight colour split in the direction of travel
-  vec3 c0 = vec3(texture2D(X0, u0 + s).r, texture2D(X0, u0).g, texture2D(X0, u0 - s).b);
-  vec3 c1 = vec3(texture2D(X1, u1 + s).r, texture2D(X1, u1).g, texture2D(X1, u1 - s).b);
+  vec3 c0 = texture2D(X0, u0).rgb, c1 = texture2D(X1, u1).rgb;
   float m = smoothstep(0., 1., clamp(M * 1.4 - (1. - v.y) * .4, 0., 1.));
   gl_FragColor = vec4(mix(c0, c1, m), 1.) * k * A;
 }`));
@@ -1106,10 +1152,6 @@ void main(){
     const loop = (t) => {
       const dt = Math.min((t - last) / 1000, .05); last = t; st.t = t / 1000;
       x = damp(x, tx, 7, dt); y = damp(y, ty, 7, dt);
-      // The lag behind the pointer becomes the bend, capped so it never folds
-      const cap = 46;
-      st.ox = damp(st.ox, Math.max(-cap, Math.min(cap, (tx - x) * .32)), 10, dt);
-      st.oy = damp(st.oy, Math.max(-cap, Math.min(cap, (ty - y) * .32)), 10, dt);
       st.alpha = damp(st.alpha, active ? 1 : 0, active ? 9 : 7, dt);
       st.mix = Math.min(1, st.mix + dt / .45);
       const [bw, bh] = flowGL.size(), px = Math.min(innerWidth - 12 - bw, Math.max(x + 36, minX));
@@ -2183,9 +2225,11 @@ const onScreenLoop = (el, draw) => {
   if (still) requestAnimationFrame(() => draw(0, 1)); else onScreenLoop(cv, draw);
 })();
 
-// A liquid sphere half hidden past the right edge of the Now list; its light follows the pointer
-(() => {
-  const cv = document.getElementById('orb'); if (!cv) return;
+// Liquid spheres (raymarched): one half past the right edge of the Now list, one in the corner of
+// the case panels taking each project's colours. Their light follows the pointer.
+// Which panel is showing, and how far the next one has come in; the panel code keeps it current
+const panelTone = { i: 0, f: 0 };
+const liquidOrb = (cv, colors) => {
   const gl = cv.getContext('webgl', { premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'low-power' });
   if (!gl) { cv.remove(); return; }
   const sh = (tp, src) => { const o = gl.createShader(tp); gl.shaderSource(o, src); gl.compileShader(o); return o; };
@@ -2209,9 +2253,7 @@ void main(){
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  const u = (n) => gl.getUniformLocation(pr, n), ur = u('r'), um = u('m'), ut = u('t');
-  const tint = () => { const d = isDark(); gl.uniform3fv(u('C'), d ? [.28, .42, .64] : [.5, .66, .88]); gl.uniform3fv(u('F'), d ? [.6, .76, .96] : [.93, .97, 1]); };
-  tint();
+  const u = (n) => gl.getUniformLocation(pr, n), ur = u('r'), um = u('m'), ut = u('t'), uC = u('C'), uF = u('F');
   let mx = 0, my = 0, tmx = 0, tmy = 0;
   addEventListener('pointermove', (e) => {
     const r = cv.getBoundingClientRect();
@@ -2221,10 +2263,25 @@ void main(){
   const draw = (t, dt) => {
     fit(cv, 1.25); gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(ur, cv.width, cv.height);
     mx = damp(mx, tmx, 4, dt); my = damp(my, tmy, 4, dt); gl.uniform2f(um, mx, my); gl.uniform1f(ut, t / 1600);
+    const [c, f] = colors(); gl.uniform3fv(uC, c); gl.uniform3fv(uF, f);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 3);
   };
-  addEventListener('themechange', () => { tint(); if (reduce || basic()) draw(4000, .016); });
+  addEventListener('themechange', () => { if (reduce || basic()) draw(4000, .016); });
   if (reduce || basic()) requestAnimationFrame(() => draw(4000, .016)); else onScreenLoop(cv, draw);
+};
+(() => {
+  const now = document.getElementById('orb');
+  if (now) liquidOrb(now, () => isDark() ? [[.28, .42, .64], [.6, .76, .96]] : [[.7, .8, .94], [.95, .98, 1]]);
+  const corner = document.getElementById('corb'); if (!corner) return;
+  const rgb = (h) => { h = h.trim(); return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255); };
+  let pal = null;
+  const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+  liquidOrb(corner, () => {
+    // Body in the panel's first aurora colour, lifted; rim light in its accent
+    pal = pal || [...document.querySelectorAll('.case')].map(c => { const st = getComputedStyle(c); return [mix(rgb(st.getPropertyValue('--a1')), [1, 1, 1], .28), rgb(st.getPropertyValue('--accent'))]; });
+    const a = pal[panelTone.i], b = pal[Math.min(pal.length - 1, panelTone.i + 1)], k = panelTone.f;
+    return [mix(a[0], b[0], k), mix(a[1], b[1], k)];
+  });
 })();
 
 // Signal line above the footer: a few sine waves that swell as the pointer comes near
@@ -2257,18 +2314,32 @@ void main(){
 
 
 
-// Case panels: each one sticks once its bottom reaches the viewport, so the next slides over it.
-// If scrolling rests while a panel is only partly in, the slide is finished in the direction of
-// travel, as lenis/snap does (debounced), with native smooth scrolling.
+
+// Case panels. Near the seam between two panels a single wheel notch or key press plays the whole
+// transition to the next panel (or back to the previous one), and further input is held until the
+// gesture goes quiet, so a flick never stops halfway. Inside a panel, scrolling is left alone.
 (() => {
   const box = document.getElementById('cases'); if (!box) return;
   const P = [...box.querySelectorAll('.case')];
+  // Each screenshot glows in its own colours behind itself
+  box.querySelectorAll('.case .shot img').forEach(im => {
+    const a = im.cloneNode(); a.className = 'amb'; a.alt = ''; a.setAttribute('aria-hidden', 'true'); a.removeAttribute('style');
+    im.closest('.media').prepend(a);
+  });
   // Where each panel starts in the page flow; sticking does not change flow, only paint
-  const starts = () => { let y = box.getBoundingClientRect().top + scrollY; return P.map(p => { const s = y; y += p.offsetHeight; return s; }); };
+  const bridge = box.querySelector('.bridge.in');
+  const starts = () => { let y = bridge.getBoundingClientRect().bottom + scrollY; return P.map(p => { const s = y; y += p.offsetHeight; return s; }); };
   let S0 = [];
-  // A panel is covered once the next one has reached the top; its canvases can rest
-  const cover = () => { const y = scrollY + 1; P.forEach((p, i) => p.toggleAttribute('data-covered', i + 1 < P.length && y >= S0[i + 1])); };
-  const size = () => { P.forEach(p => p.style.setProperty('--h', p.offsetHeight + 'px')); S0 = starts(); cover(); };
+  // A covered panel is not painted; also tell the corner orb where we are
+  const cover = () => {
+    const y = scrollY + 1, vh = innerHeight;
+    P.forEach((p, i) => p.toggleAttribute('data-covered', i + 1 < P.length && y >= S0[i + 1]));
+    let i = 0; while (i + 1 < P.length && y >= S0[i + 1]) i++;
+    panelTone.i = i; panelTone.f = i + 1 < P.length ? Math.max(0, Math.min(1, (y - (S0[i + 1] - vh)) / vh)) : 0;
+  };
+  const size = () => {
+    P.forEach(p => p.style.setProperty('--h', p.offsetHeight + 'px')); S0 = starts(); cover();
+  };
   const ro = new ResizeObserver(size); P.forEach(p => ro.observe(p));
   addEventListener('scroll', cover, { passive: true });
   // Index links go to a panel's flow position; anchor scrolling to a stuck box lands wrong
@@ -2277,30 +2348,63 @@ void main(){
     scrollTo({ top: starts()[i], behavior: reduce ? 'auto' : 'smooth' });
     history.replaceState(null, '', a.hash);
   }));
-  if (reduce || !fine) return;
-  let lastY = scrollY, dir = 1, target = null, idle = 0;
-  const settle = () => {
-    const y = scrollY, vh = innerHeight;
-    // Ignore the scrollend that our own snap produces
-    if (target !== null && Math.abs(y - target) < 3) { target = null; return; }
-    target = null;
-    const S = starts();
+  if (reduce) return;
+  // The seam before panel i is the last screen of scrolling before it is fully in
+  const target = (dir) => {
+    const y = scrollY, vh = innerHeight, S = starts();
     for (let i = 0; i < P.length; i++) {
-      const top = S[i] - y;
-      if (top <= 2 || top >= vh - 2) continue;
-      const f = 1 - top / vh, fwd = dir > 0 ? f > .05 : f > .95;
-      target = Math.round(fwd ? S[i] : S[i] - vh);
-      scrollTo({ top: target, behavior: 'smooth' });
-      return;
+      // A little slack, so the last bit of padding at a panel's end does not take its own notch
+      const from = S[i] - vh, slack = Math.min(150, vh * .16);
+      if (dir > 0 && y >= from - slack && y < S[i] - 2) return S[i];
+      if (dir < 0 && y > from + 2 && y <= S[i] + slack) return Math.max(0, from);
     }
+    return null;
   };
-  addEventListener('scroll', () => {
-    const y = scrollY;
-    if (Math.abs(y - lastY) > .5) { dir = Math.sign(y - lastY); lastY = y; }
-    // Wait for a real pause: a wheel ends a short scroll after every notch
-    clearTimeout(idle); idle = setTimeout(settle, 'onscrollend' in window ? 600 : 260);
-  }, { passive: true });
-  if ('onscrollend' in window) addEventListener('scrollend', () => { clearTimeout(idle); idle = setTimeout(settle, 240); });
+  let raf = 0, busy = false, quiet = 0;
+  const release = () => { clearTimeout(quiet); quiet = setTimeout(() => { if (!raf) busy = false; }, 220); };
+  const ease = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const go = (to) => {
+    const from = scrollY, t0 = performance.now(), D = Math.min(1250, 700 + Math.abs(to - from) * .4);
+    busy = true; cancelAnimationFrame(raf);
+    const step = (t) => {
+      const q = Math.min(1, (t - t0) / D);
+      scrollTo({ top: from + (to - from) * ease(q), behavior: 'instant' });
+      if (q < 1) raf = requestAnimationFrame(step); else { raf = 0; release(); }
+    };
+    raf = requestAnimationFrame(step);
+  };
+  addEventListener('wheel', (e) => {
+    if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    // Hold the rest of a gesture (trackpad inertia, a spun wheel) until it goes quiet
+    if (busy) { e.preventDefault(); release(); return; }
+    const to = target(Math.sign(e.deltaY)); if (to === null) return;
+    e.preventDefault(); go(to);
+  }, { passive: false });
+  addEventListener('keydown', (e) => {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || /input|textarea|select/i.test(document.activeElement.tagName)) return;
+    const dir = ['PageDown', 'ArrowDown'].includes(e.key) || (e.key === ' ' && !e.shiftKey) ? 1 : ['PageUp', 'ArrowUp'].includes(e.key) || (e.key === ' ' && e.shiftKey) ? -1 : 0;
+    if (!dir) return;
+    if (busy) { e.preventDefault(); return; }
+    const to = target(dir); if (to === null) return;
+    e.preventDefault(); go(to);
+  });
+})();
+
+// Transition switcher, shown with ?lab; the choice stays in the address bar
+(() => {
+  if (!root.hasAttribute('data-lab')) return;
+  const box = document.createElement('div'); box.className = 'lab'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', 'Transition between projects');
+  const b0 = document.createElement('b'); b0.textContent = 'Transition'; box.append(b0);
+  for (const v of ['flow', 'stack', 'curtain', 'liquid', 'zoom']) {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = v; b.setAttribute('aria-pressed', root.dataset.tr === v);
+    b.onclick = () => {
+      root.dataset.tr = v; box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+      const u = new URL(location.href); u.searchParams.set('tr', v); history.replaceState(null, '', u);
+      dispatchEvent(new Event('scroll'));
+    };
+    box.append(b);
+  }
+  document.body.append(box);
 })();
 
 </script>
