@@ -10,7 +10,7 @@ with sync_playwright() as p:
     for theme in ["light", "dark"]:
         page = b.new_page(viewport={"width": 1440, "height": 900}, locale="en-US", color_scheme=theme)
         # Dark is opt-in via the toggle, stored in localStorage
-        page.add_init_script(f"localStorage.setItem('theme', '{theme}')")
+        page.add_init_script(f"localStorage.setItem('theme', '{theme}'); sessionStorage.setItem('intro', '1')")
         page.goto((ROOT / "index.html").as_uri())
         # Wait for the terrain reveal and intro to finish
         page.wait_for_timeout(3500)
@@ -19,6 +19,7 @@ with sync_playwright() as p:
         if theme == "light":
             # Case study with its figure drawn in
             page = b.new_page(viewport={"width": 1440, "height": 900}, locale="en-US")
+            page.add_init_script("sessionStorage.setItem('intro', '1')")
             page.goto((ROOT / "index.html").as_uri())
             page.wait_for_timeout(1500)
             page.evaluate("scrollTo({top: document.getElementById('datamap').getBoundingClientRect().top + scrollY, behavior: 'instant'})")

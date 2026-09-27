@@ -133,34 +133,62 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .peek-rail img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
 @media (hover:none),(pointer:coarse){ .peek{display:none} }
 
-/* case studies */
-.cases{display:grid; grid-template-columns:minmax(0,1fr); gap:0; margin-top:clamp(40px,6vw,80px)}
-.stage{display:none}
-.case{padding:0 0 72px}
-.case .shot{display:block; margin:0 0 22px; aspect-ratio:16/10; border:1px solid var(--rule); border-radius:6px; overflow:hidden; background:var(--plate)}
+/* case studies: a different layout per project */
+.cases{display:grid; gap:clamp(110px,13vw,190px); margin-top:clamp(64px,8vw,110px)}
+.case{display:grid; gap:24px 56px; align-items:start; min-width:0}
+.case .media{margin:0; min-width:0}
+.case .shot{position:relative; display:block; aspect-ratio:16/10; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--plate); box-shadow:0 34px 70px -42px rgba(20,35,50,.38); transform:perspective(1200px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.case .shot::after{content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,.32), transparent 58%); opacity:var(--ga,0)}
 .case .shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
-.case h3{margin:0; font-size:clamp(1.6rem,2.6vw,2.15rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em}
+.case h3{margin:0; font-size:clamp(1.7rem,2.8vw,2.3rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em; --w:760}
 .links{display:flex; gap:18px; margin:12px 0 0; font-weight:560}
-.hook{margin:18px 0 0; font-size:1.2rem; line-height:1.45; max-width:34ch}
+.hook{margin:18px 0 0; font-size:1.2rem; line-height:1.45; max-width:36ch}
 .built{margin:10px 0 0; color:var(--muted); font-size:.93rem}
-.case ul{margin:18px 0 0; padding-left:18px; color:var(--muted); max-width:52ch}
+.case ul{margin:18px 0 0; padding-left:18px; color:var(--muted); max-width:54ch}
 .case li{margin:0 0 8px}
 .case li::marker{color:var(--faint)}
-@media (min-width:1024px){
-  .js .cases{grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:72px}
-  .js .stage{display:block; position:sticky; top:0; height:100vh; align-self:start; container-type:inline-size}
-  .js .case .shot{display:none}
-  .js .case{min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:48px 0}
+.globe-wrap{margin:0; display:grid; justify-items:center; gap:10px}
+.globe{display:block; width:100%; max-width:360px; aspect-ratio:1}
+.globe-cap{margin:0; font-size:.84rem; color:var(--muted); text-align:center}
+.pair{display:grid; gap:clamp(90px,10vw,140px)}
+@media (min-width:1000px){
+  .case.feature{grid-template-columns:repeat(12,minmax(0,1fr)); row-gap:44px}
+  .case.feature .media{grid-column:1 / 9}
+  .case.feature .globe-wrap{grid-column:9 / 13; align-self:center}
+  .case.feature .txt{grid-column:1 / 5}
+  .case.feature .list{grid-column:5 / 9}
+  .case.feature .list ul{margin-top:6px}
+  .case.feature .fig{grid-column:9 / 13; margin-top:0}
+  .case.feature .shot{aspect-ratio:16/9}
+  .case.right{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+  .case.right .media{order:2; position:sticky; top:14vh}
+  .case.left{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+  .case.left .media{position:sticky; top:14vh}
+  .case.band{grid-template-columns:minmax(0,5fr) minmax(0,7fr); position:relative; padding:clamp(56px,6vw,88px) 0}
+  .case.band .media{margin-right:calc((100vw - min(100vw, 1320px)) / -2 - var(--gut))}
+  .case.band .fig{grid-column:1 / -1; max-width:none; display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:0 56px; align-items:end}
+  .case.band .fig svg{grid-column:2}
+  .case.band .fig figcaption{grid-column:1; grid-row:1; margin:0}
+  .pair{grid-template-columns:1fr 1fr; gap:56px; align-items:start}
+  .pair .card:nth-child(2){margin-top:120px}
 }
-.plate{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%) perspective(1400px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); aspect-ratio:16/10; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--plate); box-shadow:0 30px 70px -40px rgba(20,35,50,.35)}
-.cap{position:absolute; left:0; right:0; top:calc(50% + 31.25cqw + 16px); display:flex; align-items:flex-start; gap:24px; font-size:.86rem; color:var(--muted)}
-.cap-t{flex:1; min-width:0; clip-path:inset(0); transition:clip-path .4s var(--io)}
-.cap-t.out{clip-path:inset(0 0 0 100%)}
-.cap-t.pre{clip-path:inset(0 100% 0 0); transition:none}
-.cap-t b{color:var(--ink); font-weight:600; margin-right:8px; font-variant-numeric:tabular-nums}
-.ticks{display:flex; gap:5px; padding-top:7px}
-.ticks i{width:14px; height:3px; border-radius:2px; background:var(--rule); transition:width .5s var(--out), background-color .3s}
-.ticks i.on{width:30px; background:var(--accent)}
+.case.band::before{content:""; position:absolute; z-index:-1; top:0; bottom:0; left:calc(50% - 50vw); right:calc(50% - 50vw); background:var(--plate); transform-origin:left}
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .case.feature .media{animation:grow-in linear both; animation-timeline:view(); animation-range:entry 0% entry 85%}
+    .case.right .media{animation:from-right linear both; animation-timeline:view(); animation-range:entry 0% entry 75%}
+    .case.left .media{animation:turn-in linear both; animation-timeline:view(); animation-range:entry 0% entry 80%}
+    .case.band::before{animation:band-in linear both; animation-timeline:view(); animation-range:entry 0% entry 60%}
+    .case.band .media{animation:from-right linear both; animation-timeline:view(); animation-range:entry 10% entry 90%}
+    .pair .card{animation:card-in linear both; animation-timeline:view(); animation-range:entry 0% entry 70%}
+    .globe-wrap{animation:grow-in linear both; animation-timeline:view(); animation-range:entry 0% entry 70%}
+    @keyframes grow-in{from{transform:scale(.86) translateY(60px); opacity:.15}}
+    @keyframes from-right{from{transform:translateX(90px) rotate(1.5deg); opacity:0}}
+    @keyframes turn-in{from{transform:perspective(1200px) rotateY(22deg) translateX(-50px); opacity:0}}
+    @keyframes band-in{from{transform:scaleX(.82); opacity:0}}
+    @keyframes card-in{from{transform:translateY(90px) rotate(-2deg); opacity:0}}
+  }
+}
 
 /* figures */
 .fig{margin:32px 0 0; max-width:520px}
@@ -190,12 +218,6 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 
 /* background sheet */
 #bgmap{position:fixed; left:0; top:0; z-index:-1; pointer-events:none; will-change:transform}
-.plate figure{position:absolute; inset:0; margin:0; clip-path:inset(100% 0 0 0); transition:clip-path .9s var(--io)}
-.plate figure.from-top{clip-path:inset(0 0 100% 0)}
-.plate figure.on{clip-path:inset(0); z-index:2}
-.plate figure.off{clip-path:inset(0); z-index:1; transition:none}
-.plate img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left; transform:scale(1.08); transition:transform 1.2s var(--out)}
-.plate figure.on img{transform:none}
 
 /* decisions */
 .decs{display:grid; grid-template-columns:1fr; gap:40px}
@@ -225,33 +247,89 @@ footer{margin-top:clamp(88px,10vw,140px); padding:22px 0 30px; border-top:1px so
 footer .src{margin-left:auto}
 
 /* gallery motion */
-.plate::after{content:""; position:absolute; inset:0; z-index:3; pointer-events:none; background:radial-gradient(circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,.34), transparent 58%); opacity:var(--ga,0)}
 .tog, .big{position:relative}
 .rpl{position:absolute; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; border:1.5px solid var(--accent); pointer-events:none; animation:rpl .9s var(--out) both}
 @keyframes rpl{from{transform:scale(.2); opacity:.9}to{transform:scale(var(--rs,6)); opacity:0}}
 .count{display:inline-block; font-variant-numeric:tabular-nums; text-align:right}
-.mq{display:grid; gap:12px; margin:0 0 clamp(56px,7vw,96px); overflow:hidden; -webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.mq-row{display:flex; width:max-content; animation:mq 70s linear infinite}
-.mq-row.rev{animation-direction:reverse; animation-duration:90s}
-.mq:hover .mq-row{animation-play-state:paused}
-.mq-row span{margin-right:10px; padding:7px 16px; border:1px solid var(--rule); border-radius:999px; white-space:nowrap; font-size:.95rem; font-weight:540; background:color-mix(in srgb, var(--paper) 82%, transparent)}
-.mq-row.rev span{color:var(--muted); font-weight:460}
-@keyframes mq{to{transform:translateX(-50%)}}
 .contact{position:relative; isolation:isolate; background:linear-gradient(to bottom, transparent, var(--paper) clamp(120px,14vw,200px))}
 #dust{position:absolute; z-index:-1; top:clamp(24px,5vw,72px); right:0; width:min(64vw,860px); height:min(56vw,640px); pointer-events:none}
 @media (max-width:700px){ #dust{width:100%; height:88vw; top:24px; opacity:.55} }
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
     .index li{animation:slide-in linear both; animation-timeline:view(); animation-range:entry 0% entry 70%}
-    dl.kv > *{animation:rise-in linear both; animation-timeline:view(); animation-range:entry 0% entry 90%}
     @keyframes slide-in{from{opacity:0; transform:translateX(-48px)}}
-    @keyframes rise-in{from{opacity:0; transform:translateY(22px)}}
   }
 }
 @media (prefers-reduced-motion:reduce){
-  .mq-row{animation:none !important; flex-wrap:wrap; width:auto; row-gap:10px}
-  .mq-row .dup{display:none}
 }
+
+/* intro */
+.intro{position:fixed; inset:0; z-index:50; display:grid; place-items:center; background:var(--paper); overflow:hidden}
+.intro .aur{position:absolute; inset:0; width:100%; height:100%; display:block}
+.intro-c{position:relative; display:grid; justify-items:center; gap:14px; text-align:center}
+.mono{width:min(34vw,190px); aspect-ratio:1; overflow:visible}
+.mono path{fill:none; stroke:var(--accent); stroke-width:1.1; stroke-linejoin:round; stroke-dasharray:1 1; stroke-dashoffset:1; animation:draw 1.1s var(--out) forwards; animation-delay:calc(.15s + var(--i) * 140ms)}
+@keyframes draw{to{stroke-dashoffset:0}}
+.intro-t{margin:4px 0 0; font-size:clamp(1.8rem,5vw,2.6rem); font-weight:800; font-stretch:125%; letter-spacing:-.03em; clip-path:inset(0 100% 0 0); animation:wipe-x .9s var(--io) .75s forwards}
+@keyframes wipe-x{to{clip-path:inset(0)}}
+.intro-s{margin:0; font-size:.86rem; color:var(--muted); letter-spacing:.5em; opacity:0; animation:converge 1s var(--out) 1.05s forwards; font-variant-numeric:tabular-nums}
+@keyframes converge{to{letter-spacing:.06em; opacity:1}}
+.ld{display:flex; align-items:center; gap:12px; margin-top:10px; font-size:.82rem; color:var(--muted); font-variant-numeric:tabular-nums}
+.ld-bar{width:160px; height:2px; background:var(--rule); overflow:hidden}
+.ld-bar i{display:block; height:100%; background:var(--accent); transform-origin:left; transform:scaleX(0)}
+.ld-n{min-width:3.2ch; text-align:right}
+.intro.out{transform:translateY(-100%); transition:transform .85s var(--io)}
+.intro.out .intro-c{transform:scale(1.06); opacity:0; transition:transform .6s var(--out), opacity .4s}
+:root.intro-on{overflow:hidden}
+.ro-ld{display:inline-flex; gap:4px; vertical-align:middle}
+.ro-ld i{width:5px; height:5px; border-radius:50%; background:var(--accent); animation:ro-bounce .9s ease-in-out infinite; animation-delay:calc(var(--i) * .15s)}
+@keyframes ro-bounce{0%,100%{transform:translateY(0); opacity:.4}50%{transform:translateY(-5px); opacity:1}}
+
+/* north arrow */
+.legend .note{display:flex; align-items:flex-end; gap:14px}
+.north{width:18px; height:30px; flex:none; overflow:visible}
+.north path{fill:none; stroke:var(--ink); stroke-width:1.3; stroke-linejoin:round; stroke-dasharray:1 1; stroke-dashoffset:1}
+.north text{font:700 9px var(--font); fill:var(--ink); opacity:0}
+.go .north path{animation:draw 1s var(--out) 1.5s forwards}
+.go .north text{animation:fill-in .6s ease-out 2.1s forwards}
+.north .fill{fill:var(--ink); stroke:none; opacity:0}
+.go .north .fill{animation:fill-in .5s ease-out 2.3s forwards}
+@keyframes fill-in{to{opacity:1}}
+
+/* blob-shaped hover preview */
+.peek-in{animation:blob 9s ease-in-out infinite}
+.peek:not(.on) .peek-in{animation-play-state:paused}
+@keyframes blob{0%,100%{border-radius:42% 58% 64% 36% / 45% 42% 58% 55%}33%{border-radius:64% 36% 46% 54% / 34% 32% 68% 66%}66%{border-radius:34% 66% 42% 58% / 52% 40% 60% 48%}}
+
+/* decorative canvases */
+#decisions{position:relative; isolation:isolate}
+.flow{position:absolute; z-index:-1; inset:0; width:100%; height:100%; pointer-events:none; opacity:.9}
+.net{height:clamp(300px,30vw,380px); margin:0 0 clamp(40px,6vw,72px)}
+.net canvas{display:block; width:100%; height:100%}
+@media (max-width:759px){ .net{height:680px} }
+#now .two > div{position:relative}
+.orb{position:absolute; right:4%; top:clamp(-120px,-9vw,-80px); width:clamp(84px,9vw,124px); aspect-ratio:1; pointer-events:none}
+.sine{display:block; width:100%; height:90px; margin-top:clamp(60px,8vw,110px)}
+.sine + footer{margin-top:0}
+
+/* text reveals */
+.sc, .sw{display:inline-block; white-space:pre}
+@media (prefers-reduced-motion:no-preference){
+  .js .rev .sc{opacity:0}
+  .js .rev.in .sc{animation:sc-in .95s var(--out) both; animation-delay:calc(var(--i) * 34ms)}
+  .js .rev .sw{opacity:0}
+  .js .rev.in .sw{animation:sw-in .85s var(--out) both; animation-delay:calc(var(--d, 0s) + var(--i) * 46ms)}
+  .js .rev.drop .sc{opacity:0}
+  .js .rev.drop.in .sc{animation:drop-in .8s cubic-bezier(.3,1.45,.5,1) both; animation-delay:calc(var(--i) * 36ms)}
+}
+@keyframes sc-in{from{opacity:0; transform:translateY(58%) rotate(8deg) scale(.92); filter:blur(5px)}60%{filter:blur(0)}to{opacity:1; transform:none; filter:none}}
+@keyframes sw-in{from{opacity:0; transform:translateY(.45em); filter:blur(8px)}to{opacity:1; transform:none; filter:none}}
+@keyframes drop-in{from{opacity:0; transform:translateY(-70%) rotate(-12deg)}to{opacity:1; transform:none}}
+.index .nm .sc{transform-origin:50% 80%}
+.rev.done .sc, .rev.done .sw{animation:none !important; opacity:1 !important}
+.index a.wave .nm .sc{animation:weight-wave .75s ease-in-out both; animation-delay:calc(var(--i) * 30ms)}
+@keyframes weight-wave{45%{-webkit-text-stroke:.045em currentColor; transform:translateY(-7%)}}
+h2{--w:780}
 
 /* type motion */
 .hero h1 .l{display:inline-block}
@@ -310,6 +388,20 @@ footer .src{margin-left:auto}
 </style>
 </head>
 <body id="top">
+<div class="intro" id="intro" aria-hidden="true">
+  <canvas class="aur"></canvas>
+  <div class="intro-c">
+    <svg class="mono" viewBox="0 0 100 100"><path pathLength="1" style="--i:0" d="M46.1 89.8 43.5 90.6 40.6 90.5 37.5 89.5 34.7 87.9 32.2 85.8 30.2 83.3 28.7 80.6 27.6 77.6 27.0 74.5 26.7 71.3 26.6 68.1 26.8 64.9 27.0 61.7 27.3 58.5 27.5 55.2 27.6 52.0 27.4 48.7 26.9 45.5 26.0 42.3 24.9 39.1 23.6 36.0 22.4 32.9 21.3 29.9 20.5 26.9 20.2 24.1 20.5 21.3 21.6 18.7 23.4 16.2 25.9 14.0 28.9 12.0 32.2 10.4 35.7 9.2 39.3 8.5 42.7 8.3 45.9 8.7 48.6 9.8 50.9 11.5 52.9 13.8 54.5 16.4 56.0 19.4 57.4 22.4 58.8 25.5 60.2 28.4 61.9 31.1 63.8 33.4 65.9 35.4 68.3 37.2 70.6 38.8 73.0 40.4 75.3 42.2 77.4 44.1 79.2 46.4 80.6 49.1 81.5 52.2 81.9 55.7 81.9 59.2 81.3 62.6 80.1 65.7 78.5 68.3 76.3 70.3 73.7 71.8 70.7 73.0 67.6 73.9 64.4 74.7 61.3 75.6 58.3 76.7 55.6 78.2 53.4 80.3 51.5 82.9 49.9 85.6 48.1 88.1Z"/><path pathLength="1" style="--i:1" d="M43.4 86.8 40.9 86.9 38.2 86.1 35.5 84.6 33.3 82.5 31.7 80.2 30.7 77.6 30.0 74.9 29.7 72.1 29.5 69.3 29.4 66.5 29.4 63.7 29.3 60.9 29.3 58.1 29.3 55.3 29.2 52.5 29.1 49.6 28.9 46.8 28.6 43.9 28.1 41.0 27.5 38.1 26.7 35.1 26.0 32.2 25.3 29.3 24.9 26.6 24.8 24.0 25.3 21.7 26.3 19.6 28.1 17.9 30.5 16.5 33.4 15.4 36.6 14.8 40.0 14.6 43.3 14.8 46.4 15.5 49.2 16.7 51.5 18.4 53.1 20.5 54.4 23.1 55.4 25.8 56.2 28.6 57.0 31.4 57.9 34.1 59.0 36.4 60.6 38.4 62.6 39.9 65.0 41.0 67.5 42.1 70.0 43.3 72.4 44.9 74.5 46.9 76.2 49.3 77.4 51.9 78.2 54.6 78.5 57.2 78.2 59.8 77.5 62.2 76.3 64.5 74.7 66.6 72.8 68.5 70.6 70.2 68.2 71.7 65.6 72.9 62.9 73.9 60.1 74.6 57.3 75.3 54.7 76.2 52.3 77.4 50.4 79.2 48.7 81.4 47.1 83.7 45.4 85.6Z"/><path pathLength="1" style="--i:2" d="M43.1 81.7 40.9 82.0 38.6 81.5 36.5 80.4 34.6 78.8 33.3 76.9 32.5 74.6 32.1 72.1 31.9 69.6 31.9 67.0 31.9 64.6 31.9 62.1 31.9 59.8 31.8 57.4 31.8 55.1 31.7 52.7 31.6 50.3 31.4 47.9 31.1 45.4 30.8 42.8 30.3 40.2 29.9 37.5 29.4 34.8 29.0 32.2 28.8 29.6 28.8 27.3 29.1 25.2 29.7 23.4 30.7 21.9 32.2 20.9 34.1 20.2 36.3 19.9 38.7 19.9 41.3 20.3 43.8 21.0 46.3 22.0 48.6 23.2 50.7 24.7 52.4 26.4 53.6 28.3 54.6 30.4 55.3 32.6 55.8 34.8 56.4 37.1 57.0 39.4 57.8 41.6 59.0 43.7 60.5 45.7 62.4 47.5 64.6 49.2 66.9 50.9 69.2 52.5 71.3 54.1 72.9 55.7 74.1 57.5 74.5 59.4 74.2 61.4 73.4 63.4 72.1 65.4 70.3 67.3 68.2 69.0 65.9 70.4 63.5 71.5 61.0 72.2 58.6 72.6 56.2 73.0 54.0 73.4 51.9 74.2 50.0 75.5 48.3 77.2 46.7 79.0 45.0 80.6Z"/><path pathLength="1" style="--i:3" d="M41.6 76.0 40.2 76.1 39.0 75.7 38.0 75.0 37.1 73.8 36.4 72.4 35.9 70.8 35.4 69.0 35.0 67.0 34.7 64.9 34.5 62.8 34.3 60.7 34.2 58.6 34.0 56.6 33.9 54.5 33.8 52.5 33.7 50.5 33.6 48.5 33.5 46.4 33.4 44.4 33.2 42.3 33.1 40.1 32.9 38.0 32.8 35.9 32.8 33.9 32.9 32.0 33.2 30.3 33.7 28.8 34.4 27.5 35.4 26.5 36.8 25.8 38.5 25.4 40.5 25.4 42.5 25.7 44.5 26.3 46.2 27.2 47.6 28.4 48.7 29.9 49.6 31.5 50.3 33.2 50.9 35.1 51.4 37.0 52.0 39.0 52.8 40.9 53.7 42.8 54.8 44.5 56.1 46.2 57.5 47.8 59.0 49.4 60.5 50.9 61.9 52.4 63.3 53.9 64.4 55.5 65.4 57.1 66.1 58.7 66.6 60.2 66.8 61.8 66.7 63.3 66.4 64.6 65.8 65.9 64.8 67.0 63.5 67.9 61.9 68.6 60.0 69.2 58.0 69.8 55.8 70.3 53.5 70.9 51.2 71.6 49.0 72.6 46.9 73.6 45.0 74.7 43.2 75.5Z"/><path pathLength="1" style="--i:4" d="M45.8 69.5 44.5 69.6 43.2 69.6 42.2 69.4 41.2 69.1 40.4 68.5 39.7 67.9 39.1 67.1 38.7 66.2 38.3 65.1 37.9 64.0 37.7 62.8 37.5 61.5 37.3 60.1 37.2 58.7 37.2 57.2 37.1 55.7 37.0 54.1 37.0 52.5 36.9 50.9 36.8 49.3 36.7 47.8 36.6 46.2 36.4 44.7 36.3 43.2 36.3 41.7 36.4 40.3 36.5 38.9 36.9 37.6 37.4 36.4 38.0 35.2 38.7 34.3 39.5 33.5 40.3 32.9 41.2 32.5 42.1 32.4 42.9 32.7 43.7 33.2 44.5 34.0 45.2 35.0 45.9 36.2 46.6 37.6 47.3 39.1 48.0 40.6 48.7 42.1 49.4 43.6 50.2 45.0 51.0 46.3 51.8 47.4 52.7 48.5 53.6 49.5 54.5 50.5 55.4 51.6 56.3 52.7 57.1 53.8 57.9 55.1 58.6 56.3 59.2 57.6 59.7 58.9 60.0 60.1 60.1 61.3 59.9 62.4 59.6 63.4 58.9 64.2 58.0 64.9 56.9 65.6 55.5 66.2 54.0 66.8 52.4 67.4 50.7 68.1 49.0 68.6 47.4 69.1Z"/></svg>
+    <p class="intro-t">H. Gu</p>
+    <p class="intro-s">43.1320° N&nbsp;&nbsp;89.5119° W&nbsp;&nbsp;337 m</p>
+    <div class="ld"><span class="ld-bar"><i></i></span><span class="ld-n">0%</span></div>
+  </div>
+</div>
+<script>
+// Intro shows once per session; decided before first paint so it never flashes
+(function () { var r = document.documentElement, seen = false; try { seen = sessionStorage.getItem('intro') === '1'; } catch (e) {}
+  if (seen || r.hasAttribute('data-lite') || matchMedia('(prefers-reduced-motion: reduce)').matches) document.getElementById('intro').remove(); else r.classList.add('intro-on'); })();
+</script>
 <canvas id="bgmap" aria-hidden="true"></canvas>
 
 <header class="bar" id="bar">
@@ -332,20 +424,20 @@ footer .src{margin-left:auto}
     <div class="map" id="map" role="img" aria-label="Contour map of Madison, Wisconsin, with Lake Mendota and Lake Monona"><canvas id="terrain" aria-hidden="true"></canvas></div>
     <div class="wrap">
       <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0">H</span><span class="l" style="--i:1">.</span> <span class="l" style="--i:2">G</span><span class="l" style="--i:3">u</span></span></h1>
-      <p class="lede"><span class="blk">I build small, offline-first tools for maps, photos, and course data.</span></p>
+      <p class="lede"><span data-split="word">I build small, offline-first tools for maps, photos, and course data.</span></p>
       <p class="who" style="--i:0">Computer Science at UW–Madison, class of 2029.</p>
       <p class="avail" style="--i:1">Open to Summer 2027 SWE and ML internships</p>
       <div class="legend">
         <div class="scale" aria-hidden="true"><div class="bar-s" id="sbar"><i></i><i></i><i></i><i></i></div><div class="ticks"><span>0</span><span id="shalf"></span><span id="sfull"></span></div></div>
-        <span class="note">Madison, Wisconsin<br>Contour interval 5 m</span>
-        <span class="readout" id="readout" aria-live="off"><b id="ro-a" data-dec="manual">Bascom Hill</b><span id="ro-b" data-dec="manual"></span></span>
+        <span class="note"><svg class="north" viewBox="0 0 18 30" aria-hidden="true"><text x="9" y="8" text-anchor="middle">N</text><path pathLength="1" d="M9 11 L15 29 L9 25 L3 29 Z"/><path class="fill" d="M9 11 L9 25 L3 29 Z"/></svg><span>Madison, Wisconsin<br>Contour interval 5 m</span></span>
+        <span class="readout" id="readout" aria-live="off"><b id="ro-a" data-dec="manual">Bascom Hill</b><span id="ro-b" data-dec="manual"><span class="ro-ld"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></span></span></span>
       </div>
     </div>
   </section>
 
   <section class="block" id="work" aria-labelledby="work-h">
     <div class="wrap">
-      <div class="shead"><h2 id="work-h"><span data-dec>Selected work</span></h2><p>Built end to end, all still running.</p></div>
+      <div class="shead"><h2 id="work-h"><span data-split="char">Selected work</span></h2><p>Built end to end, all still running.</p></div>
       <ul class="index" id="index">
         <li><a href="#route-animator" data-i="0"><span class="nm">route-animator</span><span class="ds">Flies a route over a satellite globe and records the video in the browser</span><span class="kd">Web app</span></a></li>
         <li><a href="#uw-course-lookup" data-i="1"><span class="nm">uw-course-lookup</span><span class="ds">Every UW–Madison course, linked to grade history and instructor ratings</span><span class="kd">Static site</span></a></li>
@@ -356,19 +448,20 @@ footer .src{margin-left:auto}
       </ul>
 
       <div class="cases" id="cases">
-        <div class="stage" aria-hidden="true"><div class="plate" id="plate"></div><div class="cap"><span class="cap-t" id="cap-t"></span><span class="ticks" id="ticks"><i></i><i></i><i></i><i></i><i></i><i></i></span></div></div>
-        <div>
-          <article class="case" id="route-animator" data-src="assets/route-animator.jpg" data-pos="center">
-            <a class="shot" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy"></a>
-            <h3><span data-dec>route-animator</span></h3>
-            <p class="links"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></p>
-            <p class="hook">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
-            <p class="built">MapLibre GL, Canvas 2D, in-browser video capture</p>
-            <ul>
+          <article class="case feature" id="route-animator" data-src="assets/route-animator.jpg" data-pos="center">
+            <div class="media"><a class="shot" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy"></a></div>
+            <div class="globe-wrap" aria-hidden="true"><canvas class="globe" id="globe"></canvas><p class="globe-cap">Madison, Reykjavík, Paris: the route in the screenshot</p></div>
+            <div class="txt">
+              <h3><span data-split="char">route-animator</span></h3>
+              <p class="links"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></p>
+              <p class="hook">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
+              <p class="built">MapLibre GL, Canvas 2D, in-browser video capture</p>
+            </div>
+            <div class="list"><ul>
               <li>Flies a vehicle along a multi-stop route over a satellite globe and records it with MediaRecorder. No server ever sees the clip.</li>
               <li>Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</li>
               <li>Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</li>
-            </ul>
+            </ul></div>
             <figure class="fig"><!-- fig:route-animator -->
 <svg viewBox="0 0 520 230" role="img" aria-label="Altitude over one flying leg, keyed to time versus keyed to eased distance">
 <path class="e draw" style="--d:0" d="M58.0 180.0 L512.0 180.0" pathLength="1"/>
@@ -389,19 +482,19 @@ footer .src{margin-left:auto}
 </svg>
 <!-- /fig:route-animator --><figcaption>Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%.</figcaption></figure>
           </article>
-
-          <article class="case" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg">
-            <a class="shot" href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/uw-course-lookup.jpg" width="1400" height="875" alt="Course list with Grades and Rate My Professors buttons for each UW–Madison course" loading="lazy"></a>
-            <h3><span data-dec>uw-course-lookup</span></h3>
-            <p class="links"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></p>
-            <p class="hook">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
-            <p class="built">Static site, zero dependencies, GitHub Pages</p>
-            <ul>
+          <article class="case right" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg">
+            <div class="media"><a class="shot" href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/uw-course-lookup.jpg" width="1400" height="875" alt="Course list with Grades and Rate My Professors buttons for each UW–Madison course" loading="lazy"></a></div>
+            <div class="txt">
+              <h3><span data-split="char">uw-course-lookup</span></h3>
+              <p class="links"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></p>
+              <p class="hook">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
+              <p class="built">Static site, zero dependencies, GitHub Pages</p>
+              <ul>
               <li>Resolves any course to its MadGrades GPA distribution and Rate My Professors page in one query.</li>
               <li>Seeded with anonymized course-mention counts mined from a student chat archive. Aggregates ship; records never do.</li>
               <li>No backend to keep alive: flat JSON, served from a CDN edge, loads instantly on a phone.</li>
             </ul>
-            <figure class="fig"><!-- fig:uw-course-lookup -->
+              <figure class="fig"><!-- fig:uw-course-lookup -->
 <svg viewBox="0 0 520 206" role="img" aria-label="Build pipeline from chat counts and public APIs to a static page">
 <g class="n" style="--d:0"><rect x="104" y="8" width="124" height="34" rx="6"/><text x="117" y="30" class="k">MadGrades API</text></g>
 <g class="n" style="--d:0"><rect x="254" y="8" width="154" height="34" rx="6"/><text x="267" y="30" class="k">Course Search API</text></g>
@@ -427,21 +520,22 @@ footer .src{margin-left:auto}
 <text class="s n" style="--d:0" x="146.0" y="188.0" text-anchor="start">not real courses</text>
 </svg>
 <!-- /fig:uw-course-lookup --><figcaption>Build pipeline. Course codes from the chat archive are checked against the real catalog before anything ships; the database holds <span class="count" data-to="290">290</span> courses and <span class="count" data-to="6847">6,847</span> instructors.</figcaption></figure>
+            </div>
           </article>
-
-          <article class="case" id="photo-organizer" data-src="assets/photo-organizer.jpg">
-            <a class="shot" href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener" tabindex="-1"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy"></a>
-            <h3><span data-dec>photo-organizer</span></h3>
-            <p class="links"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
-            <p class="hook">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
-            <p class="built">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class="count" data-to="7346">7,346</span> files, 0 errors.</p>
-            <ul>
+          <article class="case left" id="photo-organizer" data-src="assets/photo-organizer.jpg">
+            <div class="media"><a class="shot" href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener" tabindex="-1"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy"></a></div>
+            <div class="txt">
+              <h3><span data-split="char">photo-organizer</span></h3>
+              <p class="links"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
+              <p class="hook">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
+              <p class="built">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class="count" data-to="7346">7,346</span> files, 0 errors.</p>
+              <ul>
               <li>Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
               <li>RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
               <li>Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
               <li>Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN.</li>
             </ul>
-            <figure class="fig"><!-- fig:photo-organizer -->
+              <figure class="fig"><!-- fig:photo-organizer -->
 <svg viewBox="0 0 520 214" role="img" aria-label="Photos are embedded with CLIP, split into people and scenery, and scenery is clustered">
 <g class="n" style="--d:0"><rect x="0" y="4" width="206" height="34" rx="6"/><text x="13" y="26" class="k">7,346 files</text></g>
 <g class="n" style="--d:2"><rect x="0" y="70" width="206" height="50" rx="6"/><text x="13" y="92" class="k">CLIP ViT-B/32</text><text x="13" y="109" class="s">cached by path, size, mtime</text></g>
@@ -500,19 +594,21 @@ footer .src{margin-left:auto}
 <text class="s n" style="--d:9" x="372.0" y="196.0" text-anchor="middle">misc</text>
 </svg>
 <!-- /fig:photo-organizer --><figcaption>Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</figcaption></figure>
+            </div>
           </article>
-
-          <article class="case" id="datamap" data-src="assets/datamap.jpg">
-            <a class="shot" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy"></a>
-            <h3><span data-dec>DataMap</span></h3>
-            <p class="links"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></p>
-            <p class="hook">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
-            <p class="built">OKLCH ramps, quantile breaks, no dependencies, Playwright tests</p>
-            <ul>
+          <article class="case band" id="datamap" data-src="assets/datamap.jpg">
+            <div class="txt">
+              <h3><span data-split="char">DataMap</span></h3>
+              <p class="links"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></p>
+              <p class="hook">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
+              <p class="built">OKLCH ramps, quantile breaks, no dependencies, Playwright tests</p>
+              <ul>
               <li>Sequential ramps are generated in OKLCH from a reference lightness/chroma trajectory with the hue swapped, so perceptual monotonicity is structural, not eyeballed after the fact.</li>
               <li>Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
               <li>Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
             </ul>
+            </div>
+            <div class="media"><a class="shot" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy"></a></div>
             <figure class="fig"><!-- fig:datamap -->
 <svg viewBox="0 0 520 168" role="img" aria-label="Blue, teal and orange seven-class ramps that share one lightness track">
 <text class="k n" style="--d:0" x="0.0" y="27.0" text-anchor="start">blue</text>
@@ -551,17 +647,18 @@ footer .src{margin-left:auto}
 </svg>
 <!-- /fig:datamap --><figcaption>Seven-class ramps exactly as DataMap&rsquo;s <code>color.js</code> builds them. Every hue reuses one lightness track, so each column shares an L value.</figcaption></figure>
           </article>
-
-          <article class="case" id="geo-spoof" data-src="assets/geo-spoof.jpg">
-            <a class="shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof" loading="lazy"></a>
-            <h3><span data-dec>geo-spoof</span></h3>
-            <p class="links"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener">Source</a></p>
-            <p class="hook">Chrome extension that answers the Geolocation API with a point you pick on a map.</p>
-            <p class="built">Manifest V3, content-script patching</p>
-            <ul>
+          <div class="pair">
+          <article class="case card" id="geo-spoof" data-src="assets/geo-spoof.jpg">
+            <div class="media"><a class="shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof" loading="lazy"></a></div>
+            <div class="txt">
+              <h3><span data-split="char">geo-spoof</span></h3>
+              <p class="links"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener">Source</a></p>
+              <p class="hook">Chrome extension that answers the Geolocation API with a point you pick on a map.</p>
+              <p class="built">Manifest V3, content-script patching</p>
+              <ul>
               <li>Patched calls still pass native-type checks, so pages that probe for tampering see ordinary functions.</li>
             </ul>
-            <figure class="fig"><!-- fig:geo-spoof -->
+              <figure class="fig"><!-- fig:geo-spoof -->
 <svg viewBox="0 0 520 214" role="img" aria-label="Settings flow from the popup through bridge.js to inject.js, which answers the page">
 <g class="n" style="--d:0"><rect x="0" y="8" width="146" height="34" rx="6"/><text x="13" y="30" class="k">popup map picker</text></g>
 <g class="n" style="--d:1"><rect x="196" y="8" width="140" height="34" rx="6"/><text x="209" y="30" class="k">chrome.storage</text></g>
@@ -583,15 +680,16 @@ footer .src{margin-left:auto}
 <text class="s n" style="--d:7" x="184.0" y="194.0" text-anchor="end">toString(): [native code]</text>
 </svg>
 <!-- /fig:geo-spoof --><figcaption><code>bridge.js</code> reads settings in the isolated world and hands them to <code>inject.js</code>, which patches the page&rsquo;s own <code>navigator.geolocation</code> before any page script runs.</figcaption></figure>
+            </div>
           </article>
-
-          <article class="case" id="tophat-watch" data-src="assets/tophat-watch.jpg">
-            <a class="shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator" loading="lazy"></a>
-            <h3><span data-dec>tophat-watch</span></h3>
-            <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
-            <p class="hook">Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.</p>
-            <p class="built">Chrome extension, ntfy push</p>
-            <figure class="fig"><!-- fig:tophat-watch -->
+          <article class="case card" id="tophat-watch" data-src="assets/tophat-watch.jpg">
+            <div class="media"><a class="shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator" loading="lazy"></a></div>
+            <div class="txt">
+              <h3><span data-split="char">tophat-watch</span></h3>
+              <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
+              <p class="hook">Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.</p>
+              <p class="built">Chrome extension, ntfy push</p>
+              <figure class="fig"><!-- fig:tophat-watch -->
 <svg viewBox="0 0 520 222" role="img" aria-label="The content script reports to the service worker, which alerts through three channels">
 <g class="n" style="--d:0"><rect x="0" y="4" width="196" height="34" rx="6"/><text x="13" y="26" class="k">Classroom tab</text></g>
 <g class="n" style="--d:2"><rect x="0" y="68" width="196" height="50" rx="6"/><text x="13" y="90" class="k">content.js</text><text x="13" y="107" class="s">DOM observer, 5 s rescan</text></g>
@@ -611,26 +709,28 @@ footer .src{margin-left:auto}
 <path class="tip n acc" style="--d:11" d="M318.0 185.0 L311.7 188.0 L311.7 182.0Z"/>
 </svg>
 <!-- /fig:tophat-watch --><figcaption>The content script reports on every DOM change and every 5&nbsp;s. The service worker remembers what has already alerted, so an item alerts once each time it opens.</figcaption></figure>
+            </div>
           </article>
-        </div>
+          </div>
       </div>
     </div>
   </section>
 
   <section class="block" id="decisions" aria-labelledby="dec-h">
+    <canvas class="flow" id="flow" aria-hidden="true"></canvas>
     <div class="wrap">
-      <div class="shead"><h2 id="dec-h"><span data-dec>Decisions I'd defend</span></h2><p>The parts of these projects I actually think about.</p></div>
+      <div class="shead"><h2 id="dec-h"><span data-split="char">Decisions I'd defend</span></h2><p>The parts of these projects I actually think about.</p></div>
       <div class="decs">
         <div class="dec" style="--i:0">
-          <h3><span class="blk">Show the gap, don't fake the data.</span></h3>
+          <h3><span data-split="word">Show the gap, don't fake the data.</span></h3>
           <p>Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</p>
         </div>
         <div class="dec" style="--i:1">
-          <h3><span class="blk">Aggregates leave the machine; records don't.</span></h3>
+          <h3><span data-split="word">Aggregates leave the machine; records don't.</span></h3>
           <p>The course tool is built on a private chat archive. Only anonymized counts are published; the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</p>
         </div>
         <div class="dec" style="--i:2">
-          <h3><span class="blk">Public repos are original work only.</span></h3>
+          <h3><span data-split="word">Public repos are original work only.</span></h3>
           <p>Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</p>
         </div>
       </div>
@@ -639,13 +739,10 @@ footer .src{margin-left:auto}
 
   <section class="block" id="now" aria-labelledby="now-h">
     <p class="sr">Tools used in these projects: MapLibre GL, Canvas 2D, WebGL, MediaRecorder, OffscreenCanvas, D3, TopoJSON, OKLCH, Leaflet, Chrome MV3, PyTorch, open_clip, HDBSCAN, FastAPI, SQLite, Playwright, GitHub Actions. Data sources: USGS 3DEP, MadGrades API, Course Search & Enroll API, World Bank, US Census, ISO 3166, OpenStreetMap, Nominatim, Esri World Imagery, Reddit via Firecrawl, ntfy.</p>
-    <div class="mq" aria-hidden="true">
-      <div class="mq-row"><span>MapLibre GL</span><span>Canvas 2D</span><span>WebGL</span><span>MediaRecorder</span><span>OffscreenCanvas</span><span>D3</span><span>TopoJSON</span><span>OKLCH</span><span>Leaflet</span><span>Chrome MV3</span><span>PyTorch</span><span>open_clip</span><span>HDBSCAN</span><span>FastAPI</span><span>SQLite</span><span>Playwright</span><span>GitHub Actions</span><span class="dup">MapLibre GL</span><span class="dup">Canvas 2D</span><span class="dup">WebGL</span><span class="dup">MediaRecorder</span><span class="dup">OffscreenCanvas</span><span class="dup">D3</span><span class="dup">TopoJSON</span><span class="dup">OKLCH</span><span class="dup">Leaflet</span><span class="dup">Chrome MV3</span><span class="dup">PyTorch</span><span class="dup">open_clip</span><span class="dup">HDBSCAN</span><span class="dup">FastAPI</span><span class="dup">SQLite</span><span class="dup">Playwright</span><span class="dup">GitHub Actions</span></div>
-      <div class="mq-row rev"><span>USGS 3DEP</span><span>MadGrades API</span><span>Course Search & Enroll API</span><span>World Bank</span><span>US Census</span><span>ISO 3166</span><span>OpenStreetMap</span><span>Nominatim</span><span>Esri World Imagery</span><span>Reddit via Firecrawl</span><span>ntfy</span><span class="dup">USGS 3DEP</span><span class="dup">MadGrades API</span><span class="dup">Course Search & Enroll API</span><span class="dup">World Bank</span><span class="dup">US Census</span><span class="dup">ISO 3166</span><span class="dup">OpenStreetMap</span><span class="dup">Nominatim</span><span class="dup">Esri World Imagery</span><span class="dup">Reddit via Firecrawl</span><span class="dup">ntfy</span></div>
-    </div>
+    <div class="net" aria-hidden="true"><canvas id="net"></canvas></div>
     <div class="wrap two">
       <div>
-        <h2 id="stack-h"><span data-dec>Stack</span></h2>
+        <h2 id="stack-h"><span data-split="char">Stack</span></h2>
         <dl class="kv">
           <dt>Languages</dt><dd>Python, Java, JavaScript, SQL / SQLite, Bash</dd>
           <dt>ML</dt><dd>PyTorch, open_clip, HDBSCAN, NumPy</dd>
@@ -654,7 +751,8 @@ footer .src{margin-left:auto}
         </dl>
       </div>
       <div>
-        <h2 id="now-h"><span data-dec>Now</span><span class="when">September 2026</span></h2>
+        <canvas class="orb" id="orb" aria-hidden="true"></canvas>
+        <h2 id="now-h"><span data-split="char">Now</span><span class="when">September 2026</span></h2>
         <dl class="kv">
           <dt>Applying</dt><dd>Summer 2027 SWE and ML internships.</dd>
           <dt>Drilling</dt><dd>About 150 pattern-based algorithm problems, grouped by technique rather than count.</dd>
@@ -668,11 +766,12 @@ footer .src{margin-left:auto}
   <section class="block contact" id="contact" aria-labelledby="contact-h">
     <canvas id="dust" aria-hidden="true"></canvas>
     <div class="wrap">
-      <h2 id="contact-h"><span data-dec>Contact</span></h2>
+      <h2 id="contact-h"><span data-split="char">Contact</span></h2>
       <p style="margin-top:14px">Email is the fastest way to reach me. Click the address to copy it.</p>
-      <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-dec>hgu72@wisc.edu</span></button>
+      <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-split="drop">hgu72@wisc.edu</span></button>
       <p class="sr" id="mail-status" role="status"></p>
       <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag>Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag>GitHub</a></div>
+      <canvas class="sine" id="sine" aria-hidden="true"></canvas>
       <footer>
         <span>One HTML file, no framework, no trackers.</span>
         <span>Terrain: USGS 3DEP via Terrain Tiles on AWS.</span>
@@ -690,10 +789,11 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const basic = () => root.hasAttribute('data-lite');
 
-// Text intro waits for the display face only, never for the map
-let goAt = 0;
+// The text intro starts as the intro overlay leaves, or once the display face is ready
+let goAt = 0, introFinished = false, introResolve;
+const introDone = new Promise(r => { introResolve = r; }).then(() => { introFinished = true; });
 const fontReady = Promise.race([document.fonts.load('800 100px Archivo'), new Promise(r => setTimeout(r, 800))]);
-fontReady.then(() => requestAnimationFrame(() => { root.classList.add('go'); goAt = performance.now(); }));
+introDone.then(() => requestAnimationFrame(() => { root.classList.add('go'); goAt = performance.now(); }));
 
 // Theme toggle
 const themeBtn = document.getElementById('theme');
@@ -743,41 +843,69 @@ const decode = (el, o = {}) => {
   requestAnimationFrame(tick);
 };
 
-// Headings decode once as they come into view
-const decIO = new IntersectionObserver((es) => es.forEach(e => {
+// Split text for per-letter or per-word reveals. Screen readers get the plain text from a
+// visually hidden copy; the animated spans are hidden from them.
+const split = (el, text) => {
+  const mode = el.dataset.split, by = mode === 'word' ? 'word' : 'char';
+  text = text ?? el.dataset.text ?? el.textContent; el.dataset.text = text;
+  el.textContent = '';
+  const sr = document.createElement('span'); sr.className = 'sr'; sr.textContent = text;
+  const vis = document.createElement('span'); vis.setAttribute('aria-hidden', 'true');
+  let i = 0;
+  for (const part of by === 'word' ? text.split(/(\s+)/) : [...text]) {
+    if (!part) continue;
+    if (by === 'word' && /^\s+$/.test(part)) { vis.append(part); continue; }
+    const sp = document.createElement('span'); sp.className = by === 'word' ? 'sw' : 'sc'; sp.style.setProperty('--i', i++); sp.textContent = part; vis.append(sp);
+  }
+  el.append(sr, vis);
+  if (mode !== 'plain') el.classList.add('rev');
+  if (mode === 'drop') el.classList.add('drop');
+};
+document.querySelectorAll('[data-split]').forEach(el => split(el));
+// Once a reveal has played, drop its animations so the letters stop being separate layers
+const settle = (el) => { const n = el.querySelectorAll('.sc, .sw').length; setTimeout(() => el.classList.add('done'), 1600 + n * 46 + (parseFloat(el.style.getPropertyValue('--d')) || 0) * 1000); };
+// Reveal once in view; the hero line waits for the intro, decision titles for their section
+const revIO = new IntersectionObserver((es) => es.forEach(e => {
   if (!e.isIntersecting) return;
-  decIO.unobserve(e.target);
+  revIO.unobserve(e.target);
   const sh = e.target.closest('.shead'); if (sh) sh.classList.add('on');
-  decode(e.target, { cursor: !e.target.closest('h3') });
-}), { threshold: .9 });
-document.querySelectorAll('[data-dec]:not([data-dec="manual"])').forEach(el => decIO.observe(el));
-const decsIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); decsIO.unobserve(e.target); } }), { threshold: .3 });
+  e.target.classList.add('in'); settle(e.target);
+}), { threshold: .6 });
+document.querySelectorAll('[data-split]').forEach(el => { if (!el.closest('.hero') && !el.closest('.dec')) revIO.observe(el); });
+const decsIO = new IntersectionObserver((es) => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add('seen'); decsIO.unobserve(e.target);
+  e.target.querySelectorAll('[data-split]').forEach((el, k) => { el.style.setProperty('--d', (.3 + k * .14) + 's'); el.classList.add('in'); settle(el); });
+}), { threshold: .3 });
 document.querySelectorAll('.decs').forEach(d => decsIO.observe(d));
+introDone.then(() => { const l = document.querySelector('.hero .lede [data-split]'); if (l) { l.style.setProperty('--d', '.55s'); l.classList.add('in'); settle(l); } });
 
-// Quick decode on hover for nav links and project names
+// Project names: a weight wave runs through the letters on hover
 if (fine && !basic()) {
-  document.querySelectorAll('.nav a').forEach(a => a.addEventListener('pointerenter', () => { if (!a._tok) decode(a, { step: 18, settle: 120, lead: 40 }); }));
-  document.querySelectorAll('.index a').forEach(a => { const n = a.querySelector('.nm'); a.addEventListener('pointerenter', () => { if (!n._tok) decode(n, { step: 16, settle: 130, lead: 40 }); }); });
+  document.querySelectorAll('.index a').forEach(a => {
+    const n = a.querySelector('.nm'); n.dataset.split = 'plain'; split(n);
+    a.addEventListener('pointerenter', () => { a.classList.remove('wave'); void a.offsetWidth; a.classList.add('wave'); });
+  });
 }
 
-// Pinned screenshot tilts toward the pointer, with a soft glare
+// Case screenshots tilt toward the pointer, with a soft glare
 if (fine && !reduce) {
-  const stage = document.querySelector('.stage'), pl = document.getElementById('plate');
-  let tx = 0, ty = 0, x = 0, y = 0, gx = 50, gy = 50, ga = 0, tga = 0, raf = 0, last = 0;
-  const tick = (t) => {
-    const dt = Math.min(.05, (t - last) / 1000); last = t;
-    x = damp(x, tx, 9, dt); y = damp(y, ty, 9, dt); ga = damp(ga, tga, 8, dt);
-    pl.style.setProperty('--rx', (-y * 5).toFixed(2) + 'deg'); pl.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
-    pl.style.setProperty('--gx', gx.toFixed(1) + '%'); pl.style.setProperty('--gy', gy.toFixed(1) + '%'); pl.style.setProperty('--ga', ga.toFixed(3));
-    raf = Math.abs(x - tx) + Math.abs(y - ty) + Math.abs(ga - tga) > .002 ? requestAnimationFrame(tick) : 0;
-  };
-  const go = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
-  stage.addEventListener('pointermove', (e) => {
-    const r = pl.getBoundingClientRect(), u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height;
-    tx = Math.max(-1, Math.min(1, u * 2 - 1)); ty = Math.max(-1, Math.min(1, v * 2 - 1));
-    gx = u * 100; gy = v * 100; tga = u >= 0 && u <= 1 && v >= 0 && v <= 1 ? 1 : .35; go();
+  document.querySelectorAll('.case .shot').forEach(sh => {
+    let tx = 0, ty = 0, x = 0, y = 0, gx = 50, gy = 50, ga = 0, tga = 0, raf = 0, last = 0;
+    const tick = (t) => {
+      const dt = Math.min(.05, (t - last) / 1000); last = t;
+      x = damp(x, tx, 9, dt); y = damp(y, ty, 9, dt); ga = damp(ga, tga, 8, dt);
+      sh.style.setProperty('--rx', (-y * 4).toFixed(2) + 'deg'); sh.style.setProperty('--ry', (x * 6).toFixed(2) + 'deg');
+      sh.style.setProperty('--gx', gx.toFixed(1) + '%'); sh.style.setProperty('--gy', gy.toFixed(1) + '%'); sh.style.setProperty('--ga', ga.toFixed(3));
+      raf = Math.abs(x - tx) + Math.abs(y - ty) + Math.abs(ga - tga) > .002 ? requestAnimationFrame(tick) : 0;
+    };
+    const go = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+    sh.addEventListener('pointermove', (e) => {
+      const r = sh.getBoundingClientRect(), u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height;
+      tx = u * 2 - 1; ty = v * 2 - 1; gx = u * 100; gy = v * 100; tga = 1; go();
+    });
+    sh.addEventListener('pointerleave', () => { tx = ty = 0; tga = 0; go(); });
   });
-  stage.addEventListener('pointerleave', () => { tx = ty = 0; tga = 0; go(); });
 }
 
 // Magnetic pull on small controls, springing back when the pointer leaves
@@ -839,8 +967,9 @@ mail.onclick = async (ev) => {
   const addr = mail.dataset.mail;
   ripple(mail, ev, 16);
   try { await navigator.clipboard.writeText(addr); } catch { location.href = 'mailto:' + addr; return; }
-  decode(mailTxt, { text: 'Copied', step: 40, settle: 160 }); status.textContent = 'Email address copied';
-  clearTimeout(mail.t); mail.t = setTimeout(() => { decode(mailTxt, { text: addr, step: 22, settle: 160 }); status.textContent = ''; }, 1600);
+  const replay = (t) => { split(mailTxt, t); mailTxt.classList.remove('in', 'done'); void mailTxt.offsetWidth; mailTxt.classList.add('in'); settle(mailTxt); };
+  replay('Copied'); status.textContent = 'Email address copied';
+  clearTimeout(mail.t); mail.t = setTimeout(() => { replay(addr); status.textContent = ''; }, 1600);
 };
 
 // Header: solid after hero, hide on scroll down
@@ -885,41 +1014,6 @@ if (fine && !reduce && !basic()) {
     rail.style.transform = `translateY(${-a.dataset.i * 100}%)`; kick();
   }));
   list.addEventListener('pointerleave', () => { active = false; peek.classList.remove('on'); });
-}
-
-// Case studies: sticky plate swaps on scroll
-const plate = document.getElementById('plate');
-{
-  const figs = cases.map(c => {
-    const f = document.createElement('figure'), im = new Image();
-    im.src = c.dataset.src; im.alt = ''; im.loading = 'lazy'; im.decoding = 'async';
-    if (c.dataset.pos) im.style.objectPosition = c.dataset.pos;
-    f.append(im); plate.append(f); return f;
-  });
-  const capT = document.getElementById('cap-t'), ticks = [...document.querySelectorAll('#ticks i')];
-  const caption = (i) => {
-    capT.classList.add('out');
-    setTimeout(() => {
-      capT.innerHTML = `<b>${i + 1}/${cases.length}</b>` + cases[i].querySelector('.shot img').alt;
-      capT.classList.replace('out', 'pre'); capT.offsetWidth; capT.classList.remove('pre');
-    }, 380);
-    ticks.forEach((t, k) => t.classList.toggle('on', k === i));
-  };
-  let cur = -1, py = scrollY;
-  const show = (i) => {
-    if (i === cur) return;
-    const down = scrollY >= py; py = scrollY;
-    figs.forEach(f => f.classList.remove('off'));
-    if (cur >= 0) { figs[cur].classList.remove('on'); figs[cur].classList.add('off'); }
-    const f = figs[i];
-    f.classList.toggle('from-top', !down);
-    f.getBoundingClientRect();
-    f.classList.add('on');
-    cur = i; caption(i);
-  };
-  const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) show(cases.indexOf(e.target)); }), { rootMargin: '-50% 0px -50% 0px' });
-  cases.forEach(c => io.observe(c));
-  show(0);
 }
 
 // Figures draw in once they scroll into view
@@ -1055,17 +1149,11 @@ void main(){
   for (int k = 0; k < ${N}; k++) {
     float A = HA[k]; if (A < .002) continue;
     vec4 h = HL[k]; float d = distance(pos, h.yz), R = h.w;
-    float inside = 1. - smoothstep(R - 120., R, d);
-    float front = exp(-pow((d - R) / 28., 2.));
+    // A soft-edged patch: full strength in the middle, fading over the outer half
+    float inside = 1. - smoothstep(R * .45, R, d);
     float idh = h.x < 258. ? 23. : floor((h.x - 260.) / 5. + .5);
-    float line = cov(lp, idh);
-    // The line swells where the front passes, like a wave running along it
-    if (front > .08) {
-      float n = max(max(cov(lp + ivec2(sw, 0), idh), cov(lp - ivec2(sw, 0), idh)), max(cov(lp + ivec2(0, sw), idh), cov(lp - ivec2(0, sw), idh)));
-      line = max(line, n * front);
-    }
-    hi = max(hi, line * A * clamp(inside + front, 0., 1.));
-    band = max(band, (1. - smoothstep(2.5 - fw, 2.5 + fw, abs(e - h.x))) * A * (inside * .07 + front * .06));
+    hi = max(hi, cov(lp, idh) * A * inside);
+    band = max(band, (1. - smoothstep(2.5 - fw, 2.5 + fw, abs(e - h.x))) * A * inside * .08);
   }
   col = mix(col, T, band); col = mix(col, T, hi);
   float dist = distance(gl_FragCoord.xy, Cn), R = Rv * Rmax;
@@ -1202,6 +1290,8 @@ const terrain = (() => {
   const waiting = new Map();
   let gridOk;
   const gridReady = new Promise(r => { gridOk = r; });
+  let heroOk;
+  const heroReady = new Promise(r => { heroOk = r; });
   const onMsg = ({ data: m }) => {
     if (m.type === 'grid') { g = m.g; core.load(g, META); if (glmap) glmap.setGrid(g, META.w, META.h); gridOk(); }
     else if (m.type === 'painted') { const r = waiting.get(m.id); waiting.delete(m.id); if (r) r(m); }
@@ -1311,6 +1401,7 @@ const terrain = (() => {
     if (tier < 2) { paths = null; idle(tracePaths); }
     if (tier === 0) reveal = 1;
     if (!glmap) draw2D(performance.now());
+    heroOk();
     kick();
   };
 
@@ -1325,26 +1416,28 @@ const terrain = (() => {
     if (!document.fonts.check('italic 500 14px Archivo')) document.fonts.load('italic 500 14px Archivo').then(() => { if (gen === heroGen) { compose(); if (glmap) glmap.setBase(base); kick(true); } });
   };
 
-  // Contour highlights. Reaching a new elevation lights that isoline from the pointer
-  // outward, like a ripple, with its neighbours 5 m up and down fainter; old ones fade.
-  const NH = 9;
-  const hls = Array.from({ length: NH }, () => ({ L: 0, x: 0, y: 0, t0: 0, R: 0, a: 0, ta: 0 }));
-  let curL = null;
+  // Contour highlights. The level under the pointer lights up in a soft patch that widens
+  // slowly and follows the pointer; when the level changes, the old patch shrinks back where
+  // it stands and fades, so fast movement never lights up the whole map.
+  const NH = 9, REACH = 170;
+  const hls = Array.from({ length: NH }, () => ({ L: 0, x: 0, y: 0, R: 0, tR: 0, a: 0, ta: 0, live: false }));
+  let curL = null, tapT = 0;
   const levelFor = (e) => e < SHORE + .6 ? SHORE : BASE + STEP * Math.max(0, Math.round((e - BASE) / STEP));
-  const spread = (L, x, y, t) => {
-    for (const h of hls) h.ta = 0;
-    const set = L === SHORE || tier < 2 ? [[L, 1, 0]] : [[L, 1, 0], [L - STEP, .42, 120], [L + STEP, .42, 120]];
+  const retract = () => { for (const h of hls) if (h.live) { h.live = false; h.tR = 0; h.ta = 0; } };
+  const spread = (L, x, y) => {
+    retract();
+    const set = L === SHORE || tier < 2 ? [[L, 1, 1]] : [[L, 1, 1], [L - STEP, .4, .8], [L + STEP, .4, .8]];
     const used = new Set();
-    for (const [lv, peak, delay] of set) {
+    for (const [lv, peak, reach] of set) {
       if (lv < SHORE) continue;
-      // Reuse the most faded slot not already taken by this spread
+      // Reuse the most faded slot that is not live
       let h = null;
-      for (const q of hls) if (!used.has(q) && (!h || q.a < h.a)) h = q;
+      for (const q of hls) if (!q.live && !used.has(q) && (!h || q.a < h.a)) h = q;
+      if (!h) break;
       used.add(h);
-      Object.assign(h, { L: lv, x, y, t0: t + delay, R: 0, a: 0, ta: peak });
+      Object.assign(h, { L: lv, x, y, R: 0, tR: REACH * reach, a: 0, ta: peak, live: true });
     }
   };
-  const radius = (h, t) => t < h.t0 ? 0 : Math.hypot(W, H) * 1.05 * (1 - Math.exp(-(t - h.t0) / 1200));
 
   let cv2dOk = false;
   const draw2D = (t) => {
@@ -1361,21 +1454,21 @@ const terrain = (() => {
     if (!paths) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = 2;
     for (const h of hls) {
-      if (h.a < .01 || h.R <= 0) continue;
+      if (h.a < .01 || h.R <= 1) continue;
       const p = h.L === SHORE ? paths.shore : (paths.levels[(h.L - BASE) / STEP] || {}).p;
       if (!p) continue;
-      ctx.save(); ctx.beginPath(); ctx.arc(h.x, h.y, h.R, 0, 7); ctx.clip();
-      ctx.strokeStyle = `rgba(${colors.water},${h.a})`; ctx.lineWidth = 2; ctx.stroke(p);
-      // A thicker band just inside the front reads as the wave passing
-      ctx.beginPath(); ctx.arc(h.x, h.y, h.R, 0, 7); ctx.arc(h.x, h.y, Math.max(0, h.R - 34), 0, 7, true); ctx.clip();
-      ctx.lineWidth = 3.4; ctx.stroke(p);
-      ctx.restore();
+      // A soft edge in three steps
+      for (const [r0, k] of [[1, .3], [.75, .65], [.5, 1]]) {
+        ctx.save(); ctx.beginPath(); ctx.arc(h.x, h.y, h.R * r0, 0, 7); ctx.clip();
+        ctx.strokeStyle = `rgba(${colors.water},${h.a * k})`; ctx.lineWidth = 2; ctx.stroke(p); ctx.restore();
+      }
     }
   };
 
   // Frame loop: runs only while something is moving, and only on screen
   let raf = 0, last = 0, tx = null, ty = null, moved = false, heroOn = true, glDirty = false;
-  const kick = (dirty) => { if (dirty) glDirty = true; if (!raf && ready && heroOn && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  const kick = (dirty) => { if (dirty) glDirty = true; if (!raf && ready && heroOn && !document.hidden && (introFinished || reveal >= 1)) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  introDone.then(() => kick());
   const frame = (t) => {
     raf = 0;
     const dt = Math.min(.05, Math.max(.001, (t - last) / 1000)); last = t;
@@ -1387,14 +1480,16 @@ const terrain = (() => {
       let L = levelFor(e);
       // Hold the current level until the pointer is clearly past the midpoint, so it does not flicker
       if (curL !== null && L !== curL && L !== SHORE && curL !== SHORE && Math.abs(e - curL) < STEP / 2 + .8) L = curL;
-      if (L !== curL) { curL = L; spread(L, tx, ty, t); }
+      if (L !== curL) { curL = L; spread(L, tx, ty); }
     }
     let busy = reveal < 1;
     for (const h of hls) {
-      h.a = damp(h.a, h.ta, h.ta > h.a ? 14 : 4.5, dt);
-      if (h.ta === 0 && h.a < .004) h.a = 0;
-      h.R = radius(h, t);
-      if (h.a > 0 && (Math.abs(h.a - h.ta) > .004 || t - h.t0 < 3200)) busy = true;
+      if (h.live && tx !== null) { h.x = damp(h.x, tx, 8, dt); h.y = damp(h.y, ty, 8, dt); }
+      // Widen slowly, shrink back a little faster
+      h.R = damp(h.R, h.tR, h.tR > h.R ? 2.4 : 4.5, dt);
+      h.a = damp(h.a, h.ta, h.ta > h.a ? 5 : 4, dt);
+      if (!h.live && h.R < 1) { h.R = 0; h.a = 0; }
+      if (h.a > 0 && (Math.abs(h.R - h.tR) > .5 || Math.abs(h.a - h.ta) > .004 || (h.live && tx !== null && Math.abs(h.x - tx) + Math.abs(h.y - ty) > .6))) busy = true;
     }
     const [fx, fy] = focusPx();
     let live = false;
@@ -1428,16 +1523,16 @@ const terrain = (() => {
   });
   hero.addEventListener('pointerleave', () => {
     if (!ready) return;
-    tx = null; curL = null; for (const h of hls) h.ta = 0;
+    tx = null; curL = null; retract();
     home(); kick();
   });
-  // A press sends the current level out again from that point; on touch it picks the level
+  // Touch has no hover: a tap lights the level there for a moment
   hero.addEventListener('pointerdown', (e) => {
-    if (!ready || !g) return;
+    if (!ready || !g || e.pointerType === 'mouse') return;
     pointAt(e);
     const L = levelFor(at((tx - ox) / s, (ty - oy) / s));
-    curL = L; spread(L, tx, ty, performance.now());
-    if (e.pointerType !== 'mouse') { read((tx - ox) / s, (ty - oy) / s); tx = null; }
+    curL = L; spread(L, tx, ty); read((tx - ox) / s, (ty - oy) / s); tx = null;
+    clearTimeout(tapT); tapT = setTimeout(() => { retract(); curL = null; kick(); }, 1800);
     kick();
   });
 
@@ -1499,7 +1594,7 @@ const terrain = (() => {
   new ResizeObserver(() => { const H2 = root.scrollHeight; if (bgDone && Math.abs(H2 - lastH) > 150) { lastH = H2; clearTimeout(rt); rt = setTimeout(paintBg, 200); } }).observe(document.body);
   return {
     repaint: () => { if (ready) { renderHero(); if (bgDone) paintBg(); } },
-    gridReady, SHORE, elev: (i, j) => at(i, j), focusCell: () => toGrid(FOCUS.lat, FOCUS.lon),
+    gridReady, heroReady, SHORE, elev: (i, j) => at(i, j), focusCell: () => toGrid(FOCUS.lat, FOCUS.lon),
   };
 })();
 // Contact: the lakes again, as particles that gather when the section comes into view.
@@ -1521,21 +1616,46 @@ const terrain = (() => {
     }
     for (let n = T.length - 1; n > 0; n--) { const k = Math.random() * (n + 1) | 0; [T[n], T[k]] = [T[k], T[n]]; }
     const [fi, fj] = terrain.focusCell(); camp = [offX + (fi - I0) * sc, offY + (fj - J0) * sc];
-    P = T.map(([x, y], n) => {
-      const o = P[n];
-      return { x: o ? o.x : Math.random() * W, y: o ? o.y : Math.random() * H, vx: 0, vy: 0, tx: x, ty: y, k: .012 + Math.random() * .022, hi: Math.random() < .3 };
-    });
+    // Second shape: the word, sampled from the page's own face
+    const o = document.createElement('canvas'); o.width = Math.ceil(W); o.height = Math.ceil(H);
+    const og = o.getContext('2d', { willReadFrequently: true });
+    let fs = Math.min(H * .42, W * .3);
+    og.font = `800 ${fs}px Archivo, sans-serif`; og.fontStretch = 'expanded';
+    fs *= Math.min(1, W * .82 / og.measureText('hello').width); og.font = `800 ${fs}px Archivo, sans-serif`;
+    og.textAlign = 'right'; og.textBaseline = 'middle'; og.fillText('hello', W - 8, H * .52);
+    const d = og.getImageData(0, 0, o.width, o.height).data, T2 = [];
+    for (let y = gap / 2; y < H; y += gap) for (let x = gap / 2; x < W; x += gap) if (d[((y | 0) * o.width + (x | 0)) * 4 + 3] > 128) T2.push([x, y]);
+    for (let n = T2.length - 1; n > 0; n--) { const k = Math.random() * (n + 1) | 0; [T2[n], T2[k]] = [T2[k], T2[n]]; }
+    shapes = [T, T2];
+    const n = Math.max(T.length, T2.length);
+    P = Array.from({ length: n }, (_, k) => { const q = P[k]; return q || { x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0, tx: 0, ty: 0, k: .012 + Math.random() * .022, hi: Math.random() < .3 }; });
+    assign(false);
     if (still) P.forEach(p => { p.x = p.tx; p.y = p.ty; });
   };
+  // Point every particle at the current shape; the spares drift as faint dust
+  let shapes = [[], []], cur = 0;
+  const assign = (burst) => {
+    const T = shapes[cur];
+    P.forEach((p, k) => {
+      const t = T[k]; p.dust = !t;
+      p.tx = t ? t[0] : Math.random() * W; p.ty = t ? t[1] : Math.random() * H;
+      if (burst) { p.vx += (Math.random() - .5) * 18; p.vy += (Math.random() - .5) * 18; }
+    });
+  };
+  const morph = () => { cur = 1 - cur; assign(true); kick(); };
+  setInterval(() => { if (onScreen && !still && mx < -1e3 && !document.hidden) morph(); }, 6500);
   const draw = () => {
     col = col || getComputedStyle(root).getPropertyValue('--water').trim();
     ctx.clearRect(0, 0, W, H);
     for (const hi of [false, true]) {
       ctx.fillStyle = `rgba(${col},${hi ? .75 : .32})`; ctx.beginPath();
-      for (const p of P) if (p.hi === hi) ctx.rect(p.x - .9, p.y - .9, 1.8, 1.8);
+      for (const p of P) if (p.hi === hi && !p.dust) ctx.rect(p.x - .9, p.y - .9, 1.8, 1.8);
       ctx.fill();
     }
-    if (camp) { ctx.strokeStyle = `rgba(${col},.9)`; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(camp[0], camp[1], 6, 0, 7); ctx.stroke(); }
+    ctx.fillStyle = `rgba(${col},.12)`; ctx.beginPath();
+    for (const p of P) if (p.dust) ctx.rect(p.x - .6, p.y - .6, 1.2, 1.2);
+    ctx.fill();
+    if (camp && cur === 0) { ctx.strokeStyle = `rgba(${col},.9)`; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(camp[0], camp[1], 6, 0, 7); ctx.stroke(); }
   };
   const frame = (t) => {
     raf = 0;
@@ -1561,13 +1681,346 @@ const terrain = (() => {
   sec.addEventListener('pointerleave', () => { mx = my = -1e4; kick(); });
   sec.addEventListener('pointerdown', (e) => {
     if (e.target.closest('a, button')) return;
-    for (const p of P) { p.vx += (Math.random() - .5) * 22; p.vy += (Math.random() - .5) * 22; }
-    kick();
+    morph();
   });
   let rt = 0;
   addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (P.length) { build(); draw(); kick(); } }, 200); });
   addEventListener('themechange', () => { col = ''; draw(); });
 })();
+// Shared helpers for the decorative canvases
+const cssv = (n) => getComputedStyle(root).getPropertyValue(n).trim();
+const hexRgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)).join(',');
+// Match a canvas's backing store to its CSS size; returns CSS size and the pixel ratio used
+const fit = (cv, maxDpr = 1.5) => {
+  const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, maxDpr);
+  const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
+  if (cv.width !== w) cv.width = w;
+  if (cv.height !== h) cv.height = h;
+  return { W: r.width, H: r.height, d };
+};
+// Call draw(t, dt) every frame, but only while the element is on screen and the tab is visible
+const onScreenLoop = (el, draw) => {
+  let on = false, raf = 0, last = 0;
+  const tick = (t) => {
+    raf = 0;
+    const dt = Math.min(.05, Math.max(.001, (t - last) / 1000)); last = t;
+    draw(t, dt);
+    if (on && !document.hidden) raf = requestAnimationFrame(tick);
+  };
+  const start = () => { if (!raf && on && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+  new IntersectionObserver(([e]) => { on = e.isIntersecting; start(); }, { rootMargin: '80px' }).observe(el);
+  document.addEventListener('visibilitychange', start);
+};
+
+// Intro: a loader over a pale aurora while fonts and terrain load, then the page slides in
+(() => {
+  const el = document.getElementById('intro');
+  if (!el) { fontReady.then(introResolve); return; }
+  try { sessionStorage.setItem('intro', '1'); } catch {}
+  const bar = el.querySelector('.ld-bar i'), num = el.querySelector('.ld-n'), cv = el.querySelector('.aur');
+  const t0 = performance.now();
+  let target = 6, shown = 0, last = t0, leaving = false;
+  fontReady.then(() => { target = Math.max(target, 38); });
+  terrain.gridReady.then(() => { target = Math.max(target, 72); });
+  terrain.heroReady.then(() => { target = 100; });
+  setTimeout(() => { target = 100; }, 4500);
+  // Aurora: a small shader canvas that CSS scales up, so its bands stay soft
+  const gl = cv.getContext('webgl', { alpha: false, antialias: false, depth: false, powerPreference: 'low-power' });
+  let aur = null;
+  if (gl) {
+    const sh = (tp, src) => { const o = gl.createShader(tp); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }'));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision mediump float; uniform vec2 r; uniform float t; uniform vec3 P, A, B;
+void main(){
+  vec2 uv = (gl_FragCoord.xy * 2. - r) / min(r.x, r.y); float T = t * .3;
+  for (float i = 1.; i < 6.; i += 1.) { uv.x += .5 / i * sin(i * 2. * uv.y + T + i); uv.y += .5 / i * cos(i * 1.4 * uv.x + T * 1.1); }
+  float k = .5 + .5 * sin(uv.x * 1.2 + uv.y * .8 + T * .6), k2 = .5 + .5 * cos(uv.y * 1.3 - uv.x * .6 - T * .5);
+  vec3 c = mix(P, A, k * .85); c = mix(c, B, k2 * .5);
+  gl_FragColor = vec4(c, 1.);
+}`));
+    gl.bindAttribLocation(pr, 0, 'p'); gl.linkProgram(pr); gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    const u = (n) => gl.getUniformLocation(pr, n), dark = isDark();
+    gl.uniform3fv(u('P'), dark ? [.06, .086, .114] : [.984, .988, .984]);
+    gl.uniform3fv(u('A'), dark ? [.1, .19, .31] : [.83, .9, .97]);
+    gl.uniform3fv(u('B'), dark ? [.07, .2, .16] : [.86, .94, .89]);
+    cv.width = Math.max(64, Math.round(innerWidth / 4)); cv.height = Math.max(48, Math.round(innerHeight / 4));
+    gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(u('r'), cv.width, cv.height);
+    const ut = u('t');
+    aur = (t) => { gl.uniform1f(ut, t / 1000); gl.drawArrays(gl.TRIANGLES, 0, 3); };
+  }
+  const tick = (t) => {
+    const dt = Math.min(.05, (t - last) / 1000); last = t;
+    // The count eases toward what has actually loaded, never faster than the work
+    shown = Math.min(target, shown + Math.max(22, (target - shown) * 3.5) * dt);
+    bar.style.transform = `scaleX(${(shown / 100).toFixed(3)})`; num.textContent = Math.floor(shown) + '%';
+    if (aur) aur(t);
+    if (!leaving && shown >= 100 && t - t0 > 2100) {
+      leaving = true; el.classList.add('out'); root.classList.remove('intro-on'); introResolve();
+      setTimeout(() => { el.remove(); const l = gl && gl.getExtension('WEBGL_lose_context'); if (l) l.loseContext(); }, 1000);
+    }
+    if (document.contains(el)) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();
+
+// Route globe: a dotted sphere with the route in the screenshot, Madison to Reykjavík to Paris
+(() => {
+  const cv = document.getElementById('globe'); if (!cv) return;
+  const ctx = cv.getContext('2d'), still = reduce || basic();
+  const D = [];
+  for (let i = 0, N = 1100; i < N; i++) { const y = 1 - 2 * (i + .5) / N, r = Math.sqrt(1 - y * y), a = i * 2.39996; D.push([Math.cos(a) * r, y, Math.sin(a) * r]); }
+  const ll = (lat, lon) => { const f = lat * Math.PI / 180, l = lon * Math.PI / 180; return [Math.cos(f) * Math.sin(l), Math.sin(f), Math.cos(f) * Math.cos(l)]; };
+  const stops = [['Madison', 43.07, -89.40], ['Reykjavík', 64.15, -21.94], ['Paris', 48.86, 2.35]].map(([n, a, b]) => ({ n, v: ll(a, b) }));
+  const slerp = (a, b, t) => {
+    const d = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))), s = Math.sin(d);
+    const k1 = Math.sin((1 - t) * d) / s, k2 = Math.sin(t * d) / s;
+    return [a[0] * k1 + b[0] * k2, a[1] * k1 + b[1] * k2, a[2] * k1 + b[2] * k2];
+  };
+  // Great-circle legs, lifted a little off the surface in the middle
+  const arc = [];
+  for (let l = 0; l < 2; l++) for (let i = 0; i <= 64; i++) { const t = i / 64, q = slerp(stops[l].v, stops[l + 1].v, t), h = 1 + .1 * Math.sin(Math.PI * t); arc.push([q[0] * h, q[1] * h, q[2] * h]); }
+  // Yaw brings longitude -40 to the front, pitch tilts latitude 50 toward the viewer
+  let yaw = .7, pitch = .8, mx = null, my = null, col = null;
+  const rot = ([x, y, z]) => {
+    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const x1 = x * cy + z * sy, z1 = -x * sy + z * cy;
+    return [x1, y * cp - z1 * sp, y * sp + z1 * cp];
+  };
+  const draw = (t, dt) => {
+    const r = fit(cv, 2), W = r.W, H = r.H;
+    ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
+    if (!col) col = { line: cssv('--line'), acc: cssv('--water'), ink: cssv('--ink') };
+    // Drift, or follow the pointer while it is over the globe
+    yaw = damp(yaw, mx === null ? .7 + Math.sin(t / 4000) * .35 : .7 + (mx - .5) * 1.4, 3, dt);
+    pitch = damp(pitch, my === null ? .8 : .8 + (my - .5) * .7, 3, dt);
+    const R = Math.min(W, H) * .43, cx = W / 2, cy = H / 2;
+    ctx.strokeStyle = `rgba(${col.line},.16)`; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke();
+    for (const front of [false, true]) {
+      ctx.fillStyle = front ? `rgba(${col.line},.62)` : `rgba(${col.line},.13)`; ctx.beginPath();
+      for (const v of D) { const [x, y, z] = rot(v); if ((z > 0) !== front) continue; const sz = front ? .9 + z * 1.1 : .7; ctx.rect(cx + x * R - sz / 2, cy - y * R - sz / 2, sz, sz); }
+      ctx.fill();
+    }
+    ctx.lineWidth = 1.6; ctx.strokeStyle = `rgba(${col.acc},.9)`; ctx.beginPath();
+    let pen = false;
+    for (const v of arc) { const [x, y, z] = rot(v); if (z < -.05) { pen = false; continue; } const px = cx + x * R, py = cy - y * R; if (pen) ctx.lineTo(px, py); else ctx.moveTo(px, py); pen = true; }
+    ctx.stroke();
+    // The plane: six seconds per trip
+    const [x, y, z] = rot(arc[Math.min(arc.length - 1, Math.floor((t / 6000 % 1) * arc.length))]);
+    if (z > -.05) {
+      ctx.fillStyle = `rgba(${col.acc},.18)`; ctx.beginPath(); ctx.arc(cx + x * R, cy - y * R, 9, 0, 7); ctx.fill();
+      ctx.fillStyle = `rgb(${col.acc})`; ctx.beginPath(); ctx.arc(cx + x * R, cy - y * R, 3.2, 0, 7); ctx.fill();
+    }
+    ctx.font = '600 11px Archivo, sans-serif'; ctx.textBaseline = 'middle';
+    for (const st of stops) {
+      const [sx, sy, sz] = rot(st.v); if (sz < 0) continue;
+      const px = cx + sx * R, py = cy - sy * R;
+      ctx.fillStyle = `rgb(${col.acc})`; ctx.beginPath(); ctx.arc(px, py, 2.6, 0, 7); ctx.fill();
+      ctx.fillStyle = col.ink; ctx.fillText(st.n, px + 7, py);
+    }
+  };
+  cv.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); mx = (e.clientX - r.left) / r.width; my = (e.clientY - r.top) / r.height; });
+  cv.addEventListener('pointerleave', () => { mx = my = null; });
+  addEventListener('themechange', () => { col = null; });
+  if (still) requestAnimationFrame(() => draw(0, .016)); else onScreenLoop(cv, draw);
+})();
+
+// Decisions: rain running downhill over the west-side terrain, as faint streaks
+(() => {
+  const cv = document.getElementById('flow'); if (!cv) return;
+  const ctx = cv.getContext('2d');
+  if (reduce || basic()) { cv.remove(); return; }
+  let W = 0, H = 0, P = [], col = '', sc = 1;
+  const I0 = 14, J0 = 95;
+  const seed = (p) => { p.x = Math.random() * W; p.y = Math.random() * H; p.l = 60 + Math.random() * 160; return p; };
+  const setup = () => {
+    const r = fit(cv, 1.5); W = r.W; H = r.H; ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
+    sc = 190 / Math.max(W, H);
+    P = Array.from({ length: Math.round(Math.min(700, W * H / 1300)) }, () => seed({}));
+    col = cssv('--water');
+  };
+  const draw = () => {
+    if (!W) setup();
+    // Fade old streaks toward transparent, then extend every drop one step downhill
+    ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,.045)'; ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = `rgba(${col},.3)`; ctx.lineWidth = 1; ctx.beginPath();
+    for (const p of P) {
+      const i = I0 + p.x * sc, j = J0 + p.y * sc;
+      const gx = terrain.elev(i + .6, j) - terrain.elev(i - .6, j), gy = terrain.elev(i, j + .6) - terrain.elev(i, j - .6), m = Math.hypot(gx, gy);
+      if (m < .015 || --p.l < 0) { seed(p); continue; }
+      const nx = p.x - gx / m * 1.3, ny = p.y - gy / m * 1.3;
+      ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); p.x = nx; p.y = ny;
+      if (nx < 0 || ny < 0 || nx > W || ny > H) seed(p);
+    }
+    ctx.stroke();
+  };
+  terrain.gridReady.then(() => onScreenLoop(cv, draw));
+  addEventListener('resize', () => { W = 0; });
+  addEventListener('themechange', () => { col = cssv('--water'); });
+})();
+
+// Tools and data sources as a constellation: anything used in the same project is linked
+(() => {
+  const cv = document.getElementById('net'); if (!cv) return;
+  const ctx = cv.getContext('2d'), still = reduce || basic();
+  // Ordered so projects that share a tool sit next to each other
+  const PROJ = {
+    'this site': ['WebGL', 'OffscreenCanvas', 'Canvas 2D', 'USGS 3DEP'],
+    'route-animator': ['MapLibre GL', 'Canvas 2D', 'MediaRecorder', 'WebGL', 'Esri World Imagery'],
+    'photo-organizer': ['PyTorch', 'open_clip', 'HDBSCAN', 'FastAPI'],
+    'uw-course-lookup': ['SQLite', 'GitHub Actions', 'MadGrades API', 'Course Search & Enroll API', 'Reddit via Firecrawl'],
+    'DataMap': ['D3', 'TopoJSON', 'OKLCH', 'Playwright', 'World Bank', 'US Census', 'ISO 3166'],
+    'tophat-watch': ['Chrome MV3', 'ntfy', 'Playwright'],
+    'geo-spoof': ['Leaflet', 'Chrome MV3', 'OpenStreetMap', 'Nominatim'],
+  };
+  const keys = Object.keys(PROJ), names = [...new Set(Object.values(PROJ).flat())];
+  const nodes = names.map((n) => ({ n, projs: keys.filter(p => PROJ[p].includes(n)), x: 0, y: 0, hx: 0, hy: 0, ph: Math.random() * 6.28 }));
+  const edges = [];
+  keys.forEach(p => { const l = PROJ[p]; for (let a = 0; a < l.length; a++) for (let b = a + 1; b < l.length; b++) edges.push([nodes[names.indexOf(l[a])], nodes[names.indexOf(l[b])], p]); });
+  let W = 0, H = 0, mx = -1e4, my = -1e4, col = null;
+  const centers = {};
+  const layout = () => {
+    const r = fit(cv, 2); W = r.W; H = r.H; ctx.setTransform(r.d, 0, 0, r.d, 0, 0);
+    const narrow = W < 760, cols = narrow ? 2 : keys.length, rows = Math.ceil(keys.length / cols);
+    keys.forEach((p, k) => {
+      const c = k % cols, rr = Math.floor(k / cols);
+      centers[p] = [(c + .5) / cols * W, narrow ? (rr + .5) / rows * H : H * (.5 + .14 * Math.sin(k * 1.9))];
+    });
+    const rx = W / cols * .34, ry = H / rows * .3, shared = {};
+    nodes.forEach(nd => { if (nd.projs.length > 1) (shared[nd.projs.join()] ||= []).push(nd); });
+    nodes.forEach(nd => {
+      const cs = nd.projs.map(p => centers[p]);
+      if (cs.length > 1) {
+        const grp = shared[nd.projs.join()], k = grp.indexOf(nd);
+        nd.hx = cs.reduce((a, c) => a + c[0], 0) / cs.length + (k - (grp.length - 1) / 2) * 78;
+        nd.hy = cs.reduce((a, c) => a + c[1], 0) / cs.length - ry * .9 + (k % 2) * 16;
+      }
+      else {
+        const l = PROJ[nd.projs[0]], ang = l.indexOf(nd.n) / l.length * 6.283 + .6;
+        nd.hx = Math.max(10, Math.min(W - 10, cs[0][0] + Math.cos(ang) * rx)); nd.hy = cs[0][1] + Math.sin(ang) * ry;
+      }
+      if (!nd.x) { nd.x = nd.hx; nd.y = nd.hy; }
+    });
+  };
+  const draw = (t, dt) => {
+    if (!W) layout();
+    if (!col) col = { line: cssv('--line'), acc: cssv('--water'), ink: cssv('--ink'), mut: cssv('--muted') };
+    for (const nd of nodes) {
+      let tx = nd.hx + Math.sin(t / 1700 + nd.ph) * 6, ty = nd.hy + Math.cos(t / 2100 + nd.ph * 1.3) * 5;
+      const dx = nd.x - mx, dy = nd.y - my, d = Math.hypot(dx, dy);
+      if (d < 90) { tx += dx / (d || 1) * (90 - d) * .45; ty += dy / (d || 1) * (90 - d) * .45; }
+      nd.x = damp(nd.x, tx, 6, dt); nd.y = damp(nd.y, ty, 6, dt);
+    }
+    let hot = null, best = 34;
+    for (const nd of nodes) { const d = Math.hypot(nd.x - mx, nd.y - my); if (d < best) { best = d; hot = nd; } }
+    const lit = (p) => hot && hot.projs.includes(p);
+    ctx.clearRect(0, 0, W, H); ctx.lineWidth = 1;
+    for (const [a, b, p] of edges) { ctx.strokeStyle = lit(p) ? `rgba(${col.acc},.8)` : `rgba(${col.line},.13)`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+    for (const nd of nodes) { const d = Math.hypot(nd.x - mx, nd.y - my); if (d < 130) { ctx.strokeStyle = `rgba(${col.acc},${((1 - d / 130) * .45).toFixed(3)})`; ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(nd.x, nd.y); ctx.stroke(); } }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const placed = [], free = (b) => !placed.some(q => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
+    for (const p of keys) {
+      const [x, y] = centers[p]; ctx.font = `italic ${lit(p) ? 600 : 500} 12px Archivo, sans-serif`;
+      const w = ctx.measureText(p).width; placed.push([x - w / 2 - 3, y - 8, x + w / 2 + 3, y + 8]);
+      ctx.fillStyle = `rgba(${col.acc},${lit(p) ? 1 : .6})`; ctx.fillText(p, x, y);
+    }
+    // Labels of the hovered cluster first; any other label that would collide is skipped
+    const order = hot ? [...nodes].sort((a, b) => (hot.projs.some(p => b.projs.includes(p)) ? 1 : 0) - (hot.projs.some(p => a.projs.includes(p)) ? 1 : 0)) : nodes;
+    for (const nd of order) {
+      const on = hot && (hot === nd || hot.projs.some(p => nd.projs.includes(p)));
+      ctx.fillStyle = on ? `rgb(${col.acc})` : `rgba(${col.line},.5)`; ctx.beginPath(); ctx.arc(nd.x, nd.y, on ? 3.4 : 2.6, 0, 7); ctx.fill();
+      // Labels point away from their cluster's centre, which carries the project name
+      // ...and inward near the edges, so nothing is clipped
+      const left = nd.x > W - 110 || (nd.x > 110 && nd.projs.length === 1 && nd.x < centers[nd.projs[0]][0]);
+      ctx.textAlign = left ? 'right' : 'left';
+      ctx.font = `${on ? 600 : 500} 11.5px Archivo, sans-serif`;
+      const w = ctx.measureText(nd.n).width, lx = left ? nd.x - 7 - w : nd.x + 7, box = [lx - 2, nd.y - 8, lx + w + 2, nd.y + 8];
+      if (!free(box)) continue;
+      placed.push(box); ctx.fillStyle = on ? col.ink : col.mut; ctx.fillText(nd.n, nd.x + (left ? -7 : 7), nd.y);
+    }
+  };
+  cv.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
+  cv.addEventListener('pointerleave', () => { mx = my = -1e4; });
+  addEventListener('resize', () => { W = 0; });
+  addEventListener('themechange', () => { col = null; });
+  if (still) requestAnimationFrame(() => draw(0, 1)); else onScreenLoop(cv, draw);
+})();
+
+// A small liquid sphere by the Now list; its light follows the pointer
+(() => {
+  const cv = document.getElementById('orb'); if (!cv) return;
+  const gl = cv.getContext('webgl', { premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'low-power' });
+  if (!gl) { cv.remove(); return; }
+  const sh = (tp, src) => { const o = gl.createShader(tp); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }'));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision highp float; uniform vec2 r, m; uniform float t; uniform vec3 C, F;
+float map(vec3 p){ return length(p) - 1. + .14 * sin(3. * p.x + t) * sin(3. * p.y + t * 1.3) * sin(3. * p.z + t * .7); }
+void main(){
+  vec2 uv = (gl_FragCoord.xy * 2. - r) / min(r.x, r.y);
+  vec3 ro = vec3(0., 0., 3.), rd = normalize(vec3(uv, -1.7));
+  float s = 0., d = 1.;
+  for (int i = 0; i < 64; i++) { d = map(ro + rd * s); if (d < .001 || s > 6.) break; s += d * .7; }
+  if (s > 6.) { gl_FragColor = vec4(0.); return; }
+  vec3 p = ro + rd * s; vec2 e = vec2(.002, 0.);
+  vec3 n = normalize(vec3(map(p + e.xyy) - map(p - e.xyy), map(p + e.yxy) - map(p - e.yxy), map(p + e.yyx) - map(p - e.yyx)));
+  vec3 l = normalize(vec3(m.x + .4, m.y + .6, 1.));
+  float df = max(dot(n, l), 0.), sp = pow(max(dot(reflect(-l, n), -rd), 0.), 40.), fr = pow(1. - max(dot(n, -rd), 0.), 3.);
+  gl_FragColor = vec4(C * (.22 + .78 * df) + sp * .9 + fr * F * .65, 1.);
+}`));
+  gl.bindAttribLocation(pr, 0, 'p'); gl.linkProgram(pr); gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  const u = (n) => gl.getUniformLocation(pr, n), ur = u('r'), um = u('m'), ut = u('t');
+  const tint = () => { const d = isDark(); gl.uniform3fv(u('C'), d ? [.42, .62, .9] : [.2, .45, .78]); gl.uniform3fv(u('F'), d ? [.75, .88, 1] : [.86, .93, 1]); };
+  tint();
+  let mx = 0, my = 0, tmx = 0, tmy = 0;
+  addEventListener('pointermove', (e) => {
+    const r = cv.getBoundingClientRect();
+    tmx = Math.max(-1.5, Math.min(1.5, (e.clientX - (r.left + r.width / 2)) / 300));
+    tmy = Math.max(-1.5, Math.min(1.5, -(e.clientY - (r.top + r.height / 2)) / 300));
+  }, { passive: true });
+  const draw = (t, dt) => {
+    fit(cv, 2); gl.viewport(0, 0, cv.width, cv.height); gl.uniform2f(ur, cv.width, cv.height);
+    mx = damp(mx, tmx, 4, dt); my = damp(my, tmy, 4, dt); gl.uniform2f(um, mx, my); gl.uniform1f(ut, t / 1000);
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 3);
+  };
+  addEventListener('themechange', () => { tint(); if (reduce || basic()) draw(4000, .016); });
+  if (reduce || basic()) requestAnimationFrame(() => draw(4000, .016)); else onScreenLoop(cv, draw);
+})();
+
+// Signal line above the footer: a few sine waves that swell as the pointer comes near
+(() => {
+  const cv = document.getElementById('sine'); if (!cv) return;
+  const ctx = cv.getContext('2d'), still = reduce || basic();
+  let amp = .3, tamp = .3, col = null;
+  addEventListener('pointermove', (e) => {
+    const r = cv.getBoundingClientRect(), d = Math.abs(e.clientY - (r.top + r.height / 2));
+    tamp = .25 + .75 * Math.max(0, 1 - d / 220);
+  }, { passive: true });
+  const draw = (t, dt) => {
+    const r = fit(cv, 2), W = r.W, H = r.H;
+    ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
+    if (!col) col = [cssv('--water'), hexRgb(cssv('--signal')), cssv('--line')];
+    amp = damp(amp, tamp, 3, dt);
+    ctx.lineWidth = 1.4;
+    for (const [c, a, f, ph] of [[col[0], .9, 1, 0], [col[1], .6, 1.35, 1.3], [col[2], .35, .8, 2.4]]) {
+      ctx.strokeStyle = `rgba(${c},${a})`; ctx.beginPath();
+      for (let x = 0; x <= W; x += 3) {
+        const y = H / 2 + Math.sin(x * .018 * f + t * .0018 * (1 + f * .3) + ph) * Math.sin(Math.PI * x / W) * H * .38 * amp * Math.sin(t * .0006 + ph * 1.7);
+        if (x) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+    }
+  };
+  addEventListener('themechange', () => { col = null; });
+  if (still) requestAnimationFrame(() => draw(1200, .016)); else onScreenLoop(cv, draw);
+})();
+
 </script>
 </body>
 </html>
