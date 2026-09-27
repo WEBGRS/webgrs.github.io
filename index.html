@@ -32,12 +32,6 @@
   if (q) { t = +q[1]; why = '?fx override'; }
   r.dataset.fx = t; r.dataset.fxWhy = why;
 })();
-// Transition between case panels: ?tr=flow|stack|curtain|liquid|zoom, and ?lab shows a switcher
-(function () {
-  var r = document.documentElement, q = new URLSearchParams(location.search), v = q.get('tr'), ok = ['flow', 'stack', 'curtain', 'liquid', 'zoom'];
-  r.dataset.tr = ok.indexOf(v) >= 0 ? v : ok[0];
-  if (q.has('lab')) r.dataset.lab = '';
-})();
 </script>
 
 <style>
@@ -140,30 +134,26 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .peek-gl{position:fixed; left:0; top:0; z-index:15; pointer-events:none; will-change:transform; filter:drop-shadow(0 22px 28px rgba(20,35,50,.26))}
 @media (hover:none),(pointer:coarse){ .peek, .peek-gl{display:none} }
 
-/* case studies: full-screen panels that stack. Each sticks once its bottom reaches the
-   viewport, the next slides over it, and its colors come from its own screenshot. */
-.cases{position:relative; isolation:isolate; margin-top:clamp(40px,5vw,72px); background:#05080B; timeline-scope:--p1,--p2,--p3,--p4,--p5,--p6,--bout}
+/* case studies: full-screen panels over one dark backdrop. Each panel's colour field, taken
+   from its own screenshot, fades in as it arrives and out as it leaves, so the colour changes
+   continuously from project to project. */
+.cases{position:relative; isolation:isolate; margin-top:clamp(40px,5vw,72px); background:#05080B; timeline-scope:--p1,--bout}
 .case{--pad:max(var(--gut), calc((100vw - 1320px) / 2 + var(--gut)));
-  position:sticky; top:min(0px, calc(100vh - var(--h, 100vh))); z-index:var(--z);
+  position:relative;
   min-height:100vh; box-sizing:border-box; padding:clamp(96px,12vh,140px) var(--pad) clamp(72px,10vh,120px);
   display:grid; gap:24px 56px; align-content:center; align-items:start; min-width:0;
-  background:var(--bg); color:var(--ink); overflow:clip;
-  transform-origin:50% calc(100% - 50vh);
+  color:var(--ink);
   --ink:#EEF2F4; --muted:rgba(238,242,244,.74); --faint:rgba(238,242,244,.42); --rule:rgba(238,242,244,.16); --edge:rgba(238,242,244,.4);
   --paper:color-mix(in oklab, var(--bg) 84%, white); --plate:rgba(255,255,255,.06); --line:238,242,244}
-#route-animator{--z:1; --bg:#0A2630; --a1:#1C6E80; --a2:#8A6A3A; --accent:#8FD6E4; --water:143,214,228}
-#uw-course-lookup{--z:2; --bg:#101B30; --a1:#284C80; --a2:#9E4F2A; --accent:#F2A36B; --water:242,163,107}
-#photo-organizer{--z:3; --bg:#141C23; --a1:#2E5266; --a2:#85745A; --accent:#A8CDE0; --water:168,205,224}
-#datamap{--z:4; --bg:#0B1A3C; --a1:#2458AD; --a2:#2F86C2; --accent:#9CC2F5; --water:156,194,245}
-#geo-spoof{--z:5; --bg:#211B11; --a1:#6E5A2C; --a2:#3D6B45; --accent:#E6B872; --water:230,184,114}
-#tophat-watch{--z:6; --bg:#0D2519; --a1:#1F6B45; --a2:#857226; --accent:#8EDDAA; --water:142,221,170}
-/* aurora: two colors from the screenshot drifting behind the content */
-/* A covered panel is not painted; the dark backdrop stands in for it on the way back up */
-.case[data-covered]{visibility:hidden}
-.case::before{content:""; position:absolute; z-index:-1; inset:0; pointer-events:none;
-  background:radial-gradient(34% 38% at 24% 30%, var(--a1), transparent 72%), radial-gradient(32% 36% at 76% 66%, var(--a2), transparent 72%), radial-gradient(26% 30% at 62% 20%, color-mix(in oklab, var(--a1) 55%, var(--a2)), transparent 72%);
-  opacity:.9}
-.case::after{content:""; position:absolute; inset:0; z-index:5; background:#05080B; opacity:0; pointer-events:none}
+#route-animator{--bg:#0A2630; --a1:#1C6E80; --a2:#8A6A3A; --accent:#8FD6E4; --water:143,214,228}
+#uw-course-lookup{--bg:#101B30; --a1:#284C80; --a2:#9E4F2A; --accent:#F2A36B; --water:242,163,107}
+#photo-organizer{--bg:#141C23; --a1:#2E5266; --a2:#85745A; --accent:#A8CDE0; --water:168,205,224}
+#datamap{--bg:#0B1A3C; --a1:#2458AD; --a2:#2F86C2; --accent:#9CC2F5; --water:156,194,245}
+#geo-spoof{--bg:#211B11; --a1:#6E5A2C; --a2:#3D6B45; --accent:#E6B872; --water:230,184,114}
+#tophat-watch{--bg:#0D2519; --a1:#1F6B45; --a2:#857226; --accent:#8EDDAA; --water:142,221,170}
+/* The colour field reaches into the neighbours' space so that adjacent fields overlap */
+.case::before{content:""; position:absolute; z-index:-1; inset:-45vh 0; pointer-events:none;
+  background:radial-gradient(34% 30% at 24% 42%, var(--a1), transparent 72%), radial-gradient(32% 28% at 76% 60%, var(--a2), transparent 72%), linear-gradient(transparent, var(--bg) 30%, var(--bg) 70%, transparent)}
 .case .media{position:relative; isolation:isolate; margin:0; min-width:0}
 .case .shot{position:relative; display:block; aspect-ratio:16/10; border:1px solid rgba(255,255,255,.14); border-radius:14px; overflow:hidden; background:var(--plate); box-shadow:0 40px 90px -40px rgba(0,0,0,.55)}
 /* The screenshot's own colours, blurred, glow out from behind it into the panel */
@@ -171,15 +161,12 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 /* White to the first panel's colour on the way in, and back to white on the way out */
 .bridge{display:block; height:55vh; pointer-events:none}
 .bridge.in{background:linear-gradient(to bottom, var(--paper), color-mix(in oklab, var(--paper) 55%, #0A2630) 45%, #0A2630)}
-.bridge.out{position:relative; z-index:7; height:90vh; background:linear-gradient(to bottom, transparent, color-mix(in oklab, var(--paper) 40%, transparent) 40%, var(--paper) 78%)}
+.bridge.out{position:relative; height:90vh; background:linear-gradient(to bottom, transparent, color-mix(in oklab, var(--paper) 40%, transparent) 40%, var(--paper) 78%)}
 /* A liquid orb in the corner that follows the panels' colours */
-.stage{position:sticky; top:0; z-index:8; height:100vh; margin-bottom:-100vh; overflow:clip; pointer-events:none}
-.corb{position:absolute; right:0; bottom:0; width:clamp(340px,34vw,560px); aspect-ratio:1; translate:34% 30%; mix-blend-mode:screen}
+.stage{position:sticky; top:0; height:100vh; margin-bottom:-100vh; overflow:clip; pointer-events:none}
+/* Painted above the colour fields but below every panel, since the panels come later */
+.corb{position:absolute; right:0; bottom:0; width:clamp(380px,38vw,620px); aspect-ratio:1; translate:30% 26%; opacity:.42; mix-blend-mode:screen}
 @media (max-width:760px){ .stage{display:none} }
-.lab{position:fixed; z-index:40; left:16px; bottom:16px; display:flex; flex-wrap:wrap; align-items:center; gap:6px; max-width:calc(100vw - 32px); padding:10px 12px; background:var(--paper); color:var(--muted); border:1px solid var(--rule); border-radius:10px; box-shadow:0 16px 40px -20px rgba(20,35,50,.35); font:500 .8rem var(--font)}
-.lab b{margin-right:4px; color:var(--ink); font-weight:600}
-.lab button{padding:3px 10px; border:1px solid var(--rule); border-radius:999px; background:none; color:inherit; font:inherit; cursor:pointer}
-.lab button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper)}
 .case .shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
 .case h3{margin:0; font-size:clamp(1.9rem,3.2vw,2.8rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em; --w:760}
 .links{display:flex; gap:18px; margin:12px 0 0; font-weight:560}
@@ -218,37 +205,8 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 }
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
-    #route-animator{view-timeline:--p1 block} #uw-course-lookup{view-timeline:--p2 block} #photo-organizer{view-timeline:--p3 block}
-    #datamap{view-timeline:--p4 block} #geo-spoof{view-timeline:--p5 block} #tophat-watch{view-timeline:--p6 block}
-    /* Each panel runs two animations: an entrance on its own view timeline, and an exit on the
-       timeline of the panel after it. ?tr= picks the pair. */
-    .case{animation-name:var(--tr-in), var(--tr-out); animation-duration:auto, auto; animation-timing-function:linear, linear; animation-fill-mode:both, both; animation-range:entry 0% entry 100%, entry 0% entry 100%}
-    .case::after{animation-name:var(--tr-dim); animation-duration:auto; animation-timing-function:linear; animation-fill-mode:both; animation-range:entry 0% entry 100%}
-    #route-animator{animation-timeline:view(), --p2} #uw-course-lookup{animation-timeline:view(), --p3} #photo-organizer{animation-timeline:view(), --p4}
-    #datamap{animation-timeline:view(), --p5} #geo-spoof{animation-timeline:view(), --p6} #tophat-watch{animation-timeline:view(), none}
-    #route-animator::after{animation-timeline:--p2} #uw-course-lookup::after{animation-timeline:--p3} #photo-organizer::after{animation-timeline:--p4}
-    #datamap::after{animation-timeline:--p5} #geo-spoof::after{animation-timeline:--p6} #tophat-watch::after{animation-timeline:none}
-    [data-tr="stack"]{--tr-in:none; --tr-out:sink; --tr-dim:dim}
-    [data-tr="curtain"]{--tr-in:dome; --tr-out:lift; --tr-dim:dim}
-    [data-tr="liquid"]{--tr-in:pour; --tr-out:settle; --tr-dim:dim}
-    [data-tr="zoom"]{--tr-in:zin; --tr-out:zout; --tr-dim:none}
-    [data-tr="flow"]{--tr-in:none; --tr-out:none; --tr-dim:none}
-    /* Nothing follows the last panel, so it has no exit */
-    #tophat-watch{--tr-out:none; --tr-dim:none}
-    @keyframes sink{to{transform:scale(.9) translateY(-2vh)}}
-    @keyframes dim{to{opacity:.72}}
-    @keyframes dome{from{clip-path:inset(0 round 50% 50% 0 0 / 42vh 42vh 0 0)}to{clip-path:inset(0 round 0 0 0 0 / 0 0 0 0)}}
-    @keyframes lift{to{transform:translateY(-16vh)}}
-    @keyframes pour{from{clip-path:circle(8% at 50% 108%)}to{clip-path:circle(145% at 50% 108%)}}
-    @keyframes settle{to{transform:scale(.95); filter:blur(6px)}}
-    @keyframes zin{from{transform:scale(.72) translateY(6vh); border-radius:64px}to{transform:none; border-radius:0}}
-    @keyframes zout{to{transform:scale(1.14); opacity:0}}
-    /* flow: panels scroll normally over one dark backdrop; each panel's colour field fades in
-       as it arrives and out as it leaves, so the colour changes continuously */
-    [data-tr="flow"] .case{position:relative; top:auto; z-index:auto; background:transparent; overflow:visible}
-    [data-tr="flow"] .case[data-covered]{visibility:visible}
-    [data-tr="flow"] .case::before{inset:-45vh 0; background:radial-gradient(34% 30% at 24% 42%, var(--a1), transparent 72%), radial-gradient(32% 28% at 76% 60%, var(--a2), transparent 72%), linear-gradient(transparent, var(--bg) 30%, var(--bg) 70%, transparent);
-      opacity:0; animation:field linear both; animation-timeline:view(); animation-range:cover 0% cover 100%}
+    #route-animator{view-timeline:--p1 block}
+    .case::before{opacity:0; animation:field linear both; animation-timeline:view(); animation-range:cover 0% cover 100%}
     @keyframes field{0%{opacity:0}30%,70%{opacity:1}100%{opacity:0}}
     .bridge.out{view-timeline:--bout block}
     .stage{animation:stage-in linear both, stage-out linear both; animation-timeline:--p1, --bout; animation-range:entry 30% entry 100%, entry 0% entry 60%}
@@ -383,7 +341,7 @@ footer .src{margin-left:auto}
 #now .two > div{position:relative}
 #now{position:relative; isolation:isolate; overflow-x:clip}
 #now .two{position:relative}
-.orb{position:absolute; z-index:-1; top:58%; right:calc((min(100vw, 1320px) - 100vw) / 2); width:clamp(420px,46vw,720px); aspect-ratio:1; translate:52% -50%; pointer-events:none}
+.orb{position:absolute; z-index:-1; top:58%; right:calc((min(100vw, 1320px) - 100vw) / 2); width:clamp(420px,46vw,720px); aspect-ratio:1; translate:48% -50%; opacity:.45; pointer-events:none}
 @media (max-width:760px){ .orb{display:none} }
 .sine{display:block; width:100%; height:90px; margin-top:clamp(60px,8vw,110px)}
 .sine + footer{margin-top:0}
@@ -2030,9 +1988,7 @@ const onScreenLoop = (el, draw) => {
     const x1 = x * cy + z * sy, z1 = -x * sy + z * cy;
     return [x1, y * cp - z1 * sp, y * sp + z1 * cp];
   };
-  const panel = cv.closest('.case');
   const draw = (t, dt) => {
-    if (panel && panel.hasAttribute('data-covered')) return;
     const r = fit(cv, 1.5), W = r.W, H = r.H;
     ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
     if (!col) { const ev = (n) => getComputedStyle(cv).getPropertyValue(n).trim(); col = { line: ev('--line'), acc: ev('--water'), ink: ev('--ink'), muted: ev('--muted'), paper: hexRgb(ev('--bg') || ev('--paper')) }; }
@@ -2326,23 +2282,20 @@ void main(){
     const a = im.cloneNode(); a.className = 'amb'; a.alt = ''; a.setAttribute('aria-hidden', 'true'); a.removeAttribute('style');
     im.closest('.media').prepend(a);
   });
-  // Where each panel starts in the page flow; sticking does not change flow, only paint
+  // Where each panel starts in the page
   const bridge = box.querySelector('.bridge.in');
   const starts = () => { let y = bridge.getBoundingClientRect().bottom + scrollY; return P.map(p => { const s = y; y += p.offsetHeight; return s; }); };
   let S0 = [];
-  // A covered panel is not painted; also tell the corner orb where we are
+  // Tell the corner orb which panel is showing and how far the next has come in
   const cover = () => {
     const y = scrollY + 1, vh = innerHeight;
-    P.forEach((p, i) => p.toggleAttribute('data-covered', i + 1 < P.length && y >= S0[i + 1]));
     let i = 0; while (i + 1 < P.length && y >= S0[i + 1]) i++;
     panelTone.i = i; panelTone.f = i + 1 < P.length ? Math.max(0, Math.min(1, (y - (S0[i + 1] - vh)) / vh)) : 0;
   };
-  const size = () => {
-    P.forEach(p => p.style.setProperty('--h', p.offsetHeight + 'px')); S0 = starts(); cover();
-  };
+  const size = () => { S0 = starts(); cover(); };
   const ro = new ResizeObserver(size); P.forEach(p => ro.observe(p));
   addEventListener('scroll', cover, { passive: true });
-  // Index links go to a panel's flow position; anchor scrolling to a stuck box lands wrong
+  // Index links go to a panel's start, past the header's scroll padding
   document.querySelectorAll('.index a').forEach((a, i) => a.addEventListener('click', (e) => {
     e.preventDefault();
     scrollTo({ top: starts()[i], behavior: reduce ? 'auto' : 'smooth' });
@@ -2390,22 +2343,6 @@ void main(){
   });
 })();
 
-// Transition switcher, shown with ?lab; the choice stays in the address bar
-(() => {
-  if (!root.hasAttribute('data-lab')) return;
-  const box = document.createElement('div'); box.className = 'lab'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', 'Transition between projects');
-  const b0 = document.createElement('b'); b0.textContent = 'Transition'; box.append(b0);
-  for (const v of ['flow', 'stack', 'curtain', 'liquid', 'zoom']) {
-    const b = document.createElement('button'); b.type = 'button'; b.textContent = v; b.setAttribute('aria-pressed', root.dataset.tr === v);
-    b.onclick = () => {
-      root.dataset.tr = v; box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
-      const u = new URL(location.href); u.searchParams.set('tr', v); history.replaceState(null, '', u);
-      dispatchEvent(new Event('scroll'));
-    };
-    box.append(b);
-  }
-  document.body.append(box);
-})();
 
 </script>
 </body>
