@@ -32,15 +32,6 @@
   if (q) { t = +q[1]; why = '?fx override'; }
   r.dataset.fx = t; r.dataset.fxWhy = why;
 })();
-// Design variants: ?peek= ?wbg= ?tone=, and ?lab shows a switcher
-(function () {
-  var r = document.documentElement, q = new URLSearchParams(location.search);
-  var pick = function (k, ok) { var v = q.get(k); r.dataset[k] = ok.indexOf(v) >= 0 ? v : ok[0]; };
-  pick('peek', ['glow', 'aurora', 'contour']);
-  pick('wbg', ['terrain', 'aurora', 'contours', 'none']);
-  pick('tone', ['mono', 'shift']);
-  if (q.has('lab')) r.dataset.lab = '';
-})();
 </script>
 
 <style>
@@ -135,42 +126,42 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
   .index .kd{grid-column:2; grid-row:1}
 }
 
-.peek{position:fixed; left:0; top:0; z-index:15; width:clamp(280px,26vw,420px); aspect-ratio:16/10; pointer-events:none; will-change:transform; --c1:#1E5AA8; --c2:#5BB8D6; --c3:#5FB38A}
-[data-theme="dark"] .peek{--c1:#8AB8EE; --c2:#7FD3E6; --c3:#7ACB9E}
-.peek-in{position:relative; width:100%; height:100%; opacity:0; transform:scale(.94) translateY(8px); transition:opacity .25s var(--out), transform .5s var(--out)}
+.peek{position:fixed; left:0; top:0; z-index:15; width:clamp(280px,26vw,420px); aspect-ratio:16/10; pointer-events:none; will-change:transform}
+.peek-in{width:100%; height:100%; overflow:hidden; border-radius:8px; background:var(--paper); box-shadow:0 26px 56px -30px rgba(20,35,50,.32); opacity:0; transform:scale(.94) translateY(8px); transition:opacity .25s var(--out), transform .5s var(--out)}
 .peek.on .peek-in{opacity:1; transform:none}
-.pk-win{position:absolute; inset:0; overflow:hidden; border-radius:8px; background:var(--paper); box-shadow:0 26px 56px -30px rgba(20,35,50,.32)}
 .peek-rail{height:100%; transition:transform .6s var(--io)}
 .peek-rail img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
-.pk-edge,.pk-glow{position:absolute; overflow:hidden; pointer-events:none}
-.pk-edge::before,.pk-glow::before{content:""; position:absolute; left:50%; top:50%; width:170%; aspect-ratio:1; translate:-50% -50%}
-.peek:not(.on) .pk-edge::before,.peek:not(.on) .pk-glow::before{animation-play-state:paused}
-@keyframes pk-spin{to{transform:rotate(1turn)}}
-@keyframes pk-drift{50%{transform:rotate(.5turn) scale(1.3)}to{transform:rotate(1turn)}}
-/* glow: a band of light runs around the frame */
-[data-peek="glow"] .pk-edge{inset:-2px; border-radius:10px}
-[data-peek="glow"] .pk-glow{inset:-16px; border-radius:24px; filter:blur(14px); opacity:.45}
-[data-peek="glow"] .pk-edge::before,[data-peek="glow"] .pk-glow::before{background:conic-gradient(transparent 0turn, var(--c1) .14turn, var(--c2) .28turn, transparent .42turn, transparent .52turn, var(--c3) .7turn, transparent .86turn); animation:pk-spin 4.5s linear infinite}
-/* aurora: the screenshot sits in a soft, slowly moving wash of color */
-[data-peek="aurora"] .pk-edge{inset:-10px; border-radius:16px; background:var(--paper)}
-[data-peek="aurora"] .pk-glow{inset:-30px; border-radius:40px; filter:blur(22px); opacity:.5}
-[data-peek="aurora"] .pk-edge::before,[data-peek="aurora"] .pk-glow::before{background:radial-gradient(closest-side at 28% 34%, var(--c2), transparent), radial-gradient(closest-side at 72% 30%, var(--c3), transparent), radial-gradient(closest-side at 56% 72%, var(--c1), transparent); opacity:.75; filter:blur(10px); animation:pk-drift 11s ease-in-out infinite}
-[data-peek="aurora"] .pk-win{border-radius:6px}
-/* contour: two dashed rings turning in opposite directions, like index contours */
-[data-peek="contour"] .pk-edge{inset:-7px; border-radius:12px}
-[data-peek="contour"] .pk-glow{inset:-15px; border-radius:18px; opacity:.5}
-[data-peek="contour"] .pk-edge,[data-peek="contour"] .pk-glow{padding:1.3px; -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask:linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)}
-[data-peek="contour"] .pk-edge::before,[data-peek="contour"] .pk-glow::before{background:repeating-conic-gradient(var(--c1) 0 1.6deg, transparent 1.6deg 4deg); animation:pk-spin 50s linear infinite}
-[data-peek="contour"] .pk-glow::before{animation-direction:reverse; animation-duration:80s}
-@media (hover:none),(pointer:coarse){ .peek{display:none} }
+.peek-gl{position:fixed; left:0; top:0; z-index:15; pointer-events:none; will-change:transform; filter:drop-shadow(0 22px 28px rgba(20,35,50,.26))}
+@media (hover:none),(pointer:coarse){ .peek, .peek-gl{display:none} }
 
-/* case studies: a different layout per project */
-.cases{position:relative; display:grid; gap:clamp(110px,13vw,190px); margin-top:clamp(64px,8vw,110px)}
-.case{position:relative; display:grid; gap:24px 56px; align-items:start; min-width:0}
+/* case studies: full-screen panels that stack. Each sticks once its bottom reaches the
+   viewport, the next slides over it, and its colors come from its own screenshot. */
+.cases{position:relative; isolation:isolate; margin-top:clamp(64px,8vw,110px); background:#05080B; timeline-scope:--p1,--p2,--p3,--p4,--p5,--p6}
+.case{--pad:max(var(--gut), calc((100vw - 1320px) / 2 + var(--gut)));
+  position:sticky; top:min(0px, calc(100vh - var(--h, 100vh))); z-index:var(--z);
+  min-height:100vh; box-sizing:border-box; padding:clamp(96px,12vh,140px) var(--pad) clamp(72px,10vh,120px);
+  display:grid; gap:24px 56px; align-content:center; align-items:start; min-width:0;
+  background:var(--bg); color:var(--ink); overflow:clip;
+  transform-origin:50% calc(100% - 50vh);
+  --ink:#EEF2F4; --muted:rgba(238,242,244,.74); --faint:rgba(238,242,244,.42); --rule:rgba(238,242,244,.16); --edge:rgba(238,242,244,.4);
+  --paper:color-mix(in oklab, var(--bg) 84%, white); --plate:rgba(255,255,255,.06); --line:238,242,244}
+#route-animator{--z:1; --bg:#0A2630; --a1:#1C6E80; --a2:#8A6A3A; --accent:#8FD6E4; --water:143,214,228}
+#uw-course-lookup{--z:2; --bg:#101B30; --a1:#284C80; --a2:#9E4F2A; --accent:#F2A36B; --water:242,163,107}
+#photo-organizer{--z:3; --bg:#141C23; --a1:#2E5266; --a2:#85745A; --accent:#A8CDE0; --water:168,205,224}
+#datamap{--z:4; --bg:#0B1A3C; --a1:#2458AD; --a2:#2F86C2; --accent:#9CC2F5; --water:156,194,245}
+#geo-spoof{--z:5; --bg:#211B11; --a1:#6E5A2C; --a2:#3D6B45; --accent:#E6B872; --water:230,184,114}
+#tophat-watch{--z:6; --bg:#0D2519; --a1:#1F6B45; --a2:#857226; --accent:#8EDDAA; --water:142,221,170}
+/* aurora: two colors from the screenshot drifting behind the content */
+/* A covered panel is not painted; the dark backdrop stands in for it on the way back up */
+.case[data-covered]{visibility:hidden}
+.case::before{content:""; position:absolute; z-index:-1; inset:0; pointer-events:none;
+  background:radial-gradient(34% 38% at 24% 30%, var(--a1), transparent 72%), radial-gradient(32% 36% at 76% 66%, var(--a2), transparent 72%), radial-gradient(26% 30% at 62% 20%, color-mix(in oklab, var(--a1) 55%, var(--a2)), transparent 72%);
+  opacity:.9}
+.case::after{content:""; position:absolute; inset:0; z-index:5; background:#05080B; opacity:0; pointer-events:none}
 .case .media{margin:0; min-width:0}
-.case .shot{position:relative; display:block; aspect-ratio:16/10; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--plate); box-shadow:0 34px 70px -42px rgba(20,35,50,.38)}
+.case .shot{position:relative; display:block; aspect-ratio:16/10; border:1px solid var(--rule); border-radius:10px; overflow:hidden; background:var(--plate); box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
 .case .shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
-.case h3{margin:0; font-size:clamp(1.7rem,2.8vw,2.3rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em; --w:760}
+.case h3{margin:0; font-size:clamp(1.9rem,3.2vw,2.8rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em; --w:760}
 .links{display:flex; gap:18px; margin:12px 0 0; font-weight:560}
 .hook{margin:18px 0 0; font-size:1.2rem; line-height:1.45; max-width:36ch}
 .built{margin:10px 0 0; color:var(--muted); font-size:.93rem}
@@ -180,7 +171,6 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .globe-wrap{margin:0; display:grid; justify-items:center; gap:10px}
 .globe{display:block; width:100%; max-width:400px; aspect-ratio:1}
 .globe-cap{margin:0; font-size:.84rem; color:var(--muted); text-align:center}
-.pair{position:relative; display:grid; gap:clamp(90px,10vw,140px)}
 @media (min-width:1000px){
   .case.feature{grid-template-columns:repeat(12,minmax(0,1fr)); row-gap:44px}
   .case.feature .media{grid-column:1 / 9}
@@ -194,31 +184,39 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
   .case.right .media{order:2; position:sticky; top:14vh}
   .case.left{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
   .case.left .media{position:sticky; top:14vh}
-  .case.band{grid-template-columns:minmax(0,5fr) minmax(0,7fr); position:relative; padding:clamp(56px,6vw,88px) 0}
-  .case.band .media{margin-right:calc((100vw - min(100vw, 1320px)) / -2 - var(--gut))}
+  .case.band{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+  .case.band .media{margin-right:calc(-1 * var(--pad))}
+  .case.band .shot{border-radius:10px 0 0 10px; border-right:0}
   .case.band .fig{grid-column:1 / -1; max-width:none; display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:0 56px; align-items:end}
   .case.band .fig svg{grid-column:2}
   .case.band .fig figcaption{grid-column:1; grid-row:1; margin:0}
-  .pair{grid-template-columns:1fr 1fr; gap:56px; align-items:start}
-  .pair .card:nth-child(2){margin-top:120px}
+  .case.split{grid-template-columns:repeat(12,minmax(0,1fr))}
+  .case.split .media{grid-column:1 / 8; position:sticky; top:14vh}
+  .case.split .txt{grid-column:8 / 13}
+  .case.split.rev .media{grid-column:6 / 13; grid-row:1}
+  .case.split.rev .txt{grid-column:1 / 6; grid-row:1}
 }
-.case.band::before{content:""; position:absolute; z-index:-1; top:0; bottom:0; left:calc(50% - 50vw); right:calc(50% - 50vw); background:var(--plate); transform-origin:left}
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
+    #route-animator{view-timeline:--p1 block} #uw-course-lookup{view-timeline:--p2 block} #photo-organizer{view-timeline:--p3 block}
+    #datamap{view-timeline:--p4 block} #geo-spoof{view-timeline:--p5 block} #tophat-watch{view-timeline:--p6 block}
+    /* While the next panel slides in, this one sinks back and darkens */
+    #route-animator, #route-animator::after{animation-timeline:--p2} #uw-course-lookup, #uw-course-lookup::after{animation-timeline:--p3}
+    #photo-organizer, #photo-organizer::after{animation-timeline:--p4} #datamap, #datamap::after{animation-timeline:--p5} #geo-spoof, #geo-spoof::after{animation-timeline:--p6}
+    .case:not(#tophat-watch){animation-name:sink; animation-duration:auto; animation-timing-function:linear; animation-fill-mode:both; animation-range:entry 0% entry 100%}
+    .case:not(#tophat-watch)::after{animation-name:dim; animation-duration:auto; animation-timing-function:linear; animation-fill-mode:both; animation-range:entry 0% entry 100%}
+    @keyframes sink{to{transform:scale(.9) translateY(-2vh)}}
+    @keyframes dim{to{opacity:.7}}
+    /* The arriving panel's content rises into place */
     .case.feature .media{animation:grow-in linear both; animation-timeline:view(); animation-range:entry 0% entry 85%}
-    .case.right .media{animation:from-right linear both; animation-timeline:view(); animation-range:entry 0% entry 75%}
-    .case.left .media{animation:turn-in linear both; animation-timeline:view(); animation-range:entry 0% entry 80%}
-    .case.band::before{animation:band-in linear both; animation-timeline:view(); animation-range:entry 0% entry 60%}
-    .case.band .media{animation:from-right linear both; animation-timeline:view(); animation-range:entry 10% entry 90%}
-    .pair .card{animation:card-in linear both, case-out linear both; animation-timeline:view(), view(); animation-range:entry 0% entry 70%, exit 40% exit 100%}
-    .case:not(.card){animation:case-out linear both; animation-timeline:view(); animation-range:exit 40% exit 100%}
-    @keyframes case-out{to{opacity:.3; transform:translateY(-70px)}}
+    .case.right .media, .case.band .media{animation:from-right linear both; animation-timeline:view(); animation-range:entry 0% entry 80%}
+    .case.left .media, .case.split .media{animation:turn-in linear both; animation-timeline:view(); animation-range:entry 0% entry 80%}
+    .case .txt{animation:rise linear both; animation-timeline:view(); animation-range:entry 10% entry 90%}
     .globe-wrap{animation:grow-in linear both; animation-timeline:view(); animation-range:entry 0% entry 70%}
-    @keyframes grow-in{from{transform:scale(.86) translateY(60px); opacity:.15}}
-    @keyframes from-right{from{transform:translateX(90px) rotate(1.5deg); opacity:0}}
-    @keyframes turn-in{from{transform:perspective(1200px) rotateY(22deg) translateX(-50px); opacity:0}}
-    @keyframes band-in{from{transform:scaleX(.82); opacity:0}}
-    @keyframes card-in{from{transform:translateY(90px) rotate(-2deg); opacity:0}}
+    @keyframes grow-in{from{transform:scale(.86) translateY(80px); opacity:.15}}
+    @keyframes from-right{from{transform:translateX(110px); opacity:0}}
+    @keyframes turn-in{from{transform:perspective(1200px) rotateY(18deg) translateX(-60px); opacity:0}}
+    @keyframes rise{from{transform:translateY(90px); opacity:0}}
   }
 }
 
@@ -243,7 +241,8 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .fig figcaption code{font:.94em ui-monospace,Consolas,monospace; color:var(--ink)}
 @media (prefers-reduced-motion:no-preference){
   .js .fig .draw{stroke-dasharray:1 1; stroke-dashoffset:1; transition:stroke-dashoffset 1.2s var(--out); transition-delay:calc(var(--d,0) * 110ms)}
-  .js .fig .n{opacity:0; transition:opacity .55s var(--out); transition-delay:calc(var(--d,0) * 110ms)}
+  /* Three steps rather than a smooth fade: each step repaints the figure, and these are SVG nodes */
+  .js .fig .n{opacity:0; transition:opacity .36s steps(3, end); transition-delay:calc(var(--d,0) * 110ms)}
   .js .fig.seen .draw{stroke-dashoffset:0}
   .js .fig.seen .n{opacity:1}
 }
@@ -342,40 +341,8 @@ footer .src{margin-left:auto}
 .sine{display:block; width:100%; height:90px; margin-top:clamp(60px,8vw,110px)}
 .sine + footer{margin-top:0}
 
-/* between projects: a route down the page, and per-project color fields */
-#route-animator{--h:205} #uw-course-lookup{--h:352} #photo-organizer{--h:32} #datamap{--h:172} #geo-spoof{--h:262} #tophat-watch{--h:140}
-.route{position:absolute; left:0; top:0; width:100%; height:100%; overflow:visible; pointer-events:none; will-change:transform}
-.route path{fill:none; stroke:rgba(var(--water),.5); stroke-width:1.5; stroke-linecap:round}
-.route circle{fill:var(--paper); stroke:rgb(var(--water)); stroke-width:1.5}
-.route circle.halo{fill:none; stroke-opacity:.3}
-[data-tone="shift"] .route path{stroke:hsl(var(--h) 60% 48% / .65)}
-[data-tone="shift"] .route circle{stroke:hsl(var(--h) 60% 45%)}
-@media (max-width:999px){ .route{display:none} }
-.tint{display:none; position:absolute; z-index:-2; top:-110px; bottom:-110px; left:calc(50% - 50vw); width:100vw; pointer-events:none; background:radial-gradient(52% 58% at 24% 42%, hsl(var(--h) 80% 90% / .9), transparent 72%), radial-gradient(46% 56% at 80% 58%, hsl(var(--h2, calc(var(--h) + 35)) 75% 91% / .75), transparent 72%)}
-[data-theme="dark"] .tint{background:radial-gradient(52% 58% at 24% 42%, hsl(var(--h) 45% 24% / .55), transparent 72%), radial-gradient(46% 56% at 80% 58%, hsl(var(--h2, calc(var(--h) + 35)) 40% 24% / .45), transparent 72%)}
-[data-tone="shift"] .tint{display:block}
-@supports (animation-timeline:view()){
-  @media (prefers-reduced-motion:no-preference){
-    .route{view-timeline:--route block}
-    .route path{stroke-dasharray:1 1; stroke-dashoffset:1; animation:route-draw linear both; animation-timeline:--route}
-    .route circle{transform-box:fill-box; transform-origin:center; animation:stop-in linear both; animation-timeline:--route}
-    .tint{animation:tint linear both; animation-timeline:view(); animation-range:cover 0% cover 100%}
-    @keyframes route-draw{to{stroke-dashoffset:0}}
-    @keyframes stop-in{from{transform:scale(0); opacity:0}}
-    @keyframes tint{0%,100%{opacity:0}32%,68%{opacity:1}}
-  }
-}
-#work{position:relative; isolation:isolate; overflow-x:clip}
-.wbg{display:none; position:absolute; z-index:-1; left:0; right:0; top:0; height:100vh; pointer-events:none; background:var(--paper); -webkit-mask:linear-gradient(to bottom, transparent, #000 90px, #000 calc(100% - 220px), transparent); mask:linear-gradient(to bottom, transparent, #000 90px, #000 calc(100% - 220px), transparent)}
-.wbg canvas{display:none; position:absolute; inset:0; width:100%; height:100%}
-[data-wbg="aurora"] .wbg,[data-wbg="contours"] .wbg,[data-wbg="none"] .wbg{display:block}
-[data-wbg="aurora"] .wbg .wa,[data-wbg="contours"] .wbg .wc{display:block}
+#work{position:relative; overflow-x:clip}
 .big.copied{background-size:100% 3px; color:var(--accent)}
-.lab{position:fixed; z-index:40; left:16px; bottom:16px; display:grid; gap:8px; padding:12px 14px; background:var(--paper); border:1px solid var(--rule); border-radius:10px; box-shadow:0 16px 40px -20px rgba(20,35,50,.35); font-size:.8rem; color:var(--muted)}
-.lab div{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
-.lab b{min-width:96px; font-weight:600; color:var(--ink)}
-.lab button{padding:3px 10px; border:1px solid var(--rule); border-radius:999px; background:none; color:inherit; font:inherit; cursor:pointer}
-.lab button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper)}
 
 /* text reveals */
 .sc, .sw{display:inline-block; white-space:pre}
@@ -501,7 +468,6 @@ h2{--w:780}
   </section>
 
   <section class="block" id="work" aria-labelledby="work-h">
-    <div class="wbg" id="wbg" aria-hidden="true"><canvas class="wa"></canvas><canvas class="wc"></canvas></div>
     <div class="wrap">
       <div class="shead"><h2 id="work-h"><span data-split="char">Selected work</span></h2><p>Built end to end, all still running.</p></div>
       <ul class="index" id="index">
@@ -512,8 +478,9 @@ h2{--w:780}
         <li><a href="#geo-spoof" data-i="4"><span class="nm">geo-spoof</span><span class="ds">Answers the Geolocation API with a point you pick</span><span class="kd">Chrome extension</span></a></li>
         <li><a href="#tophat-watch" data-i="5"><span class="nm">tophat-watch</span><span class="ds">Alerts you when a Top Hat question opens</span><span class="kd">Chrome extension</span></a></li>
       </ul>
+    </div>
 
-      <div class="cases" id="cases">
+    <div class="cases" id="cases">
           <article class="case feature" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg">
             <div class="media"><a class="shot" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy"></a></div>
             <div class="globe-wrap" aria-hidden="true"><canvas class="globe" id="globe"></canvas><p class="globe-cap">In blue, the route in the screenshot: Madison, Reykjavík, Paris</p></div>
@@ -713,8 +680,7 @@ h2{--w:780}
 </svg>
 <!-- /fig:datamap --><figcaption>Seven-class ramps exactly as DataMap&rsquo;s <code>color.js</code> builds them. Every hue reuses one lightness track, so each column shares an L value.</figcaption></figure>
           </article>
-          <div class="pair">
-          <article class="case card" id="geo-spoof" data-src="assets/geo-spoof.jpg">
+          <article class="case split" id="geo-spoof" data-src="assets/geo-spoof.jpg">
             <div class="media"><a class="shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof" loading="lazy"></a></div>
             <div class="txt">
               <h3><span data-split="char">geo-spoof</span></h3>
@@ -748,7 +714,7 @@ h2{--w:780}
 <!-- /fig:geo-spoof --><figcaption><code>bridge.js</code> reads settings in the isolated world and hands them to <code>inject.js</code>, which patches the page&rsquo;s own <code>navigator.geolocation</code> before any page script runs.</figcaption></figure>
             </div>
           </article>
-          <article class="case card" id="tophat-watch" data-src="assets/tophat-watch.jpg">
+          <article class="case split rev" id="tophat-watch" data-src="assets/tophat-watch.jpg">
             <div class="media"><a class="shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator" loading="lazy"></a></div>
             <div class="txt">
               <h3><span data-split="char">tophat-watch</span></h3>
@@ -777,8 +743,6 @@ h2{--w:780}
 <!-- /fig:tophat-watch --><figcaption>The content script reports on every DOM change and every 5&nbsp;s. The service worker remembers what has already alerted, so an item alerts once each time it opens.</figcaption></figure>
             </div>
           </article>
-          </div>
-      </div>
     </div>
   </section>
 
@@ -847,7 +811,7 @@ h2{--w:780}
   </section>
 </main>
 
-<div class="peek" id="peek" aria-hidden="true"><div class="peek-in"><i class="pk-glow"></i><i class="pk-edge"></i><div class="pk-win"><div class="peek-rail" id="rail"></div></div></div></div>
+<div class="peek" id="peek" aria-hidden="true"><div class="peek-in"><div class="peek-rail" id="rail"></div></div></div>
 
 <script>
 const root = document.documentElement;
@@ -1036,32 +1000,153 @@ const spy = new IntersectionObserver((es) => es.forEach(e => {
 // Frame-rate independent damping (after Lenis)
 const damp = (x, y, lambda, dt) => x + (y - x) * (1 - Math.exp(-lambda * dt));
 
-// Work index: cursor-following preview
+// Work index: cursor-following preview. With WebGL it is a textured plane that bends with the
+// pointer's velocity and ripples a little at rest, so the rectangle flows (after Clément Roche's
+// motion hover effects on Codrops); without it, a plain box.
 const cases = [...document.querySelectorAll('.case')];
 if (fine && !reduce && !basic()) {
   const peek = document.getElementById('peek'), rail = document.getElementById('rail'), list = document.getElementById('index');
-  cases.forEach(c => { const im = new Image(); im.src = c.dataset.thumb || c.dataset.src; im.alt = ''; im.decoding = 'async'; rail.append(im); });
+  const srcs = cases.map(c => c.dataset.thumb || c.dataset.src);
+  // Pages opened from disk cannot upload images to WebGL (file: URLs are cross-origin)
+  const flowGL = location.protocol === 'file:' ? null : (() => {
+    const cv = document.createElement('canvas');
+    const gl = cv.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: true, powerPreference: 'low-power' });
+    if (!gl) return null;
+    const sh = (tp, src) => { const o = gl.createShader(tp); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, `attribute vec2 a; uniform vec2 C, B, O; uniform float T, S; varying vec2 v;
+void main(){
+  v = a;
+  vec2 q = (a - .5) * B * S;
+  // Bend: the middle of each edge trails the pointer, the corners less
+  q.x += sin(a.y * 3.14159) * O.x; q.y += sin(a.x * 3.14159) * O.y;
+  // Rest: a slow travelling wave along the edges
+  q.x += 3.5 * sin(a.y * 6.5 + T * 1.3) * (a.x - .5) * 2.; q.y += 3. * sin(a.x * 5.5 - T * 1.1) * (a.y - .5) * 2.;
+  vec2 px = C * .5 + q;
+  gl_Position = vec4(px.x / C.x * 2. - 1., 1. - px.y / C.y * 2., 0., 1.);
+}`));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision highp float; uniform sampler2D X0, X1; uniform vec4 F0, F1; uniform vec2 B, O; uniform float M, A; varying vec2 v;
+void main(){
+  // Rounded corners from the rest shape
+  vec2 d = abs(v - .5) * B - (B * .5 - 9.);
+  float r = length(max(d, 0.)) - 9., k = 1. - smoothstep(-.8, .8, r);
+  vec2 s = O / B * .05;
+  vec2 u0 = v * F0.xy + F0.zw, u1 = v * F1.xy + F1.zw;
+  // A slight colour split in the direction of travel
+  vec3 c0 = vec3(texture2D(X0, u0 + s).r, texture2D(X0, u0).g, texture2D(X0, u0 - s).b);
+  vec3 c1 = vec3(texture2D(X1, u1 + s).r, texture2D(X1, u1).g, texture2D(X1, u1 - s).b);
+  float m = smoothstep(0., 1., clamp(M * 1.4 - (1. - v.y) * .4, 0., 1.));
+  gl_FragColor = vec4(mix(c0, c1, m), 1.) * k * A;
+}`));
+    gl.bindAttribLocation(pr, 0, 'a'); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
+    gl.useProgram(pr);
+    // A 32 x 20 grid of triangles, enough for smooth curves
+    const NX = 32, NY = 20, V = [];
+    for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+      const a = i / NX, b = j / NY, c = (i + 1) / NX, e = (j + 1) / NY;
+      V.push(a, b, c, b, a, e, c, b, c, e, a, e);
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(V), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    const U = {}; ['C', 'B', 'O', 'T', 'S', 'X0', 'X1', 'F0', 'F1', 'M', 'A'].forEach(n => { U[n] = gl.getUniformLocation(pr, n); });
+    gl.uniform1i(U.X0, 0); gl.uniform1i(U.X1, 1);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // Textures load in the background; until one is ready its slot shows the paper colour
+    const tex = srcs.map(src => {
+      const t = { id: gl.createTexture(), w: 16, h: 10, ok: false };
+      gl.bindTexture(gl.TEXTURE_2D, t.id);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([240, 243, 245, 255]));
+      [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(k => gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE));
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      const im = new Image(); im.decoding = 'async';
+      im.onload = () => {
+        // Downscale once with the browser's resampler; without mipmaps a large image shimmers
+        const k = Math.min(1, 900 / im.naturalWidth), c = document.createElement('canvas');
+        c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+        const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(im, 0, 0, c.width, c.height);
+        gl.bindTexture(gl.TEXTURE_2D, t.id); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+        t.w = im.naturalWidth; t.h = im.naturalHeight; t.ok = true;
+      };
+      im.src = src;
+      return t;
+    });
+    // Cover-fit anchored top left, like the screenshots elsewhere on the page
+    const fitOf = (t, bw, bh) => { const ib = t.w / t.h, bb = bw / bh; return ib > bb ? [bb / ib, 1, 0, 0] : [1, ib / bb, 0, 0]; };
+    cv.className = 'peek-gl'; cv.setAttribute('aria-hidden', 'true'); document.body.append(cv);
+    let W = 0, H = 0, bw = 0, bh = 0, pad = 70, dpr = 1;
+    const size = () => {
+      bw = Math.min(420, Math.max(280, innerWidth * .26)); bh = bw / 1.6; dpr = Math.min(devicePixelRatio || 1, 2);
+      W = bw + pad * 2; H = bh + pad * 2;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      gl.viewport(0, 0, cv.width, cv.height);
+    };
+    size(); addEventListener('resize', size);
+    return {
+      cv, pad, size: () => [bw, bh],
+      draw(st) {
+        gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+        if (st.alpha < .003) return;
+        const t0 = tex[st.from], t1 = tex[st.to];
+        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, t0.id);
+        gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, t1.id);
+        gl.uniform4fv(U.F0, fitOf(t0, bw, bh)); gl.uniform4fv(U.F1, fitOf(t1, bw, bh));
+        gl.uniform2f(U.C, W, H); gl.uniform2f(U.B, bw, bh); gl.uniform2f(U.O, st.ox, st.oy);
+        gl.uniform1f(U.T, st.t); gl.uniform1f(U.S, .9 + .1 * st.alpha); gl.uniform1f(U.M, st.mix); gl.uniform1f(U.A, st.alpha);
+        gl.drawArrays(gl.TRIANGLES, 0, NX * NY * 6);
+      },
+    };
+  })();
+
   let tx = 0, ty = 0, x = 0, y = 0, raf = 0, last = 0, active = false, minX = 0;
-  const loop = (t) => {
-    const dt = Math.min((t - last) / 1000, .05); last = t;
-    x = damp(x, tx, 11, dt); y = damp(y, ty, 11, dt);
-    // Keep clear of the hovered name
-    const w = peek.offsetWidth, h = peek.offsetHeight, px = Math.min(innerWidth - 12 - w, Math.max(x + 36, minX));
-    peek.style.transform = `translate3d(${px}px,${Math.max(12, Math.min(innerHeight - h - 12, y - h / 2))}px,0)`;
-    raf = (active || Math.abs(tx - x) + Math.abs(ty - y) > .5) ? requestAnimationFrame(loop) : 0;
-  };
-  const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); } };
-  list.addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; kick(); });
-  list.querySelectorAll('a').forEach(a => a.addEventListener('pointerenter', (e) => {
-    if (!active) { x = tx = e.clientX; y = ty = e.clientY; }
-    minX = a.querySelector('.ds').getBoundingClientRect().left - 8;
-    active = true; peek.classList.add('on');
-    const h = +getComputedStyle(cases[a.dataset.i]).getPropertyValue('--h');
-    if (root.dataset.tone === 'shift') [[1, 0, 48], [2, 40, 58], [3, -40, 62]].forEach(([k, dh, l]) => peek.style.setProperty('--c' + k, `hsl(${h + dh} 70% ${l}%)`));
-    else ['--c1', '--c2', '--c3'].forEach(k => peek.style.removeProperty(k));
-    rail.style.transform = `translateY(${-a.dataset.i * 100}%)`; kick();
-  }));
-  list.addEventListener('pointerleave', () => { active = false; peek.classList.remove('on'); });
+  if (flowGL) {
+    peek.remove();
+    // Plane state: position, bend, alpha, and a crossfade between two projects
+    const st = { from: 0, to: 0, mix: 1, alpha: 0, ox: 0, oy: 0, t: 0 };
+    const loop = (t) => {
+      const dt = Math.min((t - last) / 1000, .05); last = t; st.t = t / 1000;
+      x = damp(x, tx, 7, dt); y = damp(y, ty, 7, dt);
+      // The lag behind the pointer becomes the bend, capped so it never folds
+      const cap = 46;
+      st.ox = damp(st.ox, Math.max(-cap, Math.min(cap, (tx - x) * .32)), 10, dt);
+      st.oy = damp(st.oy, Math.max(-cap, Math.min(cap, (ty - y) * .32)), 10, dt);
+      st.alpha = damp(st.alpha, active ? 1 : 0, active ? 9 : 7, dt);
+      st.mix = Math.min(1, st.mix + dt / .45);
+      const [bw, bh] = flowGL.size(), px = Math.min(innerWidth - 12 - bw, Math.max(x + 36, minX));
+      flowGL.cv.style.transform = `translate3d(${px - flowGL.pad}px,${Math.max(12, Math.min(innerHeight - bh - 12, y - bh / 2)) - flowGL.pad}px,0)`;
+      flowGL.draw(st);
+      raf = (active || st.alpha > .003) ? requestAnimationFrame(loop) : 0;
+    };
+    const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); } };
+    list.addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; kick(); });
+    list.querySelectorAll('a').forEach(a => a.addEventListener('pointerenter', (e) => {
+      const i = +a.dataset.i;
+      if (!active && st.alpha < .05) { x = tx = e.clientX; y = ty = e.clientY; st.from = st.to = i; st.mix = 1; }
+      else if (i !== st.to) { st.from = st.mix < .5 ? st.from : st.to; st.to = i; st.mix = 0; }
+      minX = a.querySelector('.ds').getBoundingClientRect().left - 8;
+      active = true; kick();
+    }));
+    list.addEventListener('pointerleave', () => { active = false; kick(); });
+  } else {
+    srcs.forEach(src => { const im = new Image(); im.src = src; im.alt = ''; im.decoding = 'async'; rail.append(im); });
+    const loop = (t) => {
+      const dt = Math.min((t - last) / 1000, .05); last = t;
+      x = damp(x, tx, 11, dt); y = damp(y, ty, 11, dt);
+      // Keep clear of the hovered name
+      const w = peek.offsetWidth, h = peek.offsetHeight, px = Math.min(innerWidth - 12 - w, Math.max(x + 36, minX));
+      peek.style.transform = `translate3d(${px}px,${Math.max(12, Math.min(innerHeight - h - 12, y - h / 2))}px,0)`;
+      raf = (active || Math.abs(tx - x) + Math.abs(ty - y) > .5) ? requestAnimationFrame(loop) : 0;
+    };
+    const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); } };
+    list.addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; kick(); });
+    list.querySelectorAll('a').forEach(a => a.addEventListener('pointerenter', (e) => {
+      if (!active) { x = tx = e.clientX; y = ty = e.clientY; }
+      minX = a.querySelector('.ds').getBoundingClientRect().left - 8;
+      active = true; peek.classList.add('on');
+      rail.style.transform = `translateY(${-a.dataset.i * 100}%)`; kick();
+    }));
+    list.addEventListener('pointerleave', () => { active = false; peek.classList.remove('on'); });
+  }
 }
 
 // Figures draw in once they scroll into view
@@ -1755,12 +1840,18 @@ const terrain = (() => {
 const cssv = (n) => getComputedStyle(root).getPropertyValue(n).trim();
 const hexRgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)).join(',');
 // Match a canvas's backing store to its CSS size; returns CSS size and the pixel ratio used
+// Sizes come from a ResizeObserver: reading layout every frame would force it, and a
+// bounding box would include the transforms that scroll animations add
+const cssSize = new WeakMap();
+const sizeRO = new ResizeObserver(es => es.forEach(e => cssSize.set(e.target, [e.contentRect.width, e.contentRect.height])));
 const fit = (cv, maxDpr = 1.5) => {
-  const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, maxDpr);
-  const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
+  let s = cssSize.get(cv);
+  if (!s) { sizeRO.observe(cv); s = [cv.offsetWidth, cv.offsetHeight]; cssSize.set(cv, s); }
+  const d = Math.min(devicePixelRatio || 1, maxDpr);
+  const w = Math.max(1, Math.round(s[0] * d)), h = Math.max(1, Math.round(s[1] * d));
   if (cv.width !== w) cv.width = w;
   if (cv.height !== h) cv.height = h;
-  return { W: r.width, H: r.height, d };
+  return { W: s[0], H: s[1], d };
 };
 // Pale aurora bands from a small shader canvas that CSS scales up, so the bands stay soft
 const makeAurora = (cv, scale = 4) => {
@@ -1897,10 +1988,12 @@ const onScreenLoop = (el, draw) => {
     const x1 = x * cy + z * sy, z1 = -x * sy + z * cy;
     return [x1, y * cp - z1 * sp, y * sp + z1 * cp];
   };
+  const panel = cv.closest('.case');
   const draw = (t, dt) => {
+    if (panel && panel.hasAttribute('data-covered')) return;
     const r = fit(cv, 1.5), W = r.W, H = r.H;
     ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
-    if (!col) col = { line: cssv('--line'), acc: cssv('--water'), ink: cssv('--ink'), muted: cssv('--muted'), paper: hexRgb(cssv('--paper')) };
+    if (!col) { const ev = (n) => getComputedStyle(cv).getPropertyValue(n).trim(); col = { line: ev('--line'), acc: ev('--water'), ink: ev('--ink'), muted: ev('--muted'), paper: hexRgb(ev('--bg') || ev('--paper')) }; }
     // Keeps turning; slows down and tilts toward the pointer while it is over the globe
     T += dt; spin = damp(spin, mx === null ? .2 : .05, 2, dt); yaw += spin * dt;
     pitch = damp(pitch, my === null ? .42 : .42 + (my - .5) * .6, 3, dt);
@@ -2163,163 +2256,51 @@ void main(){
 })();
 
 
-// Between projects: a route drawn down the page from one project to the next as you scroll,
-// and, in the color variant, a tinted field per project that crossfades into the next
+
+// Case panels: each one sticks once its bottom reaches the viewport, so the next slides over it.
+// If scrolling rests while a panel is only partly in, the slide is finished in the direction of
+// travel, as lenis/snap does (debounced), with native smooth scrolling.
 (() => {
   const box = document.getElementById('cases'); if (!box) return;
-  const NS = 'http://www.w3.org/2000/svg', list = [...box.querySelectorAll('.case')];
-  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'route'); svg.setAttribute('aria-hidden', 'true');
-  box.prepend(svg);
-  // One field per project; the two cards share one, with a hue on each side
-  list.forEach(c => {
-    const t = document.createElement('i'); t.className = 'tint'; t.setAttribute('aria-hidden', 'true');
-    if (c.classList.contains('card')) {
-      const pair = c.parentElement;
-      if (c === pair.firstElementChild) { t.style.setProperty('--h', getComputedStyle(c).getPropertyValue('--h')); t.style.setProperty('--h2', getComputedStyle(pair.lastElementChild).getPropertyValue('--h')); pair.prepend(t); }
-    } else c.prepend(t);
-  });
-  // Offsets inside the box, ignoring the transforms that scroll animations add
-  const pos = (el) => { let x = 0, y = 0; for (let e = el; e && e !== box; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; } return [x, y]; };
-  const seg = (d, y0, y1, h) => {
-    const p = document.createElementNS(NS, 'path');
-    p.setAttribute('d', d); p.setAttribute('pathLength', '1');
-    p.style.setProperty('--h', h); p.style.animationRange = `cover calc(50vh + ${y0.toFixed(0)}px) cover calc(50vh + ${y1.toFixed(0)}px)`;
-    svg.append(p);
-  };
-  const stop = (x, y, h) => {
-    for (const [r, cls] of [[9, 'halo'], [4, '']]) {
-      const c = document.createElementNS(NS, 'circle');
-      c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', r); if (cls) c.setAttribute('class', cls);
-      c.style.setProperty('--h', h); c.style.animationRange = `cover calc(50vh + ${(y - 4).toFixed(0)}px) cover calc(50vh + ${(y + 40).toFixed(0)}px)`;
-      svg.append(c);
+  const P = [...box.querySelectorAll('.case')];
+  // Where each panel starts in the page flow; sticking does not change flow, only paint
+  const starts = () => { let y = box.getBoundingClientRect().top + scrollY; return P.map(p => { const s = y; y += p.offsetHeight; return s; }); };
+  let S0 = [];
+  // A panel is covered once the next one has reached the top; its canvases can rest
+  const cover = () => { const y = scrollY + 1; P.forEach((p, i) => p.toggleAttribute('data-covered', i + 1 < P.length && y >= S0[i + 1])); };
+  const size = () => { P.forEach(p => p.style.setProperty('--h', p.offsetHeight + 'px')); S0 = starts(); cover(); };
+  const ro = new ResizeObserver(size); P.forEach(p => ro.observe(p));
+  addEventListener('scroll', cover, { passive: true });
+  // Index links go to a panel's flow position; anchor scrolling to a stuck box lands wrong
+  document.querySelectorAll('.index a').forEach((a, i) => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollTo({ top: starts()[i], behavior: reduce ? 'auto' : 'smooth' });
+    history.replaceState(null, '', a.hash);
+  }));
+  if (reduce || !fine) return;
+  let lastY = scrollY, dir = 1, target = null, idle = 0;
+  const settle = () => {
+    const y = scrollY, vh = innerHeight;
+    // Ignore the scrollend that our own snap produces
+    if (target !== null && Math.abs(y - target) < 3) { target = null; return; }
+    target = null;
+    const S = starts();
+    for (let i = 0; i < P.length; i++) {
+      const top = S[i] - y;
+      if (top <= 2 || top >= vh - 2) continue;
+      const f = 1 - top / vh, fwd = dir > 0 ? f > .05 : f > .95;
+      target = Math.round(fwd ? S[i] : S[i] - vh);
+      scrollTo({ top: target, behavior: 'smooth' });
+      return;
     }
   };
-  const layout = () => {
-    svg.replaceChildren();
-    if (innerWidth < 1000) return;
-    svg.setAttribute('viewBox', `0 0 ${box.offsetWidth} ${box.offsetHeight}`);
-    const S = list.map(c => {
-      const [, top] = pos(c), [hx, hy] = pos(c.querySelector('h3')), h3 = c.querySelector('h3');
-      return { c, top, bottom: top + c.offsetHeight, x: hx - 30, y: hy + h3.offsetHeight / 2, h: getComputedStyle(c).getPropertyValue('--h').trim() };
-    });
-    // A bend in the gap above a case: down, across, down
-    const bend = (x0, x1, yA, yB) => { const m = (yA + yB) / 2; return `L${x0} ${yA} C${x0} ${m} ${x1} ${m} ${x1} ${yB} `; };
-    let ax = S[0].x, ay = 0;
-    S.forEach((s, i) => {
-      const prev = S[i - 1];
-      if (prev && prev.c.classList.contains('card') && s.c.classList.contains('card')) {
-        // Second card: branch off above the pair, over the empty space above it
-        const pairTop = Math.min(prev.top, s.top), gap = pairTop - S[i - 2].bottom, y0 = pairTop - gap * .55;
-        seg(`M${prev.x} ${y0} ` + bend(prev.x, s.x, y0, pairTop - 10).replace(/^L\S+ \S+ /, '') + `L${s.x} ${s.y}`, y0, s.y, s.h);
-        stop(s.x, s.y, s.h);
-        return;
-      }
-      let d = `M${ax} ${ay} `;
-      if (Math.abs(s.x - ax) > 2) { const gap = prev ? s.top - prev.bottom : 60; d += bend(ax, s.x, s.top - gap * .9, s.top - gap * .1); }
-      d += `L${s.x} ${s.y}`;
-      seg(d, ay, s.y, s.h); stop(s.x, s.y, s.h);
-      ax = s.x; ay = s.y;
-    });
-  };
-  let rt = 0;
-  const later = () => { clearTimeout(rt); rt = setTimeout(layout, 120); };
-  new ResizeObserver(later).observe(box);
-  document.fonts.ready.then(later);
-})();
-
-// Work backdrop variants behind the index: aurora bands, or live contours with a hill that
-// rises under the pointer. The default keeps the terrain sheet.
-(() => {
-  const sec = document.getElementById('work'), wrap = document.getElementById('wbg'), list = document.getElementById('index');
-  if (!wrap) return;
-  const cvA = wrap.querySelector('.wa'), cvC = wrap.querySelector('.wc'), still = reduce || basic();
-  const size = () => { wrap.style.height = Math.round(list.offsetTop + list.offsetHeight + 220) + 'px'; };
-  size(); addEventListener('resize', size); document.fonts.ready.then(size);
-  let aur = null, cx = null, col = null, F = new Float32Array(0), px = null, py = null, hx = 0, hy = 0, hill = 0, lastDraw = 0;
-  // Five slow waves; wavelength in px, direction, amplitude, speed
-  const WV = [[620, .3, 1, .1], [470, 1.9, .8, .13], [380, 2.8, .6, .08], [900, 4.1, 1.1, .06], [300, 5.3, .35, .17]]
-    .map(([l, a, amp, sp], k) => [amp, Math.cos(a) * 6.283 / l, Math.sin(a) * 6.283 / l, sp, k * 1.7]);
-  // Marching squares: edge pairs per case; edges 0 top, 1 right, 2 bottom, 3 left
-  const SEG = [[], [3, 0], [0, 1], [3, 1], [1, 2], [3, 0, 1, 2], [0, 2], [3, 2], [2, 3], [0, 2], [0, 1, 2, 3], [1, 2], [3, 1], [0, 1], [3, 0], []];
-  const NL = 14;
-  const contours = (t, dt) => {
-    const r = fit(cvC, 1.5), W = r.W, H = r.H, S = 14, nx = Math.ceil(W / S) + 1, ny = Math.ceil(H / S) + 1;
-    if (!cx) cx = cvC.getContext('2d');
-    if (!col) col = cssv('--line');
-    cx.setTransform(r.d, 0, 0, r.d, 0, 0); cx.clearRect(0, 0, W, H);
-    if (F.length !== nx * ny) F = new Float32Array(nx * ny);
-    hill = damp(hill, px === null ? 0 : 1.8, 2.5, dt);
-    if (px !== null) { hx = damp(hx, px, 5, dt); hy = damp(hy, py, 5, dt); }
-    const T = t / 1000;
-    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
-      const x = i * S, y = j * S; let v = 0;
-      for (const w of WV) v += w[0] * Math.sin(x * w[1] + y * w[2] + T * w[3] + w[4]);
-      if (hill > .01) { const dx = x - hx, dy = y - hy; v += hill * Math.exp(-(dx * dx + dy * dy) / 26000); }
-      F[j * nx + i] = v;
-    }
-    const pt = (e, x, y, a, b, c, d, L) => {
-      if (e === 0) return [x + (L - a) / (b - a) * S, y];
-      if (e === 1) return [x + S, y + (L - b) / (c - b) * S];
-      if (e === 2) return [x + (L - d) / (c - d) * S, y + S];
-      return [x, y + (L - a) / (d - a) * S];
-    };
-    for (let k = 0; k < NL; k++) {
-      const L = -2.9 + k * 5.8 / (NL - 1), major = k % 4 === 1;
-      cx.strokeStyle = `rgba(${col},${major ? .22 : .1})`; cx.lineWidth = major ? 1.2 : .9; cx.beginPath();
-      for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
-        const a = F[j * nx + i], b = F[j * nx + i + 1], c = F[(j + 1) * nx + i + 1], d = F[(j + 1) * nx + i];
-        const e = SEG[(a > L) | (b > L) << 1 | (c > L) << 2 | (d > L) << 3];
-        for (let q = 0; q < e.length; q += 2) {
-          const p0 = pt(e[q], i * S, j * S, a, b, c, d, L), p1 = pt(e[q + 1], i * S, j * S, a, b, c, d, L);
-          cx.moveTo(p0[0], p0[1]); cx.lineTo(p1[0], p1[1]);
-        }
-      }
-      cx.stroke();
-    }
-  };
-  let on = false, raf = 0;
-  const tick = (t) => {
-    raf = 0;
-    const m = root.dataset.wbg;
-    if (m === 'aurora') { aur = aur || makeAurora(cvA, 5); if (aur) aur.draw(t); }
-    else if (m === 'contours') { if (t - lastDraw > 30) { contours(t, Math.min(.1, (t - lastDraw) / 1000)); lastDraw = t; } }
-    else return;
-    if (on && !document.hidden && !still) raf = requestAnimationFrame(tick);
-  };
-  const start = () => { if (!raf && on && !document.hidden) raf = requestAnimationFrame(tick); };
-  new IntersectionObserver(([e]) => { on = e.isIntersecting; start(); }).observe(wrap);
-  addEventListener('labchange', () => { size(); start(); });
-  document.addEventListener('visibilitychange', start);
-  sec.addEventListener('pointermove', (e) => {
-    const r = wrap.getBoundingClientRect(), y = e.clientY - r.top;
-    if (y > r.height - 120) { px = py = null; return; }
-    if (px === null) { hx = e.clientX - r.left; hy = y; }
-    px = e.clientX - r.left; py = y;
+  addEventListener('scroll', () => {
+    const y = scrollY;
+    if (Math.abs(y - lastY) > .5) { dir = Math.sign(y - lastY); lastY = y; }
+    // Wait for a real pause: a wheel ends a short scroll after every notch
+    clearTimeout(idle); idle = setTimeout(settle, 'onscrollend' in window ? 600 : 260);
   }, { passive: true });
-  sec.addEventListener('pointerleave', () => { px = py = null; });
-  addEventListener('themechange', () => { col = null; if (aur) aur.tint(); });
-})();
-
-// Variant switcher, shown with ?lab; choices stay in the address bar
-(() => {
-  if (!root.hasAttribute('data-lab')) return;
-  const opts = { peek: ['glow', 'aurora', 'contour'], wbg: ['terrain', 'aurora', 'contours', 'none'], tone: ['mono', 'shift'] };
-  const names = { peek: 'Preview edge', wbg: 'Work backdrop', tone: 'Color' };
-  const box = document.createElement('div'); box.className = 'lab'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', 'Design variants');
-  for (const k in opts) {
-    const row = document.createElement('div'), b0 = document.createElement('b'); b0.textContent = names[k]; row.append(b0);
-    for (const v of opts[k]) {
-      const b = document.createElement('button'); b.type = 'button'; b.textContent = v; b.setAttribute('aria-pressed', root.dataset[k] === v);
-      b.onclick = () => {
-        root.dataset[k] = v; row.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
-        const u = new URL(location.href); u.searchParams.set(k, v); history.replaceState(null, '', u);
-        dispatchEvent(new Event('labchange'));
-      };
-      row.append(b);
-    }
-    box.append(row);
-  }
-  document.body.append(box);
+  if ('onscrollend' in window) addEventListener('scrollend', () => { clearTimeout(idle); idle = setTimeout(settle, 240); });
 })();
 
 </script>
