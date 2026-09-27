@@ -148,7 +148,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
   .js .case .shot{display:none}
   .js .case{min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:48px 0}
 }
-.plate{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); aspect-ratio:16/10; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--plate); box-shadow:0 30px 70px -40px rgba(20,35,50,.35)}
+.plate{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%) perspective(1400px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); aspect-ratio:16/10; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--plate); box-shadow:0 30px 70px -40px rgba(20,35,50,.35)}
 .cap{position:absolute; left:0; right:0; top:calc(50% + 31.25cqw + 16px); display:flex; align-items:flex-start; gap:24px; font-size:.86rem; color:var(--muted)}
 .cap-t{flex:1; min-width:0; clip-path:inset(0); transition:clip-path .4s var(--io)}
 .cap-t.out{clip-path:inset(0 0 0 100%)}
@@ -220,6 +220,35 @@ dl.kv dd{margin:0; color:var(--muted)}
 footer{margin-top:clamp(88px,10vw,140px); padding:22px 0 30px; border-top:1px solid var(--rule); display:flex; flex-wrap:wrap; gap:8px 28px; color:var(--muted); font-size:.88rem}
 footer .src{margin-left:auto}
 
+/* gallery motion */
+.plate::after{content:""; position:absolute; inset:0; z-index:3; pointer-events:none; background:radial-gradient(circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,.34), transparent 58%); opacity:var(--ga,0)}
+.tog, .big{position:relative}
+.rpl{position:absolute; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; border:1.5px solid var(--accent); pointer-events:none; animation:rpl .9s var(--out) both}
+@keyframes rpl{from{transform:scale(.2); opacity:.9}to{transform:scale(var(--rs,6)); opacity:0}}
+.count{display:inline-block; font-variant-numeric:tabular-nums; text-align:right}
+.mq{display:grid; gap:12px; margin:0 0 clamp(56px,7vw,96px); overflow:hidden; -webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq-row{display:flex; width:max-content; animation:mq 70s linear infinite}
+.mq-row.rev{animation-direction:reverse; animation-duration:90s}
+.mq:hover .mq-row{animation-play-state:paused}
+.mq-row span{margin-right:10px; padding:7px 16px; border:1px solid var(--rule); border-radius:999px; white-space:nowrap; font-size:.95rem; font-weight:540; background:color-mix(in srgb, var(--paper) 82%, transparent)}
+.mq-row.rev span{color:var(--muted); font-weight:460}
+@keyframes mq{to{transform:translateX(-50%)}}
+.contact{position:relative; isolation:isolate; background:linear-gradient(to bottom, transparent, var(--paper) clamp(120px,14vw,200px))}
+#dust{position:absolute; z-index:-1; top:clamp(24px,5vw,72px); right:0; width:min(64vw,860px); height:min(56vw,640px); pointer-events:none}
+@media (max-width:700px){ #dust{width:100%; height:88vw; top:24px; opacity:.55} }
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .index li{animation:slide-in linear both; animation-timeline:view(); animation-range:entry 0% entry 70%}
+    dl.kv > *{animation:rise-in linear both; animation-timeline:view(); animation-range:entry 0% entry 90%}
+    @keyframes slide-in{from{opacity:0; transform:translateX(-48px)}}
+    @keyframes rise-in{from{opacity:0; transform:translateY(22px)}}
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .mq-row{animation:none !important; flex-wrap:wrap; width:auto; row-gap:10px}
+  .mq-row .dup{display:none}
+}
+
 /* type motion */
 .hero h1 .l{display:inline-block}
 .blk{background:linear-gradient(var(--accent),var(--accent)) no-repeat 0 0/0% 100%; -webkit-box-decoration-break:clone; box-decoration-break:clone}
@@ -288,7 +317,7 @@ footer .src{margin-left:auto}
       <li><a href="#now">Now</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <button class="tog" id="theme" type="button" aria-label="Switch to dark theme">
+    <button class="tog" id="theme" type="button" aria-label="Switch to dark theme" data-mag>
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 1.75a7.25 7.25 0 0 1 0 14.5z" fill="currentColor"/></svg>
     </button>
   </div>
@@ -393,15 +422,15 @@ footer .src{margin-left:auto}
 <text class="s n" style="--d:0" x="146.0" y="170.0" text-anchor="start">26 codes that are</text>
 <text class="s n" style="--d:0" x="146.0" y="188.0" text-anchor="start">not real courses</text>
 </svg>
-<!-- /fig:uw-course-lookup --><figcaption>Build pipeline. Course codes from the chat archive are checked against the real catalog before anything ships; the database holds 290 courses and 6,847 instructors.</figcaption></figure>
+<!-- /fig:uw-course-lookup --><figcaption>Build pipeline. Course codes from the chat archive are checked against the real catalog before anything ships; the database holds <span class="count" data-to="290">290</span> courses and <span class="count" data-to="6847">6,847</span> instructors.</figcaption></figure>
           </article>
 
           <article class="case" id="photo-organizer" data-src="assets/photo-organizer.jpg">
             <a class="shot" href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener" tabindex="-1"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy"></a>
             <h3><span data-dec>photo-organizer</span></h3>
             <p class="links"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
-            <p class="hook">Sorts a 310&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
-            <p class="built">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. 7,346 files, 0 errors.</p>
+            <p class="hook">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
+            <p class="built">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class="count" data-to="7346">7,346</span> files, 0 errors.</p>
             <ul>
               <li>Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
               <li>RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
@@ -605,6 +634,11 @@ footer .src{margin-left:auto}
   </section>
 
   <section class="block" id="now" aria-labelledby="now-h">
+    <p class="sr">Tools used in these projects: MapLibre GL, Canvas 2D, WebGL, MediaRecorder, OffscreenCanvas, D3, TopoJSON, OKLCH, Leaflet, Chrome MV3, PyTorch, open_clip, HDBSCAN, FastAPI, SQLite, Playwright, GitHub Actions. Data sources: USGS 3DEP, MadGrades API, Course Search & Enroll API, World Bank, US Census, ISO 3166, OpenStreetMap, Nominatim, Esri World Imagery, Reddit via Firecrawl, ntfy.</p>
+    <div class="mq" aria-hidden="true">
+      <div class="mq-row"><span>MapLibre GL</span><span>Canvas 2D</span><span>WebGL</span><span>MediaRecorder</span><span>OffscreenCanvas</span><span>D3</span><span>TopoJSON</span><span>OKLCH</span><span>Leaflet</span><span>Chrome MV3</span><span>PyTorch</span><span>open_clip</span><span>HDBSCAN</span><span>FastAPI</span><span>SQLite</span><span>Playwright</span><span>GitHub Actions</span><span class="dup">MapLibre GL</span><span class="dup">Canvas 2D</span><span class="dup">WebGL</span><span class="dup">MediaRecorder</span><span class="dup">OffscreenCanvas</span><span class="dup">D3</span><span class="dup">TopoJSON</span><span class="dup">OKLCH</span><span class="dup">Leaflet</span><span class="dup">Chrome MV3</span><span class="dup">PyTorch</span><span class="dup">open_clip</span><span class="dup">HDBSCAN</span><span class="dup">FastAPI</span><span class="dup">SQLite</span><span class="dup">Playwright</span><span class="dup">GitHub Actions</span></div>
+      <div class="mq-row rev"><span>USGS 3DEP</span><span>MadGrades API</span><span>Course Search & Enroll API</span><span>World Bank</span><span>US Census</span><span>ISO 3166</span><span>OpenStreetMap</span><span>Nominatim</span><span>Esri World Imagery</span><span>Reddit via Firecrawl</span><span>ntfy</span><span class="dup">USGS 3DEP</span><span class="dup">MadGrades API</span><span class="dup">Course Search & Enroll API</span><span class="dup">World Bank</span><span class="dup">US Census</span><span class="dup">ISO 3166</span><span class="dup">OpenStreetMap</span><span class="dup">Nominatim</span><span class="dup">Esri World Imagery</span><span class="dup">Reddit via Firecrawl</span><span class="dup">ntfy</span></div>
+    </div>
     <div class="wrap two">
       <div>
         <h2 id="stack-h"><span data-dec>Stack</span></h2>
@@ -628,12 +662,13 @@ footer .src{margin-left:auto}
   </section>
 
   <section class="block contact" id="contact" aria-labelledby="contact-h">
+    <canvas id="dust" aria-hidden="true"></canvas>
     <div class="wrap">
       <h2 id="contact-h"><span data-dec>Contact</span></h2>
       <p style="margin-top:14px">Email is the fastest way to reach me. Click the address to copy it.</p>
       <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-dec>hgu72@wisc.edu</span></button>
       <p class="sr" id="mail-status" role="status"></p>
-      <div class="after"><a href="mailto:hgu72@wisc.edu">Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener">GitHub</a></div>
+      <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag>Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag>GitHub</a></div>
       <footer>
         <span>One HTML file, no framework, no trackers.</span>
         <span>Terrain: USGS 3DEP via Terrain Tiles on AWS.</span>
@@ -669,7 +704,7 @@ syncTheme();
 themeBtn.onclick = () => {
   root.dataset.theme = isDark() ? 'light' : 'dark';
   try { localStorage.setItem('theme', root.dataset.theme); } catch {}
-  syncTheme(); terrain.repaint();
+  syncTheme(); terrain.repaint(); dispatchEvent(new Event('themechange'));
 };
 
 // Text decode: glyphs resolve left to right behind a block cursor.
@@ -721,10 +756,84 @@ if (fine && !basic()) {
   document.querySelectorAll('.index a').forEach(a => { const n = a.querySelector('.nm'); a.addEventListener('pointerenter', () => { if (!n._tok) decode(n, { step: 16, settle: 130, lead: 40 }); }); });
 }
 
+// Pinned screenshot tilts toward the pointer, with a soft glare
+if (fine && !reduce) {
+  const stage = document.querySelector('.stage'), pl = document.getElementById('plate');
+  let tx = 0, ty = 0, x = 0, y = 0, gx = 50, gy = 50, ga = 0, tga = 0, raf = 0, last = 0;
+  const tick = (t) => {
+    const dt = Math.min(.05, (t - last) / 1000); last = t;
+    x = damp(x, tx, 9, dt); y = damp(y, ty, 9, dt); ga = damp(ga, tga, 8, dt);
+    pl.style.setProperty('--rx', (-y * 5).toFixed(2) + 'deg'); pl.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
+    pl.style.setProperty('--gx', gx.toFixed(1) + '%'); pl.style.setProperty('--gy', gy.toFixed(1) + '%'); pl.style.setProperty('--ga', ga.toFixed(3));
+    raf = Math.abs(x - tx) + Math.abs(y - ty) + Math.abs(ga - tga) > .002 ? requestAnimationFrame(tick) : 0;
+  };
+  const go = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+  stage.addEventListener('pointermove', (e) => {
+    const r = pl.getBoundingClientRect(), u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height;
+    tx = Math.max(-1, Math.min(1, u * 2 - 1)); ty = Math.max(-1, Math.min(1, v * 2 - 1));
+    gx = u * 100; gy = v * 100; tga = u >= 0 && u <= 1 && v >= 0 && v <= 1 ? 1 : .35; go();
+  });
+  stage.addEventListener('pointerleave', () => { tx = ty = 0; tga = 0; go(); });
+}
+
+// Magnetic pull on small controls, springing back when the pointer leaves
+if (fine && !reduce) {
+  const mags = [...document.querySelectorAll('[data-mag]')].map(el => ({ el, x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0 }));
+  let raf = 0, last = 0;
+  const tick = (t) => {
+    const dt = Math.min(.033, (t - last) / 1000); last = t;
+    let moving = false;
+    for (const m of mags) {
+      // Lightly damped spring: a small overshoot, like an elastic ease
+      m.vx += ((m.tx - m.x) * 220 - m.vx * 16) * dt; m.vy += ((m.ty - m.y) * 220 - m.vy * 16) * dt;
+      m.x += m.vx * dt; m.y += m.vy * dt;
+      if (Math.abs(m.tx - m.x) + Math.abs(m.ty - m.y) + Math.abs(m.vx) + Math.abs(m.vy) > .05) moving = true;
+      m.el.style.translate = `${m.x.toFixed(2)}px ${m.y.toFixed(2)}px`;
+    }
+    raf = moving ? requestAnimationFrame(tick) : 0;
+  };
+  addEventListener('pointermove', (e) => {
+    for (const m of mags) {
+      const r = m.el.getBoundingClientRect(), cx = r.left + r.width / 2 - m.x, cy = r.top + r.height / 2 - m.y;
+      const dx = e.clientX - cx, dy = e.clientY - cy, near = Math.hypot(dx, dy) < Math.max(r.width, r.height) / 2 + 36;
+      m.tx = near ? dx * .35 : 0; m.ty = near ? dy * .3 : 0;
+    }
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+  }, { passive: true });
+}
+
+// Water-ring ripple where a button is pressed
+const ripple = (el, e, scale) => {
+  if (reduce) return;
+  const r = el.getBoundingClientRect(), x = e.clientX ? e.clientX - r.left : r.width / 2, y = e.clientY ? e.clientY - r.top : r.height / 2;
+  for (let k = 0; k < 2; k++) {
+    const i = document.createElement('i');
+    i.className = 'rpl'; i.setAttribute('aria-hidden', 'true');
+    i.style.left = x + 'px'; i.style.top = y + 'px'; i.style.setProperty('--rs', scale * (k ? .62 : 1)); i.style.animationDelay = k * 120 + 'ms';
+    el.append(i); i.addEventListener('animationend', () => i.remove());
+  }
+};
+themeBtn.addEventListener('click', (e) => ripple(themeBtn, e, 5));
+
+// Numbers count up the first time they are fully in view
+const fmt = new Intl.NumberFormat('en-US');
+const countIO = new IntersectionObserver((es) => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  countIO.unobserve(e.target);
+  const el = e.target, to = +el.dataset.to;
+  if (reduce || basic()) return;
+  el.style.width = el.getBoundingClientRect().width + 'px';
+  const t0 = performance.now();
+  const step = (t) => { const q = Math.min(1, (t - t0) / 1300); el.textContent = fmt.format(Math.round(to * (1 - Math.pow(1 - q, 4)))); if (q < 1) requestAnimationFrame(step); else el.style.width = ''; };
+  requestAnimationFrame(step);
+}), { threshold: 1 });
+document.querySelectorAll('.count').forEach(el => countIO.observe(el));
+
 // Copy email
 const mail = document.getElementById('mail'), mailTxt = mail.firstElementChild, status = document.getElementById('mail-status');
-mail.onclick = async () => {
+mail.onclick = async (ev) => {
   const addr = mail.dataset.mail;
+  ripple(mail, ev, 16);
   try { await navigator.clipboard.writeText(addr); } catch { location.href = 'mailto:' + addr; return; }
   decode(mailTxt, { text: 'Copied', step: 40, settle: 160 }); status.textContent = 'Email address copied';
   clearTimeout(mail.t); mail.t = setTimeout(() => { decode(mailTxt, { text: addr, step: 22, settle: 160 }); status.textContent = ''; }, 1600);
@@ -1322,7 +1431,77 @@ const terrain = (() => {
   addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (ready) { renderHero(); paintBg(); } }, 150); });
   // Page height can change after fonts settle
   new ResizeObserver(() => { const H2 = root.scrollHeight; if (bgDone && Math.abs(H2 - lastH) > 150) { lastH = H2; clearTimeout(rt); rt = setTimeout(paintBg, 200); } }).observe(document.body);
-  return { repaint: () => { if (ready) { renderHero(); if (bgDone) paintBg(); } } };
+  return {
+    repaint: () => { if (ready) { renderHero(); if (bgDone) paintBg(); } },
+    gridReady, SHORE, elev: (i, j) => at(i, j), focusCell: () => toGrid(FOCUS.lat, FOCUS.lon),
+  };
+})();
+
+// Contact: the lakes again, as particles that gather when the section comes into view.
+// Springs pull each particle to a water cell; the pointer pushes them aside; a click scatters them.
+(() => {
+  const cv = document.getElementById('dust'), sec = document.getElementById('contact'), ctx = cv.getContext('2d');
+  const still = reduce || basic();
+  let W = 0, H = 0, dpr = 1, P = [], raf = 0, last = 0, onScreen = false, mx = -1e4, my = -1e4, col = '', camp = null;
+  const build = () => {
+    const r = cv.getBoundingClientRect();
+    W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Crop around Mendota and Monona in grid cells, right-aligned in the canvas
+    const I0 = 112, I1 = 352, J0 = 12, J1 = 214, sc = Math.min(W / (I1 - I0), H / (J1 - J0));
+    const offX = W - (I1 - I0) * sc, offY = (H - (J1 - J0) * sc) / 2, gap = W < 500 ? 5 : 7, T = [];
+    for (let y = gap / 2; y < H; y += gap) for (let x = gap / 2; x < W; x += gap) {
+      const i = I0 + (x - offX) / sc, j = J0 + (y - offY) / sc;
+      if (i >= I0 && i <= I1 && j >= J0 && j <= J1 && terrain.elev(i, j) < terrain.SHORE + .6) T.push([x, y]);
+    }
+    for (let n = T.length - 1; n > 0; n--) { const k = Math.random() * (n + 1) | 0; [T[n], T[k]] = [T[k], T[n]]; }
+    const [fi, fj] = terrain.focusCell(); camp = [offX + (fi - I0) * sc, offY + (fj - J0) * sc];
+    P = T.map(([x, y], n) => {
+      const o = P[n];
+      return { x: o ? o.x : Math.random() * W, y: o ? o.y : Math.random() * H, vx: 0, vy: 0, tx: x, ty: y, k: .012 + Math.random() * .022, hi: Math.random() < .3 };
+    });
+    if (still) P.forEach(p => { p.x = p.tx; p.y = p.ty; });
+  };
+  const draw = () => {
+    col = col || getComputedStyle(root).getPropertyValue('--water').trim();
+    ctx.clearRect(0, 0, W, H);
+    for (const hi of [false, true]) {
+      ctx.fillStyle = `rgba(${col},${hi ? .75 : .32})`; ctx.beginPath();
+      for (const p of P) if (p.hi === hi) ctx.rect(p.x - .9, p.y - .9, 1.8, 1.8);
+      ctx.fill();
+    }
+    if (camp) { ctx.strokeStyle = `rgba(${col},.9)`; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(camp[0], camp[1], 6, 0, 7); ctx.stroke(); }
+  };
+  const frame = (t) => {
+    raf = 0;
+    const f = Math.min(3, Math.max(.2, (t - last) / 16.67)); last = t;
+    let energy = 0;
+    const damp1 = Math.pow(.86, f);
+    for (const p of P) {
+      p.vx += (p.tx - p.x) * p.k * f; p.vy += (p.ty - p.y) * p.k * f;
+      const dx = p.x - mx, dy = p.y - my, d2 = dx * dx + dy * dy;
+      if (d2 < 4900) { const d = Math.sqrt(d2) || 1, push = (1 - d / 70) * 3.2 * f; p.vx += dx / d * push; p.vy += dy / d * push; }
+      p.vx *= damp1; p.vy *= damp1; p.x += p.vx * f; p.y += p.vy * f;
+      energy += Math.abs(p.vx) + Math.abs(p.vy) + Math.abs(p.tx - p.x) * .05;
+    }
+    draw();
+    if (onScreen && (energy / (P.length || 1) > .01 || mx > -1e3)) raf = requestAnimationFrame(frame);
+  };
+  const kick = () => { if (!raf && onScreen && !still) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  terrain.gridReady.then(() => {
+    build(); draw();
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; kick(); }, { rootMargin: '80px' }).observe(cv);
+  });
+  sec.addEventListener('pointermove', (e) => { if (e.pointerType !== 'mouse') return; const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; kick(); });
+  sec.addEventListener('pointerleave', () => { mx = my = -1e4; kick(); });
+  sec.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('a, button')) return;
+    for (const p of P) { p.vx += (Math.random() - .5) * 22; p.vy += (Math.random() - .5) * 22; }
+    kick();
+  });
+  let rt = 0;
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (P.length) { build(); draw(); kick(); } }, 200); });
+  addEventListener('themechange', () => { col = ''; draw(); });
 })();
 </script>
 </body>
