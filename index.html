@@ -165,7 +165,18 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .pg + .pg .pg-in{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,6fr); gap:0 56px; align-items:start}
 .pg + .pg .pg-h{grid-column:1 / -1}
 .pg + .pg .fig{margin-top:16px}
-@media (max-width:760px){ .cap{grid-template-columns:1fr} .cap-shot{grid-row:auto} .pg, .pg + .pg{grid-column:auto} .pg + .pg .pg-in{display:block} }
+.pg{min-width:0}
+/* Phones and portrait tablets: one column, each project set off by a hairline */
+@media (max-width:899px){
+  .cap{grid-template-columns:minmax(0,1fr); gap:18px}
+  .cap-shot{grid-row:auto}
+  .pg, .pg + .pg{grid-column:auto}
+  .pg + .pg .pg-in{display:block}
+  .pg + .pg{margin-top:8px}
+  .cap + .cap{padding-top:clamp(40px,9vw,64px); border-top:1px solid var(--rule)}
+  .film-caps{gap:clamp(40px,9vw,64px)}
+  .cap .fig{margin-top:20px; max-width:640px}
+}
 
 .film.live{height:calc(var(--pages) * 100vh)}
 .film.live .film-stage{position:sticky; top:0; height:100vh; overflow:clip; isolation:isolate}
@@ -220,7 +231,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 /* figures */
 .fig{margin:32px 0 0; max-width:520px}
 .fig svg{display:block; width:100%; height:auto; overflow:visible}
-@media (max-width:520px){ .fig{overflow-x:auto; scrollbar-width:thin} .fig svg{min-width:440px; margin-bottom:6px} }
+@media (max-width:520px){ .cap .fig svg{width:calc(100% + var(--gut)); max-width:none} }
 .fig figcaption{margin-top:14px; font-size:.86rem; line-height:1.5; color:var(--muted); max-width:52ch}
 .fig text{font-family:var(--font); font-size:14px; fill:var(--muted)}
 .fig text.k{fill:var(--ink); font-weight:560}
@@ -262,6 +273,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 dl.kv{display:grid; grid-template-columns:8.5em 1fr; gap:14px 24px; margin:0}
 dl.kv dt{font-weight:620}
 dl.kv dd{margin:0; color:var(--muted)}
+@media (max-width:600px){ dl.kv{grid-template-columns:minmax(0,1fr); gap:2px} dl.kv dd{margin-bottom:14px} }
 .when{color:var(--faint); font-size:1.05rem; font-weight:500; letter-spacing:0; margin-left:12px}
 
 /* contact */
@@ -287,7 +299,8 @@ footer .src{margin-left:auto}
 .count{display:inline-block; font-variant-numeric:tabular-nums; text-align:right}
 .contact{position:relative; isolation:isolate; background:linear-gradient(to bottom, transparent, var(--paper) clamp(120px,14vw,200px))}
 #dust{position:absolute; z-index:-1; top:clamp(24px,5vw,72px); right:0; width:min(64vw,860px); height:min(56vw,640px); pointer-events:none}
-@media (max-width:700px){ #dust{width:100%; height:88vw; top:24px; opacity:.55} }
+/* Phones and portrait tablets: the particles get their own space above the heading instead of sitting on the text */
+@media (max-width:1000px){ #dust{width:100%; height:min(66vw, 440px); top:28px; opacity:.9} section.block.contact{padding-top:calc(min(66vw, 440px) + 44px)} }
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
     .index li{animation:slide-in linear both; animation-timeline:view(); animation-range:entry 0% entry 70%}
@@ -2260,8 +2273,8 @@ void main(){
     if (goTo) goTo(first[i], true);
     else scrollTo({ top: caps[i].getBoundingClientRect().top + scrollY - 90, behavior: reduce ? 'auto' : 'smooth' });
   }));
-  // The deck needs room for a screenshot and a column of notes side by side
-  if (reduce || basic() || !matchMedia('(min-width: 900px) and (min-height: 560px)').matches) return;
+  // The deck needs room for a screenshot and a column of notes side by side, on a landscape screen
+  if (reduce || basic() || !matchMedia('(min-width: 900px) and (min-height: 560px) and (min-aspect-ratio: 11/10)').matches) return;
   const cv = film.querySelector('.film-gl');
   const gl = cv.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'high-performance' });
   if (!gl) return;

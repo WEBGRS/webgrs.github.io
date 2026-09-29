@@ -52,6 +52,12 @@ Lake Mendota and Lake Monona return as particles on springs. Every few seconds t
 
 The terrain continues behind everything as a faint sheet that scrolls slower than the content (a ScrollTimeline, so it moves on the compositor), and fades out while the work pages fill the screen. Elsewhere: the stack as a constellation in which tools used by the same project are linked, a raymarched liquid sphere half past the edge of the Now list, and a sine-wave signal line above the footer.
 
+## On a phone
+
+![Three phone screens: the hero, uw-course-lookup in the one-column project list, and the contact section](docs/mobile.jpg)
+
+Below 900 px the work section is a single column: screenshot, notes, then the figure, scaled to the screen width. The Stack and Now lists put each label above its text, and the contact particles get their own space above the heading instead of sitting behind it.
+
 ## Performance and accessibility
 
 The page picks an effects tier on load and logs the choice and the reason to the console:
@@ -62,7 +68,7 @@ The page picks an effects tier on load and logs the choice and the reason to the
 | 1 | Canvas 2D | 4 or fewer CPU threads or 4 GB or less memory, or a software GPU |
 | 0 | Static | reduced motion, Save-Data, or 2 or fewer threads or 2 GB or less memory |
 
-`?fx=0`, `?fx=1` or `?fx=2` forces a tier. Every decorative canvas draws only while it's on screen, and canvases on work pages that aren't showing stop drawing. With `prefers-reduced-motion`, or in a window narrower than 900 px or shorter than 560 px, the work section becomes a plain list with the same content. Screen readers get plain-text copies of the animated headings. Secondary text is never grey; it's set in the ink colour and told apart by size and weight.
+`?fx=0`, `?fx=1` or `?fx=2` forces a tier. Every decorative canvas draws only while it's on screen, and canvases on work pages that aren't showing stop drawing. With `prefers-reduced-motion`, on a portrait screen, or in a window narrower than 900 px or shorter than 560 px, the work section becomes a plain list with the same content. Screen readers get plain-text copies of the animated headings. Secondary text is never grey; it's set in the ink colour and told apart by size and weight.
 
 ## Projects shown
 

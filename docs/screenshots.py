@@ -1,5 +1,6 @@
 # Regenerate the README screenshots: the hero in both themes, three pages of the work section,
-# and the contact section. Needs Playwright with Chromium; WebGL runs on SwiftShader headless.
+# the contact section, and three phone screens side by side. Needs Playwright with Chromium;
+# WebGL runs on SwiftShader headless.
 import pathlib
 from playwright.sync_api import sync_playwright
 
@@ -20,7 +21,7 @@ def page(b, theme):
 
 
 def shot(pg, name):
-    pg.screenshot(path=str(OUT / f"{name}.jpg"), type="jpeg", quality=84)
+    pg.screenshot(path=str(OUT / f"{name}.jpg"), type="jpeg", quality=84, timeout=120000)
 
 
 def to(pg, el_id, extra=0):
@@ -51,5 +52,20 @@ with sync_playwright() as p:
     pg.evaluate("filmGo(2)"); pg.wait_for_timeout(6000)
     shot(pg, "work-dark")
     pg.close()
+    # Phone: three screens side by side (hero, a project in the one-column list, contact)
+    from PIL import Image
+    ctx = b.new_context(viewport={"width": 390, "height": 844}, device_scale_factor=2, is_mobile=True, has_touch=True, locale="en-US")
+    pg = ctx.new_page()
+    pg.add_init_script("localStorage.setItem('theme', 'light'); sessionStorage.setItem('intro', '1')")
+    pg.goto(URL); pg.wait_for_timeout(4000)
+    frames = []
+    for el, extra in [(None, 0), ("uw-course-lookup", -24), ("contact", 0)]:
+        if el: to(pg, el, extra); pg.wait_for_timeout(3000)
+        pg.screenshot(path=str(OUT / "_m.png"), timeout=120000); frames.append(Image.open(OUT / "_m.png").convert("RGB").resize((390, 844)))
+    (OUT / "_m.png").unlink()
+    sheet = Image.new("RGB", (390 * 3 + 40 * 2, 844), (255, 255, 255))
+    for i, f in enumerate(frames): sheet.paste(f, (i * 430, 0))
+    sheet.save(OUT / "mobile.jpg", quality=84)
+    ctx.close()
     b.close()
 print("saved to", OUT)
