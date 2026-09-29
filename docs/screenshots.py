@@ -59,8 +59,13 @@ with sync_playwright() as p:
     pg.add_init_script("localStorage.setItem('theme', 'light'); sessionStorage.setItem('intro', '1')")
     pg.goto(URL); pg.wait_for_timeout(4000)
     frames = []
-    for el, extra in [(None, 0), ("uw-course-lookup", -24), ("contact", 0)]:
-        if el: to(pg, el, extra); pg.wait_for_timeout(3000)
+    # Hero; uw-course-lookup on the portrait work stage (page 3); contact
+    for step in ["hero", "work", "contact"]:
+        if step == "work":
+            to(pg, "film"); pg.wait_for_timeout(4500)
+            pg.evaluate("filmGo(2)"); pg.wait_for_timeout(5000)
+        elif step == "contact":
+            to(pg, "contact"); pg.wait_for_timeout(3000)
         pg.screenshot(path=str(OUT / "_m.png"), timeout=120000); frames.append(Image.open(OUT / "_m.png").convert("RGB").resize((390, 844)))
     (OUT / "_m.png").unlink()
     sheet = Image.new("RGB", (390 * 3 + 40 * 2, 844), (255, 255, 255))

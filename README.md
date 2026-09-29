@@ -22,7 +22,7 @@ H. Gu's portfolio site, live at **<https://webgrs.github.io>**. It's a single `i
 
 ### Hero
 
-The map is traced from USGS 3DEP elevation (via Terrain Tiles on AWS) at a 5 m contour interval. Marching squares runs in a worker on an OffscreenCanvas, and the map reveals outward from campus. The contour under the pointer lights up in a soft patch that spreads slowly; on the WebGL tier the contours 5 m above and below light up with it, fainter. Hovering also reads out coordinates and elevation.
+The map is traced from USGS 3DEP elevation (via Terrain Tiles on AWS) at a 5 m contour interval. Marching squares runs in a worker on an OffscreenCanvas, and the map reveals outward from campus. The contour under the pointer lights up in a soft patch that spreads slowly; on the WebGL tier the contours 5 m above and below light up with it, fainter. With a mouse, hovering also reads out coordinates and elevation.
 
 Once per session a short loader plays first: five real contour lines of a hill northwest of Madison (43.132° N, 89.512° W, 337 m), drawn stroke by stroke while fonts and terrain load.
 
@@ -54,9 +54,11 @@ The terrain continues behind everything as a faint sheet that scrolls slower tha
 
 ## On a phone
 
-![Three phone screens: the hero, uw-course-lookup in the one-column project list, and the contact section](docs/mobile.jpg)
+![Three phone screens: the hero, uw-course-lookup on the paged work stage, and the contact section](docs/mobile.jpg)
 
-Below 900 px the work section is a single column: screenshot, notes, then the figure, scaled to the screen width. The Stack and Now lists put each label above its text, and the contact particles get their own space above the heading instead of sitting behind it.
+On a portrait phone the work section is paged like the desktop one, with the screenshot on top and the notes under it. Held sideways, or in a short window, it's a single-column list instead, and its screenshots unroll as they arrive. Below 900 px blocks rise in as they scroll into view and a thin bar at the top tracks reading progress. The Stack and Now lists put each label above its text.
+
+Phones leave out what needs a mouse or a wide screen: the map's elevation readout, the stack constellation and the contact particles. Tablets keep the particles, above the contact heading instead of behind it; without hover they skip the readout too. `?full` brings back the constellation, the particles and the orb by the Now list on a phone, whatever it costs.
 
 ## Performance and accessibility
 
@@ -68,7 +70,7 @@ The page picks an effects tier on load and logs the choice and the reason to the
 | 1 | Canvas 2D | 4 or fewer CPU threads or 4 GB or less memory, or a software GPU |
 | 0 | Static | reduced motion, Save-Data, or 2 or fewer threads or 2 GB or less memory |
 
-`?fx=0`, `?fx=1` or `?fx=2` forces a tier. Every decorative canvas draws only while it's on screen, and canvases on work pages that aren't showing stop drawing. With `prefers-reduced-motion`, on a portrait screen, or in a window narrower than 900 px or shorter than 560 px, the work section becomes a plain list with the same content. Screen readers get plain-text copies of the animated headings. Secondary text is never grey; it's set in the ink colour and told apart by size and weight.
+`?fx=0`, `?fx=1` or `?fx=2` forces a tier. Every decorative canvas draws only while it's on screen, and canvases on work pages that aren't showing stop drawing. The work section is paged on landscape screens at least 900 × 560 and on portrait screens under 900 px wide and at least 560 px tall; anywhere else, with `prefers-reduced-motion`, or on the static tier, it's a plain list with the same content. Screen readers get plain-text copies of the animated headings. Secondary text is never grey; it's set in the ink colour and told apart by size and weight.
 
 ## Projects shown
 
