@@ -1,33 +1,70 @@
 # webgrs.github.io
 
-Personal portfolio site: **<https://webgrs.github.io>**
+H. Gu's portfolio site, live at **<https://webgrs.github.io>**. It's a single `index.html`: no framework, no build step, no analytics. The one outside request is the Archivo typeface from Google Fonts.
 
-![Portfolio site, light theme](docs/light.jpg)
-
-![DataMap's case study on its deep blue panel, with the screenshot and a figure of its color ramps](docs/work.jpg)
+![The hero in the light theme: a contour map of Madison with the name over it](docs/light.jpg)
 
 <details><summary>Dark theme</summary>
 
-![Portfolio site, dark theme](docs/dark.jpg)
+![The hero in the dark theme](docs/dark.jpg)
 
 </details>
 
-One `index.html` plus project screenshots in `assets/`; no framework, trackers, or build step. It opens in the light theme; a toggle switches to dark and remembers the choice.
+## What's on the page
 
-- **Intro:** once per session, a loader over a pale aurora shader. The mark is five real contour lines of a hill northwest of Madison (43.132 N, 89.512 W, 337 m) drawn stroke by stroke; the percentage follows fonts, terrain decoding and the first map paint, then the sheet slides away.
-- **Hero:** a contour map of Madison drawn from real USGS 3DEP elevation data (5 m interval, marching squares in a worker on an OffscreenCanvas), revealed outward from campus. The contour under the pointer lights up in a wide, soft patch that spreads slowly and follows the pointer; on the WebGL tier the contours 5 m above and below light up with it, fainter. When the level changes the old patch shrinks back and fades where it stands, slowly enough that fast movement leaves a short trail rather than a flash. Hovering also reads out coordinates and elevation, and a north arrow draws itself in the legend.
-- **Effects tier:** 2 (WebGL), 1 (canvas) or 0 (lite), chosen from CPU threads, device memory, save-data, reduced motion and the GPU; a software GPU falls back to canvas. The console logs the tier and why. `?fx=0`, `?fx=1` or `?fx=2` forces a tier.
-- **Work index:** hovering a project shows its screenshot beside the cursor as a WebGL plane on a fine grid whose edges keep flowing in slow waves, so the rectangle moves on its own. Switching projects wipes one screenshot into the next. Pages opened from disk fall back to a plain box, since WebGL cannot read `file:` images. A stroke wave runs through the hovered name.
-- **Case studies:** each project is a full-screen panel coloured from its own screenshot: a deep base and two aurora hues sampled from the image's dominant colours, with the screenshot's own colours glowing out from behind it. A gradient carries the page from white into the first panel and back to white after the last. Near the seam between panels, one wheel notch or key press plays the whole transition to the next panel, and the rest of the gesture is held until it goes quiet, so a flick never stops halfway; inside a panel, scrolling is left alone. The panels scroll over one dark backdrop and each colour field fades in as its panel arrives and out as it leaves, so the colour changes continuously from project to project. A translucent liquid orb behind the content takes on each panel's colours. Every project has a small figure of how it works, and route-animator also gets a slowly turning globe of dotted continents (a 1° land mask built by `docs/land/build_land.py`) with its route and a few others.
-- **Background:** the same terrain continues behind the page as a faint sheet that scrolls slower than the content. Behind the decisions, particles run downhill over the real terrain; the tools and data sources are a constellation in which anything used by the same project is linked; a raymarched liquid sphere sits half hidden past the right edge of the Now list; a sine-wave signal line sits above the footer.
-- **Type:** the name rises letter by letter while Archivo's width axis opens from 62% to 125%. Headings arrive letter by letter with a slight turn and blur, paragraphs word by word, and the email address drops in. Screen readers get the plain text from a hidden copy.
-- **Contact:** Lake Mendota and Lake Monona again, as particles on springs. Every few seconds they sweep across into the word "hello" and back, changing from water blue to ink on the way. The pointer pushes them aside; a click switches the shape.
-- Copying the email swaps the text for "Copied" and underlines it; no ripple.
-- Motion respects `prefers-reduced-motion`, and every decorative canvas runs only while it is on screen.
+| Section | What it shows |
+|---|---|
+| Hero | A contour map of Madison drawn from real elevation data, with the name and a one-line intro |
+| Selected work | Six projects, each with its screenshot, notes and a figure of how it works |
+| Decisions I'd defend | Three engineering calls from those projects |
+| Stack and Now | The tools and data sources, linked by project; what's happening this term |
+| Contact | Email and GitHub, with the two lakes redrawn as particles |
 
-Motion patterns borrowed from Olivier Larose's [awwwards-landing-page](https://github.com/olivierlarose/awwwards-landing-page) (hover preview), [Lenis](https://github.com/darkroomengineering/lenis) (the `damp` function), Emil Kowalski's [animation tips](https://emilkowal.ski/ui/7-practical-animation-tips), and Vercel's [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines). Some of the decorative effects started from a local gallery of motion studies.
+### Hero
 
-## Projects linked
+The map is traced from USGS 3DEP elevation (via Terrain Tiles on AWS) at a 5 m contour interval. Marching squares runs in a worker on an OffscreenCanvas, and the map reveals outward from campus. The contour under the pointer lights up in a soft patch that spreads slowly; on the WebGL tier the contours 5 m above and below light up with it, fainter. Hovering also reads out coordinates and elevation.
+
+Once per session a short loader plays first: five real contour lines of a hill northwest of Madison (43.132° N, 89.512° W, 337 m), drawn stroke by stroke while fonts and terrain load.
+
+### Selected work
+
+![route-animator's overview page: notes and a dotted globe on the left, the screenshot on the right with a teal orb behind it](docs/work-overview.jpg)
+
+The index lists the six projects. Hovering one shows its screenshot beside the cursor, with edges that ripple while the picture inside stays still.
+
+Below the index the projects become pages on one pinned stage: an overview with links and what it's built with, then the decisions behind it and a figure of how it works. Route-animator and photo-organizer have enough to say for two pages; the rest fit on one. Every page uses the same type scale, the largest at which all of them fit.
+
+![route-animator's second page: three points and the altitude figure](docs/work-notes.jpg)
+
+Paging works like slides. One wheel notch, key press or swipe plays the whole turn and holds the rest of the gesture until it goes quiet, so a transition never stops halfway; dragging the scrollbar lands on the nearest page. Between projects the screenshot glides to the other side while the next one dissolves in over it. Within a project only the notes change. The blocks of each page arrive in turn: the title letter by letter, then the summary, links, each point, and the figure, which draws itself in.
+
+Behind the screenshot sits a translucent liquid orb in a different colour for each project. It's drawn flat, a distance field with a rippling edge lit as if it were a sphere, so it costs little. With every project it swings to its next place and the new colour washes across it from the side it's heading to. A small droplet orbits it and merges with it now and then, and a few motes circle it on tilted orbits with fading trails, speeding up while it travels and easing off after.
+
+![uw-course-lookup in the dark theme, with a red orb behind the screenshot](docs/work-dark.jpg)
+
+### Contact
+
+![The contact section: the email address, mail and GitHub buttons, and particles forming the word hello](docs/contact.jpg)
+
+Lake Mendota and Lake Monona return as particles on springs. Every few seconds they sweep into the word "hello" and back, changing from water blue to ink, but never while the pointer is over them or for ten seconds after a click. The pointer pushes them aside and a click switches the shape. Clicking the address copies it.
+
+### Behind the page
+
+The terrain continues behind everything as a faint sheet that scrolls slower than the content (a ScrollTimeline, so it moves on the compositor), and fades out while the work pages fill the screen. Elsewhere: the stack as a constellation in which tools used by the same project are linked, a raymarched liquid sphere half past the edge of the Now list, and a sine-wave signal line above the footer.
+
+## Performance and accessibility
+
+The page picks an effects tier on load and logs the choice and the reason to the console:
+
+| Tier | What runs | Chosen when |
+|---|---|---|
+| 2 | WebGL map and effects | the default |
+| 1 | Canvas 2D | 4 or fewer CPU threads or 4 GB or less memory, or a software GPU |
+| 0 | Static | reduced motion, Save-Data, or 2 or fewer threads or 2 GB or less memory |
+
+`?fx=0`, `?fx=1` or `?fx=2` forces a tier. Every decorative canvas draws only while it's on screen, and canvases on work pages that aren't showing stop drawing. With `prefers-reduced-motion`, or in a window narrower than 900 px or shorter than 560 px, the work section becomes a plain list with the same content. Screen readers get plain-text copies of the animated headings. Secondary text is never grey; it's set in the ink colour and told apart by size and weight.
+
+## Projects shown
 
 - [route-animator](https://github.com/WEBGRS/route-animator): satellite-globe route videos in the browser
 - [uw-course-lookup](https://github.com/WEBGRS/uw-course-lookup): UW–Madison course lookup, linking to MadGrades and Rate My Professors
@@ -38,4 +75,23 @@ Motion patterns borrowed from Olivier Larose's [awwwards-landing-page](https://g
 
 ## Run locally
 
-Open `index.html` in a browser. `python docs/screenshots.py` rebuilds the images above. `python docs/figures.py` redraws the case-study figures. `python docs/terrain/build_terrain.py` re-fetches the elevation tiles and rewrites the terrain data embedded in `index.html`.
+```sh
+git clone https://github.com/WEBGRS/webgrs.github.io
+cd webgrs.github.io
+python -m http.server 8792
+```
+
+Then open <http://localhost:8792>. Opening `index.html` straight from disk works too, except the hover preview, which falls back to a plain box because WebGL can't read `file:` images.
+
+## Scripts
+
+| Script | What it does |
+|---|---|
+| `docs/screenshots.py` | Rebuilds the images in this README (Playwright with Chromium) |
+| `docs/figures.py` | Redraws the how-it-works figures and writes them into `index.html` |
+| `docs/terrain/build_terrain.py` | Re-fetches the elevation tiles and rewrites the terrain data embedded in `index.html` |
+| `docs/land/build_land.py` | Rebuilds the 1° land mask for the route-animator globe |
+
+## Credits
+
+Motion patterns borrowed from Olivier Larose's [awwwards-landing-page](https://github.com/olivierlarose/awwwards-landing-page) (hover preview), [Lenis](https://github.com/darkroomengineering/lenis) (the `damp` function), Emil Kowalski's [animation tips](https://emilkowal.ski/ui/7-practical-animation-tips), and Vercel's [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines). Some of the decorative effects started from a local gallery of motion studies.
