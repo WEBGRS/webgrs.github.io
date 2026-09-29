@@ -36,7 +36,7 @@
 
 <style>
 :root{
-  --paper:#FBFCFB; --ink:#16202A; --muted:#56626E; --faint:#8A949D; --rule:#DCE1E4; --edge:#B9C2C9;
+  --paper:#FBFCFB; --ink:#16202A; --muted:#16202A; --faint:#16202A; --rule:#DCE1E4; --edge:#B9C2C9;
   --accent:#1E5AA8; --signal:#2E7D55; --plate:#EDF0F2;
   --line:22,32,42; --water:30,90,168;
   --font:"Archivo",-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -44,7 +44,7 @@
   --gut:clamp(16px,4vw,56px);
 }
 :root[data-theme="dark"]{
-  --paper:#0F161D; --ink:#E2E8ED; --muted:#98A5B0; --faint:#66727D; --rule:#24303B; --edge:#3A4754;
+  --paper:#0F161D; --ink:#E2E8ED; --muted:#E2E8ED; --faint:#E2E8ED; --rule:#24303B; --edge:#3A4754;
   --accent:#8AB8EE; --signal:#6FC495; --plate:#18222C;
   --line:226,232,237; --water:138,184,238;
 }
@@ -57,7 +57,7 @@ a:hover{text-decoration-thickness:2px}
 :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
 ::selection{background:rgba(var(--water),.22)}
 .wrap{max-width:1320px; margin:0 auto; padding:0 var(--gut)}
-.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; user-select:none}
 
 /* header */
 .bar{position:fixed; inset:0 0 auto; z-index:20; transition:transform .35s var(--out), background-color .25s, box-shadow .25s}
@@ -134,96 +134,88 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .peek-gl{position:fixed; left:0; top:0; z-index:15; pointer-events:none; will-change:transform; filter:drop-shadow(0 22px 28px rgba(20,35,50,.26))}
 @media (hover:none),(pointer:coarse){ .peek, .peek-gl{display:none} }
 
-/* case studies: full-screen panels over one dark backdrop. Each panel's colour field, taken
-   from its own screenshot, fades in as it arrives and out as it leaves, so the colour changes
-   continuously from project to project. */
-.cases{position:relative; isolation:isolate; margin-top:clamp(40px,5vw,72px); background:#05080B; timeline-scope:--p1,--bout}
-.case{--pad:max(var(--gut), calc((100vw - 1320px) / 2 + var(--gut)));
-  position:relative;
-  min-height:100vh; box-sizing:border-box; padding:clamp(96px,12vh,140px) var(--pad) clamp(72px,10vh,120px);
-  display:grid; gap:24px 56px; align-content:center; align-items:start; min-width:0;
-  color:var(--ink);
-  --ink:#EEF2F4; --muted:rgba(238,242,244,.74); --faint:rgba(238,242,244,.42); --rule:rgba(238,242,244,.16); --edge:rgba(238,242,244,.4);
-  --paper:color-mix(in oklab, var(--bg) 84%, white); --plate:rgba(255,255,255,.06); --line:238,242,244}
-#route-animator{--bg:#0A2630; --a1:#1C6E80; --a2:#8A6A3A; --accent:#8FD6E4; --water:143,214,228}
-#uw-course-lookup{--bg:#101B30; --a1:#284C80; --a2:#9E4F2A; --accent:#F2A36B; --water:242,163,107}
-#photo-organizer{--bg:#141C23; --a1:#2E5266; --a2:#85745A; --accent:#A8CDE0; --water:168,205,224}
-#datamap{--bg:#0B1A3C; --a1:#2458AD; --a2:#2F86C2; --accent:#9CC2F5; --water:156,194,245}
-#geo-spoof{--bg:#211B11; --a1:#6E5A2C; --a2:#3D6B45; --accent:#E6B872; --water:230,184,114}
-#tophat-watch{--bg:#0D2519; --a1:#1F6B45; --a2:#857226; --accent:#8EDDAA; --water:142,221,170}
-/* The colour field reaches into the neighbours' space so that adjacent fields overlap */
-.case::before{content:""; position:absolute; z-index:-1; inset:-45vh 0; pointer-events:none;
-  background:radial-gradient(34% 30% at 24% 42%, var(--a1), transparent 72%), radial-gradient(32% 28% at 76% 60%, var(--a2), transparent 72%), linear-gradient(transparent, var(--bg) 30%, var(--bg) 70%, transparent)}
-.case .media{position:relative; isolation:isolate; margin:0; min-width:0}
-.case .shot{position:relative; display:block; aspect-ratio:16/10; border:1px solid rgba(255,255,255,.14); border-radius:14px; overflow:hidden; background:var(--plate); box-shadow:0 40px 90px -40px rgba(0,0,0,.55)}
-/* The screenshot's own colours, blurred, glow out from behind it into the panel */
-.case .amb{position:absolute; z-index:-1; left:5%; top:8%; width:90%; height:92%; object-fit:cover; filter:blur(56px) saturate(1.35); opacity:.6; pointer-events:none}
-/* White to the first panel's colour on the way in, and back to white on the way out */
-.bridge{display:block; height:55vh; pointer-events:none}
-.bridge.in{background:linear-gradient(to bottom, var(--paper), color-mix(in oklab, var(--paper) 55%, #0A2630) 45%, #0A2630)}
-.bridge.out{position:relative; height:90vh; background:linear-gradient(to bottom, transparent, color-mix(in oklab, var(--paper) 40%, transparent) 40%, var(--paper) 78%)}
-/* A liquid orb in the corner that follows the panels' colours */
-.stage{position:sticky; top:0; height:100vh; margin-bottom:-100vh; overflow:clip; pointer-events:none}
-/* Painted above the colour fields but below every panel, since the panels come later */
-.corb{position:absolute; right:0; bottom:0; width:clamp(620px,60vw,980px); aspect-ratio:1; translate:50% 50%; opacity:.42; mix-blend-mode:screen}
-@media (max-width:760px){ .stage{display:none} }
-.case .shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
-.case h3{margin:0; font-size:clamp(1.9rem,3.2vw,2.8rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em; --w:760}
+/* work film: each project is one or two pages on a sticky stage. The screenshot glides between
+   sides; a translucent liquid orb behind it moves with every project. Within a project only the
+   notes change. Type is the same size on every page. */
+.film{position:relative; margin-top:clamp(40px,5vw,72px); --s:min(1vh, .625vw)}
+.film-stage{position:relative}
+.film-gl,.film-rail,.media{display:none}
+.film-caps{margin:0 auto; padding:0 var(--gut); max-width:1320px; list-style:none; display:grid; gap:clamp(64px,9vw,120px)}
+.cap{display:grid; grid-template-columns:minmax(0,6fr) minmax(0,5fr); gap:28px 56px; align-items:start; scroll-margin-top:72px}
+.cap-shot{grid-column:1; grid-row:1 / span 2; margin:0; aspect-ratio:16/10; border-radius:12px; overflow:hidden; background:var(--plate); border:1px solid var(--rule)}
+.cap-shot img{display:block; width:100%; height:100%; object-fit:cover; object-position:top left}
+.pg{grid-column:2}
+.cap-n{margin:0; color:var(--accent); font-size:.86rem; font-weight:560; letter-spacing:.06em; font-variant-numeric:tabular-nums}
+.cap h3{margin:8px 0 0; font-size:clamp(1.9rem,3.2vw,2.8rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em}
+.cap h3 .ch{display:inline-block}
+.hook{margin:14px 0 0; font-size:1.15rem; line-height:1.45; max-width:38ch}
 .links{display:flex; gap:18px; margin:12px 0 0; font-weight:560}
-.hook{margin:18px 0 0; font-size:1.2rem; line-height:1.45; max-width:36ch}
-.built{margin:10px 0 0; color:var(--muted); font-size:.93rem}
-.case ul{margin:18px 0 0; padding-left:18px; color:var(--muted); max-width:54ch}
-.case li{margin:0 0 8px}
-.case li::marker{color:var(--faint)}
-.globe-wrap{margin:0; display:grid; justify-items:center; gap:10px}
-.globe{display:block; width:100%; max-width:400px; aspect-ratio:1}
-.globe-cap{margin:0; font-size:.84rem; color:var(--muted); text-align:center}
-@media (min-width:1000px){
-  .case.feature{grid-template-columns:repeat(12,minmax(0,1fr)); row-gap:44px}
-  .case.feature .media{grid-column:1 / 9}
-  .case.feature .globe-wrap{grid-column:9 / 13; align-self:center}
-  .case.feature .txt{grid-column:1 / 5}
-  .case.feature .list{grid-column:5 / 9}
-  .case.feature .list ul{margin-top:6px}
-  .case.feature .fig{grid-column:9 / 13; margin-top:0}
-  .case.feature .shot{aspect-ratio:16/9}
-  .case.right{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
-  .case.right .media{order:2; position:sticky; top:14vh}
-  .case.left{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
-  .case.left .media{position:sticky; top:14vh}
-  .case.band{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
-  .case.band .media{margin-right:calc(-1 * var(--pad))}
-  .case.band .shot{border-radius:10px 0 0 10px; border-right:0}
-  .case.band .fig{grid-column:1 / -1; max-width:none; display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:0 56px; align-items:end}
-  .case.band .fig svg{grid-column:2}
-  .case.band .fig figcaption{grid-column:1; grid-row:1; margin:0}
-  .case.split{grid-template-columns:repeat(12,minmax(0,1fr))}
-  .case.split .media{grid-column:1 / 8; position:sticky; top:14vh}
-  .case.split .txt{grid-column:8 / 13}
-  .case.split.rev .media{grid-column:6 / 13; grid-row:1}
-  .case.split.rev .txt{grid-column:1 / 6; grid-row:1}
-}
-@supports (animation-timeline:view()){
-  @media (prefers-reduced-motion:no-preference){
-    #route-animator{view-timeline:--p1 block}
-    .case::before{opacity:0; animation:field linear both; animation-timeline:view(); animation-range:cover 0% cover 100%}
-    @keyframes field{0%{opacity:0}30%,70%{opacity:1}100%{opacity:0}}
-    .bridge.out{view-timeline:--bout block}
-    .stage{animation:stage-in linear both, stage-out linear both; animation-timeline:--p1, --bout; animation-range:entry 30% entry 100%, entry 0% entry 60%}
-    @keyframes stage-in{from{opacity:0}}
-    @keyframes stage-out{to{opacity:0}}
-    /* The arriving panel's content rises into place */
-    .case.feature .media{animation:grow-in linear both; animation-timeline:view(); animation-range:entry 0% entry 85%}
-    .case.right .media, .case.band .media{animation:from-right linear both; animation-timeline:view(); animation-range:entry 0% entry 80%}
-    .case.left .media, .case.split .media{animation:turn-in linear both; animation-timeline:view(); animation-range:entry 0% entry 80%}
-    .case .txt{animation:rise linear both; animation-timeline:view(); animation-range:entry 10% entry 90%}
-    .globe-wrap{animation:grow-in linear both; animation-timeline:view(); animation-range:entry 0% entry 70%}
-    @keyframes grow-in{from{transform:scale(.86) translateY(80px); opacity:.15}}
-    @keyframes from-right{from{transform:translateX(110px); opacity:0}}
-    @keyframes turn-in{from{transform:perspective(1200px) rotateY(18deg) translateX(-60px); opacity:0}}
-    @keyframes rise{from{transform:translateY(90px); opacity:0}}
-  }
-}
+.built{margin:10px 0 0; font-size:.93rem; font-weight:500}
+.pg-h{margin:0; font-size:.8rem; font-weight:560; letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+.pg-h b{color:var(--ink); font-weight:700; letter-spacing:.02em}
+.cap ul{margin:16px 0 0; padding-left:1.15em; max-width:56ch}
+.cap li{margin:0 0 7px}
+.cap li::marker{color:var(--accent)}
+.cap .fig{margin:24px 0 0; max-width:none}
+.globe-wrap{margin:22px 0 0; display:grid; justify-items:start; gap:8px; width:min(100%,220px)}
+.globe{display:block; width:100%; aspect-ratio:1}
+.globe-cap{margin:0; font-size:.8rem; line-height:1.35}
+/* A second page runs the full width under the screenshot: points on the left, figure on the right */
+.pg + .pg{grid-column:1 / -1}
+.pg + .pg .pg-in{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,6fr); gap:0 56px; align-items:start}
+.pg + .pg .pg-h{grid-column:1 / -1}
+.pg + .pg .fig{margin-top:16px}
+@media (max-width:760px){ .cap{grid-template-columns:1fr} .cap-shot{grid-row:auto} .pg, .pg + .pg{grid-column:auto} .pg + .pg .pg-in{display:block} }
+
+.film.live{height:calc(var(--pages) * 100vh)}
+.film.live .film-stage{position:sticky; top:0; height:100vh; overflow:clip; isolation:isolate}
+.film.live .film-stage::before{content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(transparent, var(--paper) 9%, var(--paper) 91%, transparent)}
+.film.live .film-gl{display:block; position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none}
+/* The screenshot: one frame that glides between sides, with two layers that dissolve into each other */
+.film.live .media{display:block; position:absolute; z-index:1; pointer-events:none;
+  transition:left 1.15s var(--io), top 1.15s var(--io), width 1.15s var(--io), height 1.15s var(--io)}
+.media-in{position:absolute; inset:0; border-radius:calc(var(--s) * 1.6); overflow:hidden; background:var(--plate); will-change:transform;
+  box-shadow:0 0 0 1px var(--rule), 0 calc(var(--s) * 4) calc(var(--s) * 9) calc(var(--s) * -3) rgba(16,28,40,.26)}
+/* The arriving picture fades in on top; the old one stays underneath until it is covered, so the frame never shows empty */
+.media img{position:absolute; inset:0; z-index:1; width:100%; height:100%; object-fit:cover; object-position:top left; opacity:0; filter:blur(12px); transform:scale(1.035);
+  transition:opacity .4s linear .75s, filter .4s linear .75s, transform .4s linear .75s}
+.media img.on{z-index:2; opacity:1; filter:none; transform:none; transition:opacity .75s var(--out) .12s, filter .9s var(--out) .12s, transform 1.2s var(--out) .12s}
+.film.live .film-caps{position:absolute; inset:0; z-index:2; max-width:none; padding:0; display:block; pointer-events:none}
+.film.live .cap{position:absolute; inset:0; display:block}
+.film.live .cap-shot{display:none}
+/* One page of notes: the column opposite the screenshot. One scale for every page, so type never jumps */
+.film.live .pg{position:absolute; top:10vh; bottom:5vh; width:38vw; display:flex; flex-direction:column; justify-content:center;
+  visibility:hidden; transition:visibility 0s linear .5s; font-size:calc(var(--s) * 2 * var(--fit, 1))}
+.film.live .cap.l .pg{left:4vw}
+.film.live .cap.r .pg{right:4vw}
+.film.live .pg.on{visibility:visible; transition-delay:0s; pointer-events:auto}
+.film.live .pg + .pg .pg-in{display:block}
+.film.live .cap-n{font-size:.8em}
+.film.live .cap h3{margin-top:.2em; font-size:min(3.1em, calc(38vw / 9.9)); line-height:1.02}
+.film.live .hook{margin-top:.65em; font-size:1.42em; line-height:1.36; max-width:none}
+.film.live .links{margin-top:.9em; gap:1.1em; font-size:1.05em}
+.film.live .built{margin-top:.5em; font-size:.92em}
+.film.live .pg-h{font-size:.8em}
+.film.live .cap ul{margin-top:.85em; font-size:1em; line-height:1.55; max-width:none}
+.film.live .cap li{margin-bottom:.5em}
+.film.live .cap .fig{margin-top:1.1em}
+.film.live .cap .fig figcaption{margin-top:.6em; font-size:.8em; line-height:1.45; max-width:none}
+.film.live .globe-wrap{margin-top:1.1em; width:100%; grid-template-columns:min(21em, 64%) minmax(0,1fr); align-items:end; column-gap:1.3em}
+.film.live .globe-cap{font-size:.84em; line-height:1.45; text-align:left; padding-bottom:1.2em}
+/* Blocks arrive one after another, each rising out of a blur; the title letter by letter */
+.film.live [data-k], .film.live .cap h3 .ch{opacity:0; filter:blur(8px); transition:opacity .25s var(--out), transform .3s var(--out), filter .25s var(--out)}
+.film.live [data-k]{transform:translateY(1.4em)}
+/* Graphics rise without the blur, which is costly on a large SVG or canvas */
+.film.live .fig[data-k], .film.live .globe-wrap[data-k]{filter:none; will-change:transform, opacity}
+.film.live .cap h3 .ch{transform:translateY(.55em) rotate(6deg)}
+.film.live .pg.off [data-k], .film.live .pg.off h3 .ch{transform:translateY(-.8em)}
+.film.live .pg.on [data-k]{opacity:1; transform:none; filter:none; transition-duration:.9s, 1.25s, .9s; transition-delay:calc(var(--in, 0ms) + var(--k, 0) * 240ms)}
+.film.live .pg.on h3 .ch{opacity:1; transform:none; filter:none; transition-duration:.7s, 1s, .7s; transition-delay:calc(var(--in, 0ms) + 90ms + var(--c, 0) * 34ms)}
+.film.live .film-rail{display:block; position:absolute; z-index:2; right:clamp(12px,1.6vw,24px); top:50%; height:34vh; translate:0 -50%; width:2px; background:var(--rule); border-radius:2px}
+.film-rail i{position:absolute; inset:0; background:var(--ink); border-radius:2px; transform-origin:top; transform:scaleY(0); transition:transform 1.2s var(--io)}
+/* The contour sheet behind the page fades out while the projects are on screen */
+#bgmap{transition:opacity .8s var(--out)}
+.film-in #bgmap{opacity:0}
 
 /* figures */
 .fig{margin:32px 0 0; max-width:520px}
@@ -245,9 +237,9 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .fig .dot.faint{fill:var(--faint)}
 .fig figcaption code{font:.94em ui-monospace,Consolas,monospace; color:var(--ink)}
 @media (prefers-reduced-motion:no-preference){
-  .js .fig .draw{stroke-dasharray:1 1; stroke-dashoffset:1; transition:stroke-dashoffset 1.2s var(--out); transition-delay:calc(var(--d,0) * 110ms)}
+  .js .fig .draw{stroke-dasharray:1 1; stroke-dashoffset:1; transition:stroke-dashoffset 1.1s cubic-bezier(.33,.9,.4,1); transition-delay:calc(var(--d,0) * 90ms)}
   /* Three steps rather than a smooth fade: each step repaints the figure, and these are SVG nodes */
-  .js .fig .n{opacity:0; transition:opacity .36s steps(3, end); transition-delay:calc(var(--d,0) * 110ms)}
+  .js .fig .n{opacity:0; transition:opacity .55s ease-out; transition-delay:calc(var(--d,0) * 90ms)}
   .js .fig.seen .draw{stroke-dashoffset:0}
   .js .fig.seen .n{opacity:1}
 }
@@ -278,7 +270,13 @@ dl.kv dd{margin:0; color:var(--muted)}
 .big{display:inline-block; margin:clamp(20px,3vw,36px) 0 0; padding:0 0 .08em; border:0; background:linear-gradient(currentColor,currentColor) left bottom/0 3px no-repeat; color:var(--ink); font:800 clamp(2.1rem,8.2vw,7.4rem)/1 var(--font); font-stretch:118%; letter-spacing:-.045em; cursor:pointer; text-align:left; transition:background-size .5s var(--out), transform .15s var(--out)}
 .big:hover{background-size:100% 3px}
 .big:active{transform:scale(.985)}
-.after{display:flex; flex-wrap:wrap; gap:14px 28px; margin-top:28px; font-weight:560}
+.after{display:flex; flex-wrap:wrap; gap:14px 18px; margin-top:28px; font-weight:600}
+/* A pill that fills in under the pointer, so the pull reads clearly even though it is small */
+.after a{position:relative; display:inline-flex; align-items:center; gap:.45em; padding:.55em 1.1em; border-radius:999px; text-decoration:none;
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 45%, transparent); transition:background-color .35s var(--out), color .35s var(--out), box-shadow .35s var(--out)}
+.after a::after{content:"\2192"; transition:transform .45s var(--out)}
+.after a:hover, .after a:focus-visible{background:var(--accent); color:var(--paper); box-shadow:inset 0 0 0 1.5px var(--accent)}
+.after a:hover::after{transform:translateX(.3em)}
 footer{margin-top:clamp(88px,10vw,140px); padding:22px 0 30px; border-top:1px solid var(--rule); display:flex; flex-wrap:wrap; gap:8px 28px; color:var(--muted); font-size:.88rem}
 footer .src{margin-left:auto}
 
@@ -334,7 +332,6 @@ footer .src{margin-left:auto}
 
 /* decorative canvases */
 #decisions{position:relative; isolation:isolate}
-.flow{position:absolute; z-index:-1; inset:0; width:100%; height:100%; pointer-events:none; opacity:.9}
 .net{height:clamp(300px,30vw,380px); margin:0 0 clamp(40px,6vw,72px)}
 .net canvas{display:block; width:100%; height:100%}
 @media (max-width:759px){ .net{height:680px} }
@@ -485,24 +482,28 @@ h2{--w:780}
       </ul>
     </div>
 
-    <div class="cases" id="cases">
-      <div class="stage" aria-hidden="true"><canvas class="corb" id="corb"></canvas></div>
-      <i class="bridge in" aria-hidden="true"></i>
-          <article class="case feature" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg">
-            <div class="media"><a class="shot" href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/route-animator.jpg" style="object-position:center" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy"></a></div>
-            <div class="globe-wrap" aria-hidden="true"><canvas class="globe" id="globe"></canvas><p class="globe-cap">In blue, the route in the screenshot: Madison, Reykjavík, Paris</p></div>
-            <div class="txt">
-              <h3><span data-split="char">route-animator</span></h3>
-              <p class="links"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></p>
-              <p class="hook">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
-              <p class="built">MapLibre GL, Canvas 2D, in-browser video capture</p>
-            </div>
-            <div class="list"><ul>
-              <li>Flies a vehicle along a multi-stop route over a satellite globe and records it with MediaRecorder. No server ever sees the clip.</li>
-              <li>Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</li>
-              <li>Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</li>
-            </ul></div>
-            <figure class="fig"><!-- fig:route-animator -->
+    <div class="film" id="film">
+      <div class="film-stage">
+        <canvas class="film-gl" aria-hidden="true"></canvas>
+        <ol class="film-caps">
+        <li class="cap l" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg" style="--i:0">
+          <figure class="cap-shot"><img src="assets/route-animator.jpg" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">01 / 06 &middot; Web app</p>
+            <h3 aria-label="route-animator"><span aria-hidden="true"><span class="ch" style="--c:0">r</span><span class="ch" style="--c:1">o</span><span class="ch" style="--c:2">u</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">e</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">a</span><span class="ch" style="--c:7">n</span><span class="ch" style="--c:8">i</span><span class="ch" style="--c:9">m</span><span class="ch" style="--c:10">a</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">r</span></span></h3>
+            <p class="hook" data-k style="--k:2">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></p>
+            <p class="built" data-k style="--k:3">MapLibre GL, Canvas 2D, in-browser video capture</p>
+            <div class="globe-wrap" data-k style="--k:4" aria-hidden="true"><canvas class="globe" id="globe"></canvas><p class="globe-cap">In blue, the route in the screenshot: Madison, Reykjavík, Paris</p></div>
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>route-animator</b> &middot; How it works</p>
+            <ul>
+              <li data-k style="--k:1">Flies a vehicle along a multi-stop route over a satellite globe and records it with MediaRecorder. No server ever sees the clip.</li>
+              <li data-k style="--k:2">Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</li>
+              <li data-k style="--k:3">Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</li>
+            </ul>
+            <figure class="fig" data-k style="--k:4"><!-- fig:route-animator -->
 <svg viewBox="0 0 520 230" role="img" aria-label="Altitude over one flying leg, keyed to time versus keyed to eased distance">
 <path class="e draw" style="--d:0" d="M58.0 180.0 L512.0 180.0" pathLength="1"/>
 <text class="s n" style="--d:0" x="48.0" y="56.0" text-anchor="end">cruise</text>
@@ -521,20 +522,21 @@ h2{--w:780}
 <text class="s n" style="--d:7" x="332.0" y="38.0" text-anchor="start">keyed to eased distance</text>
 </svg>
 <!-- /fig:route-animator --><figcaption>Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%.</figcaption></figure>
-          </article>
-          <article class="case right" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg">
-            <div class="media"><a class="shot" href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/uw-course-lookup.jpg" width="1400" height="875" alt="Course list with Grades and Rate My Professors buttons for each UW–Madison course" loading="lazy"></a></div>
-            <div class="txt">
-              <h3><span data-split="char">uw-course-lookup</span></h3>
-              <p class="links"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></p>
-              <p class="hook">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
-              <p class="built">Static site, zero dependencies, GitHub Pages</p>
-              <ul>
-              <li>Resolves any course to its MadGrades GPA distribution and Rate My Professors page in one query.</li>
-              <li>Seeded with anonymized course-mention counts mined from a student chat archive. Aggregates ship; records never do.</li>
-              <li>No backend to keep alive: flat JSON, served from a CDN edge, loads instantly on a phone.</li>
+          </div></div>
+        </li>
+        <li class="cap r" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" style="--i:1">
+          <figure class="cap-shot"><img src="assets/uw-course-lookup.jpg" width="1400" height="875" alt="Course list with Grades and Rate My Professors buttons for each UW–Madison course" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">02 / 06 &middot; Static site</p>
+            <h3 aria-label="uw-course-lookup"><span aria-hidden="true"><span class="ch" style="--c:0">u</span><span class="ch" style="--c:1">w</span><span class="ch" style="--c:2">-</span><span class="ch" style="--c:3">c</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">u</span><span class="ch" style="--c:6">r</span><span class="ch" style="--c:7">s</span><span class="ch" style="--c:8">e</span><span class="ch" style="--c:9">-</span><span class="ch" style="--c:10">l</span><span class="ch" style="--c:11">o</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">k</span><span class="ch" style="--c:14">u</span><span class="ch" style="--c:15">p</span></span></h3>
+            <p class="hook" data-k style="--k:2">Every UW–Madison course, linked to the grade history and instructor ratings students actually check before enrolling.</p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></p>
+            <p class="built" data-k style="--k:3">Static site, zero dependencies, GitHub Pages</p>
+            <ul>
+              <li data-k style="--k:4">Resolves any course to its MadGrades GPA distribution and Rate My Professors page in one query.</li>
+              <li data-k style="--k:5">Seeded with anonymized course-mention counts mined from a student chat archive. Aggregates ship; records never do.</li>
             </ul>
-              <figure class="fig"><!-- fig:uw-course-lookup -->
+            <figure class="fig" data-k style="--k:6"><!-- fig:uw-course-lookup -->
 <svg viewBox="0 0 520 206" role="img" aria-label="Build pipeline from chat counts and public APIs to a static page">
 <g class="n" style="--d:0"><rect x="104" y="8" width="124" height="34" rx="6"/><text x="117" y="30" class="k">MadGrades API</text></g>
 <g class="n" style="--d:0"><rect x="254" y="8" width="154" height="34" rx="6"/><text x="267" y="30" class="k">Course Search API</text></g>
@@ -560,22 +562,28 @@ h2{--w:780}
 <text class="s n" style="--d:0" x="146.0" y="188.0" text-anchor="start">not real courses</text>
 </svg>
 <!-- /fig:uw-course-lookup --><figcaption>Build pipeline. Course codes from the chat archive are checked against the real catalog before anything ships; the database holds <span class="count" data-to="290">290</span> courses and <span class="count" data-to="6847">6,847</span> instructors.</figcaption></figure>
-            </div>
-          </article>
-          <article class="case left" id="photo-organizer" data-src="assets/photo-organizer.jpg">
-            <div class="media"><a class="shot" href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener" tabindex="-1"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy"></a></div>
-            <div class="txt">
-              <h3><span data-split="char">photo-organizer</span></h3>
-              <p class="links"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
-              <p class="hook">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
-              <p class="built">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class="count" data-to="7346">7,346</span> files, 0 errors.</p>
-              <ul>
-              <li>Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
-              <li>RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
-              <li>Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
-              <li>Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN.</li>
+          </div></div>
+        </li>
+        <li class="cap l" id="photo-organizer" data-src="assets/photo-organizer.jpg" style="--i:2">
+          <figure class="cap-shot"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">03 / 06 &middot; Python, CLIP</p>
+            <h3 aria-label="photo-organizer"><span aria-hidden="true"><span class="ch" style="--c:0">p</span><span class="ch" style="--c:1">h</span><span class="ch" style="--c:2">o</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">o</span><span class="ch" style="--c:7">r</span><span class="ch" style="--c:8">g</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">i</span><span class="ch" style="--c:12">z</span><span class="ch" style="--c:13">e</span><span class="ch" style="--c:14">r</span></span></h3>
+            <p class="hook" data-k style="--k:2">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
+            <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
+            <p class="built" data-k style="--k:3">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class="count" data-to="7346">7,346</span> files, 0 errors.</p>
+            <ul>
+              <li data-k style="--k:4">Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
+              <li data-k style="--k:5">RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
             </ul>
-              <figure class="fig"><!-- fig:photo-organizer -->
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>photo-organizer</b> &middot; How it works</p>
+            <ul>
+              <li data-k style="--k:1">Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
+              <li data-k style="--k:2">Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN.</li>
+            </ul>
+            <figure class="fig" data-k style="--k:3"><!-- fig:photo-organizer -->
 <svg viewBox="0 0 520 214" role="img" aria-label="Photos are embedded with CLIP, split into people and scenery, and scenery is clustered">
 <g class="n" style="--d:0"><rect x="0" y="4" width="206" height="34" rx="6"/><text x="13" y="26" class="k">7,346 files</text></g>
 <g class="n" style="--d:2"><rect x="0" y="70" width="206" height="50" rx="6"/><text x="13" y="92" class="k">CLIP ViT-B/32</text><text x="13" y="109" class="s">cached by path, size, mtime</text></g>
@@ -634,22 +642,21 @@ h2{--w:780}
 <text class="s n" style="--d:9" x="372.0" y="196.0" text-anchor="middle">misc</text>
 </svg>
 <!-- /fig:photo-organizer --><figcaption>Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</figcaption></figure>
-            </div>
-          </article>
-          <article class="case band" id="datamap" data-src="assets/datamap.jpg">
-            <div class="txt">
-              <h3><span data-split="char">DataMap</span></h3>
-              <p class="links"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></p>
-              <p class="hook">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
-              <p class="built">OKLCH ramps, quantile breaks, no dependencies, Playwright tests</p>
-              <ul>
-              <li>Sequential ramps are generated in OKLCH from a reference lightness/chroma trajectory with the hue swapped, so perceptual monotonicity is structural, not eyeballed after the fact.</li>
-              <li>Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
-              <li>Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
+          </div></div>
+        </li>
+        <li class="cap r" id="datamap" data-src="assets/datamap.jpg" style="--i:3">
+          <figure class="cap-shot"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">04 / 06 &middot; Web app</p>
+            <h3 aria-label="DataMap"><span aria-hidden="true"><span class="ch" style="--c:0">D</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">t</span><span class="ch" style="--c:3">a</span><span class="ch" style="--c:4">M</span><span class="ch" style="--c:5">a</span><span class="ch" style="--c:6">p</span></span></h3>
+            <p class="hook" data-k style="--k:2">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></p>
+            <p class="built" data-k style="--k:3">OKLCH ramps, quantile breaks, no dependencies, Playwright tests</p>
+            <ul>
+              <li data-k style="--k:4">Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
+              <li data-k style="--k:5">Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
             </ul>
-            </div>
-            <div class="media"><a class="shot" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy"></a></div>
-            <figure class="fig"><!-- fig:datamap -->
+            <figure class="fig" data-k style="--k:6"><!-- fig:datamap -->
 <svg viewBox="0 0 520 168" role="img" aria-label="Blue, teal and orange seven-class ramps that share one lightness track">
 <text class="k n" style="--d:0" x="0.0" y="27.0" text-anchor="start">blue</text>
 <rect class="n" style="--d:0" x="70" y="6" width="60" height="32" rx="3" fill="#c9defa"/>
@@ -686,18 +693,20 @@ h2{--w:780}
 <path class="e draw" style="--d:3" d="M70.0 132.0 L514.0 132.0" pathLength="1"/>
 </svg>
 <!-- /fig:datamap --><figcaption>Seven-class ramps exactly as DataMap&rsquo;s <code>color.js</code> builds them. Every hue reuses one lightness track, so each column shares an L value.</figcaption></figure>
-          </article>
-          <article class="case split" id="geo-spoof" data-src="assets/geo-spoof.jpg">
-            <div class="media"><a class="shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof" loading="lazy"></a></div>
-            <div class="txt">
-              <h3><span data-split="char">geo-spoof</span></h3>
-              <p class="links"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener">Source</a></p>
-              <p class="hook">Chrome extension that answers the Geolocation API with a point you pick on a map.</p>
-              <p class="built">Manifest V3, content-script patching</p>
-              <ul>
-              <li>Patched calls still pass native-type checks, so pages that probe for tampering see ordinary functions.</li>
+          </div></div>
+        </li>
+        <li class="cap l" id="geo-spoof" data-src="assets/geo-spoof.jpg" style="--i:4">
+          <figure class="cap-shot"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">05 / 06 &middot; Chrome extension</p>
+            <h3 aria-label="geo-spoof"><span aria-hidden="true"><span class="ch" style="--c:0">g</span><span class="ch" style="--c:1">e</span><span class="ch" style="--c:2">o</span><span class="ch" style="--c:3">-</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">p</span><span class="ch" style="--c:6">o</span><span class="ch" style="--c:7">o</span><span class="ch" style="--c:8">f</span></span></h3>
+            <p class="hook" data-k style="--k:2">Chrome extension that answers the Geolocation API with a point you pick on a map.</p>
+            <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener">Source</a></p>
+            <p class="built" data-k style="--k:3">Manifest V3, content-script patching</p>
+            <ul>
+              <li data-k style="--k:4">Patched calls still pass native-type checks, so pages that probe for tampering see ordinary functions.</li>
             </ul>
-              <figure class="fig"><!-- fig:geo-spoof -->
+            <figure class="fig" data-k style="--k:5"><!-- fig:geo-spoof -->
 <svg viewBox="0 0 520 214" role="img" aria-label="Settings flow from the popup through bridge.js to inject.js, which answers the page">
 <g class="n" style="--d:0"><rect x="0" y="8" width="146" height="34" rx="6"/><text x="13" y="30" class="k">popup map picker</text></g>
 <g class="n" style="--d:1"><rect x="196" y="8" width="140" height="34" rx="6"/><text x="209" y="30" class="k">chrome.storage</text></g>
@@ -719,16 +728,17 @@ h2{--w:780}
 <text class="s n" style="--d:7" x="184.0" y="194.0" text-anchor="end">toString(): [native code]</text>
 </svg>
 <!-- /fig:geo-spoof --><figcaption><code>bridge.js</code> reads settings in the isolated world and hands them to <code>inject.js</code>, which patches the page&rsquo;s own <code>navigator.geolocation</code> before any page script runs.</figcaption></figure>
-            </div>
-          </article>
-          <article class="case split rev" id="tophat-watch" data-src="assets/tophat-watch.jpg">
-            <div class="media"><a class="shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator" loading="lazy"></a></div>
-            <div class="txt">
-              <h3><span data-split="char">tophat-watch</span></h3>
-              <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
-              <p class="hook">Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.</p>
-              <p class="built">Chrome extension, ntfy push</p>
-              <figure class="fig"><!-- fig:tophat-watch -->
+          </div></div>
+        </li>
+        <li class="cap r" id="tophat-watch" data-src="assets/tophat-watch.jpg" style="--i:5">
+          <figure class="cap-shot"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">06 / 06 &middot; Chrome extension</p>
+            <h3 aria-label="tophat-watch"><span aria-hidden="true"><span class="ch" style="--c:0">t</span><span class="ch" style="--c:1">o</span><span class="ch" style="--c:2">p</span><span class="ch" style="--c:3">h</span><span class="ch" style="--c:4">a</span><span class="ch" style="--c:5">t</span><span class="ch" style="--c:6">-</span><span class="ch" style="--c:7">w</span><span class="ch" style="--c:8">a</span><span class="ch" style="--c:9">t</span><span class="ch" style="--c:10">c</span><span class="ch" style="--c:11">h</span></span></h3>
+            <p class="hook" data-k style="--k:2">Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.</p>
+            <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
+            <p class="built" data-k style="--k:3">Chrome extension, ntfy push</p>
+            <figure class="fig" data-k style="--k:4"><!-- fig:tophat-watch -->
 <svg viewBox="0 0 520 222" role="img" aria-label="The content script reports to the service worker, which alerts through three channels">
 <g class="n" style="--d:0"><rect x="0" y="4" width="196" height="34" rx="6"/><text x="13" y="26" class="k">Classroom tab</text></g>
 <g class="n" style="--d:2"><rect x="0" y="68" width="196" height="50" rx="6"/><text x="13" y="90" class="k">content.js</text><text x="13" y="107" class="s">DOM observer, 5 s rescan</text></g>
@@ -748,14 +758,15 @@ h2{--w:780}
 <path class="tip n acc" style="--d:11" d="M318.0 185.0 L311.7 188.0 L311.7 182.0Z"/>
 </svg>
 <!-- /fig:tophat-watch --><figcaption>The content script reports on every DOM change and every 5&nbsp;s. The service worker remembers what has already alerted, so an item alerts once each time it opens.</figcaption></figure>
-            </div>
-          </article>
-      <i class="bridge out" aria-hidden="true"></i>
+          </div></div>
+        </li>
+        </ol>
+        <div class="film-rail" aria-hidden="true"><i></i></div>
+      </div>
     </div>
   </section>
 
   <section class="block" id="decisions" aria-labelledby="dec-h">
-    <canvas class="flow" id="flow" aria-hidden="true"></canvas>
     <div class="wrap">
       <div class="shead"><h2 id="dec-h"><span data-split="char">Decisions I'd defend</span></h2><p>The parts of these projects I actually think about.</p></div>
       <div class="decs">
@@ -808,7 +819,7 @@ h2{--w:780}
       <p style="margin-top:14px">Email is the fastest way to reach me. Click the address to copy it.</p>
       <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-split="drop">hgu72@wisc.edu</span></button>
       <p class="sr" id="mail-status" role="status"></p>
-      <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag>Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag>GitHub</a></div>
+      <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag=".05">Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag=".05">GitHub</a></div>
       <canvas class="sine" id="sine" aria-hidden="true"></canvas>
       <footer>
         <span>One HTML file, no framework, no trackers.</span>
@@ -926,16 +937,16 @@ if (fine && !basic()) {
   });
 }
 
-// Magnetic pull on small controls, springing back when the pointer leaves
+// A slight magnetic pull on small controls, settling back when the pointer leaves
 if (fine && !reduce) {
-  const mags = [...document.querySelectorAll('[data-mag]')].map(el => ({ el, x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0 }));
+  const mags = [...document.querySelectorAll('[data-mag]')].map(el => ({ el, k: parseFloat(el.dataset.mag) || .06, x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0 }));
   let raf = 0, last = 0;
   const tick = (t) => {
     const dt = Math.min(.033, (t - last) / 1000); last = t;
     let moving = false;
     for (const m of mags) {
-      // Lightly damped spring: a small overshoot, like an elastic ease
-      m.vx += ((m.tx - m.x) * 220 - m.vx * 16) * dt; m.vy += ((m.ty - m.y) * 220 - m.vy * 16) * dt;
+      // Critically damped spring: it follows and settles without bouncing
+      m.vx += ((m.tx - m.x) * 220 - m.vx * 30) * dt; m.vy += ((m.ty - m.y) * 220 - m.vy * 30) * dt;
       m.x += m.vx * dt; m.y += m.vy * dt;
       if (Math.abs(m.tx - m.x) + Math.abs(m.ty - m.y) + Math.abs(m.vx) + Math.abs(m.vy) > .05) moving = true;
       m.el.style.translate = `${m.x.toFixed(2)}px ${m.y.toFixed(2)}px`;
@@ -946,7 +957,8 @@ if (fine && !reduce) {
     for (const m of mags) {
       const r = m.el.getBoundingClientRect(), cx = r.left + r.width / 2 - m.x, cy = r.top + r.height / 2 - m.y;
       const dx = e.clientX - cx, dy = e.clientY - cy, near = Math.hypot(dx, dy) < Math.max(r.width, r.height) / 2 + 36;
-      m.tx = near ? dx * .35 : 0; m.ty = near ? dy * .3 : 0;
+      // A few pixels at most
+      m.tx = near ? Math.max(-4, Math.min(4, dx * m.k)) : 0; m.ty = near ? Math.max(-3, Math.min(3, dy * m.k)) : 0;
     }
     if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
   }, { passive: true });
@@ -1009,8 +1021,8 @@ const spy = new IntersectionObserver((es) => es.forEach(e => {
 const damp = (x, y, lambda, dt) => x + (y - x) * (1 - Math.exp(-lambda * dt));
 
 // Work index: cursor-following preview. With WebGL it is a textured plane on a fine grid whose
-// edges keep flowing in slow waves, so the rectangle moves on its own; without it, a plain box.
-const cases = [...document.querySelectorAll('.case')];
+// edges keep flowing in slow waves while the picture inside stays still; without it, a plain box.
+const cases = [...document.querySelectorAll('.film .cap')];
 if (fine && !reduce && !basic()) {
   const peek = document.getElementById('peek'), rail = document.getElementById('rail'), list = document.getElementById('index');
   const srcs = cases.map(c => c.dataset.thumb || c.dataset.src);
@@ -1021,7 +1033,7 @@ if (fine && !reduce && !basic()) {
     if (!gl) return null;
     const sh = (tp, src) => { const o = gl.createShader(tp); gl.shaderSource(o, src); gl.compileShader(o); return o; };
     const pr = gl.createProgram();
-    gl.attachShader(pr, sh(gl.VERTEX_SHADER, `attribute vec2 a; uniform vec2 C, B, O; uniform float T, S; varying vec2 v;
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, `attribute vec2 a; uniform vec2 C, B, O; uniform float T, S; varying vec2 v, w;
 void main(){
   v = a;
   vec2 q = (a - .5) * B * S;
@@ -1029,15 +1041,17 @@ void main(){
   vec2 e = (a - .5) * 2.;
   q.x += (2. * sin(a.y * 5.5 + T * 1.2) + .8 * sin(a.y * 11. - T * 1.9)) * e.x * abs(e.x);
   q.y += (1.6 * sin(a.x * 4.5 - T * 1.) + .7 * sin(a.x * 9.5 + T * 1.7)) * e.y * abs(e.y);
+  // The picture stays put inside the resting rectangle; only the outline moves over it
+  w = q / (B * S) + .5;
   vec2 px = C * .5 + q;
   gl_Position = vec4(px.x / C.x * 2. - 1., 1. - px.y / C.y * 2., 0., 1.);
 }`));
-    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision highp float; uniform sampler2D X0, X1; uniform vec4 F0, F1; uniform vec2 B, O; uniform float M, A; varying vec2 v;
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision highp float; uniform sampler2D X0, X1; uniform vec4 F0, F1; uniform vec2 B, O; uniform float M, A; varying vec2 v, w;
 void main(){
   // Rounded corners from the rest shape
   vec2 d = abs(v - .5) * B - (B * .5 - 20.);
   float r = length(max(d, 0.)) - 20., k = 1. - smoothstep(-.8, .8, r);
-  vec2 u0 = v * F0.xy + F0.zw, u1 = v * F1.xy + F1.zw;
+  vec2 u0 = w * F0.xy + F0.zw, u1 = w * F1.xy + F1.zw;
   vec3 c0 = texture2D(X0, u0).rgb, c1 = texture2D(X1, u1).rgb;
   float m = smoothstep(0., 1., clamp(M * 1.4 - (1. - v.y) * .4, 0., 1.));
   gl_FragColor = vec4(mix(c0, c1, m), 1.) * k * A;
@@ -1732,7 +1746,7 @@ const terrain = (() => {
 })();
 // Contact: the lakes again, as particles on springs. Every few seconds they sweep across into
 // the word "hello" and back, changing color on the way; the pointer pushes them aside and a
-// click switches the shape.
+// click switches the shape and holds off the automatic change for a while.
 (() => {
   const cv = document.getElementById('dust'), sec = document.getElementById('contact'), ctx = cv.getContext('2d');
   const still = reduce || basic();
@@ -1780,7 +1794,9 @@ const terrain = (() => {
     });
   };
   const morph = () => { cur = 1 - cur; assign(true); kick(); };
-  setInterval(() => { if (onScreen && !still && !document.hidden) morph(); }, 5200);
+  // It changes on its own, but never under the pointer and not for ten seconds after a click
+  let quietUntil = 0, inside = false;
+  setInterval(() => { if (performance.now() > quietUntil && !inside && onScreen && !still && !document.hidden) morph(); }, 5200);
   const draw = () => {
     if (!col) col = [cssv('--water'), cssv('--line')].map(v => v.split(',').map(Number));
     ctx.clearRect(0, 0, W, H);
@@ -1809,7 +1825,7 @@ const terrain = (() => {
         p.wait = 0; pending--; p.tx = p.nx; p.ty = p.ny; p.dust = p.nd; p.ct = cur;
         // Leave with a sideways swirl so the change reads as motion
         const dx = p.x - W * .62, dy = p.y - H * .5, d = Math.hypot(dx, dy) || 1;
-        p.vx += -dy / d * 6 + dx / d * 2.5; p.vy += dx / d * 6 + dy / d * 2.5;
+        p.vx += -dy / d * 2.4 + dx / d * 1; p.vy += dx / d * 2.4 + dy / d * 1;
       }
       p.c += (p.ct - p.c) * fade;
       p.vx += (p.tx - p.x) * p.k * f; p.vy += (p.ty - p.y) * p.k * f;
@@ -1827,10 +1843,11 @@ const terrain = (() => {
     new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; kick(); }, { rootMargin: '80px' }).observe(cv);
   });
   sec.addEventListener('pointermove', (e) => { if (e.pointerType !== 'mouse') return; const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; kick(); });
-  sec.addEventListener('pointerleave', () => { mx = my = -1e4; kick(); });
+  sec.addEventListener('pointerenter', () => { inside = true; });
+  sec.addEventListener('pointerleave', () => { inside = false; mx = my = -1e4; kick(); });
   sec.addEventListener('pointerdown', (e) => {
     if (e.target.closest('a, button')) return;
-    morph();
+    quietUntil = performance.now() + 10000; morph();
   });
   let rt = 0;
   addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (P.length) { build(); draw(); kick(); } }, 200); });
@@ -1892,15 +1909,18 @@ void main(){
   };
 };
 // Call draw(t, dt) every frame, but only while the element is on screen and the tab is visible
+// (or while something marks it paused, like a film page that is not showing)
 const onScreenLoop = (el, draw) => {
   let on = false, raf = 0, last = 0;
+  const live = () => on && !document.hidden && !el.dataset.paused;
   const tick = (t) => {
     raf = 0;
     const dt = Math.min(.05, Math.max(.001, (t - last) / 1000)); last = t;
     draw(t, dt);
-    if (on && !document.hidden) raf = requestAnimationFrame(tick);
+    if (live()) raf = requestAnimationFrame(tick);
   };
-  const start = () => { if (!raf && on && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+  const start = () => { if (!raf && live()) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+  el._resume = start;
   new IntersectionObserver(([e]) => { on = e.isIntersecting; start(); }, { rootMargin: '80px' }).observe(el);
   document.addEventListener('visibilitychange', start);
 };
@@ -2060,40 +2080,6 @@ const onScreenLoop = (el, draw) => {
   if (still) requestAnimationFrame(() => draw(0, .016)); else onScreenLoop(cv, draw);
 })();
 
-// Decisions: rain running downhill over the west-side terrain, as faint streaks
-(() => {
-  const cv = document.getElementById('flow'); if (!cv) return;
-  const ctx = cv.getContext('2d');
-  if (reduce || basic()) { cv.remove(); return; }
-  let W = 0, H = 0, P = [], col = '', sc = 1;
-  const I0 = 14, J0 = 95;
-  const seed = (p) => { p.x = Math.random() * W; p.y = Math.random() * H; p.l = 60 + Math.random() * 160; return p; };
-  const setup = () => {
-    const r = fit(cv, 1.5); W = r.W; H = r.H; ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
-    sc = 190 / Math.max(W, H);
-    P = Array.from({ length: Math.round(Math.min(700, W * H / 1300)) }, () => seed({}));
-    col = cssv('--water');
-  };
-  const draw = () => {
-    if (!W) setup();
-    // Fade old streaks toward transparent, then extend every drop one step downhill
-    ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,.045)'; ctx.fillRect(0, 0, W, H);
-    ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = `rgba(${col},.3)`; ctx.lineWidth = 1; ctx.beginPath();
-    for (const p of P) {
-      const i = I0 + p.x * sc, j = J0 + p.y * sc;
-      const gx = terrain.elev(i + .6, j) - terrain.elev(i - .6, j), gy = terrain.elev(i, j + .6) - terrain.elev(i, j - .6), m = Math.hypot(gx, gy);
-      if (m < .015 || --p.l < 0) { seed(p); continue; }
-      const nx = p.x - gx / m * 1.3, ny = p.y - gy / m * 1.3;
-      ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); p.x = nx; p.y = ny;
-      if (nx < 0 || ny < 0 || nx > W || ny > H) seed(p);
-    }
-    ctx.stroke();
-  };
-  terrain.gridReady.then(() => onScreenLoop(cv, draw));
-  addEventListener('resize', () => { W = 0; });
-  addEventListener('themechange', () => { col = cssv('--water'); });
-})();
-
 // Tools and data sources as a constellation: anything used in the same project is linked
 (() => {
   const cv = document.getElementById('net'); if (!cv) return;
@@ -2181,10 +2167,7 @@ const onScreenLoop = (el, draw) => {
   if (still) requestAnimationFrame(() => draw(0, 1)); else onScreenLoop(cv, draw);
 })();
 
-// Liquid spheres (raymarched): one half past the right edge of the Now list, one in the corner of
-// the case panels taking each project's colours. Their light follows the pointer.
-// Which panel is showing, and how far the next one has come in; the panel code keeps it current
-const panelTone = { i: 0, f: 0 };
+// Liquid sphere (raymarched), half past the right edge of the Now list. Its light follows the pointer.
 const liquidOrb = (cv, colors) => {
   const gl = cv.getContext('webgl', { premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'low-power' });
   if (!gl) { cv.remove(); return; }
@@ -2228,16 +2211,6 @@ void main(){
 (() => {
   const now = document.getElementById('orb');
   if (now) liquidOrb(now, () => isDark() ? [[.28, .42, .64], [.6, .76, .96]] : [[.7, .8, .94], [.95, .98, 1]]);
-  const corner = document.getElementById('corb'); if (!corner) return;
-  const rgb = (h) => { h = h.trim(); return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255); };
-  let pal = null;
-  const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
-  liquidOrb(corner, () => {
-    // Body in the panel's first aurora colour, lifted; rim light in its accent
-    pal = pal || [...document.querySelectorAll('.case')].map(c => { const st = getComputedStyle(c); return [mix(rgb(st.getPropertyValue('--a1')), [1, 1, 1], .28), rgb(st.getPropertyValue('--accent'))]; });
-    const a = pal[panelTone.i], b = pal[Math.min(pal.length - 1, panelTone.i + 1)], k = panelTone.f;
-    return [mix(a[0], b[0], k), mix(a[1], b[1], k)];
-  });
 })();
 
 // Signal line above the footer: a few sine waves that swell as the pointer comes near
@@ -2271,78 +2244,308 @@ void main(){
 
 
 
-// Case panels. Near the seam between two panels a single wheel notch or key press plays the whole
-// transition to the next panel (or back to the previous one), and further input is held until the
-// gesture goes quiet, so a flick never stops halfway. Inside a panel, scrolling is left alone.
+// Work film: each project is one or two pages on a sticky stage. The screenshot glides to the other
+// side and dissolves into the next one; a translucent liquid orb behind it moves with every project,
+// as a backdrop only, and takes on that project's colour. A wheel notch, key press or swipe turns one
+// page and holds further input until the gesture goes quiet; within a project only the notes change.
+// Scrolling by other means lands on the nearest page. All pages share one type scale.
 (() => {
-  const box = document.getElementById('cases'); if (!box) return;
-  const P = [...box.querySelectorAll('.case')];
-  // Each screenshot glows in its own colours behind itself
-  box.querySelectorAll('.case .shot img').forEach(im => {
-    const a = im.cloneNode(); a.className = 'amb'; a.alt = ''; a.setAttribute('aria-hidden', 'true'); a.removeAttribute('style');
-    im.closest('.media').prepend(a);
-  });
-  // Where each panel starts in the page
-  const bridge = box.querySelector('.bridge.in');
-  const starts = () => { let y = bridge.getBoundingClientRect().bottom + scrollY; return P.map(p => { const s = y; y += p.offsetHeight; return s; }); };
-  let S0 = [];
-  // Tell the corner orb which panel is showing and how far the next has come in
-  const cover = () => {
-    const y = scrollY + 1, vh = innerHeight;
-    let i = 0; while (i + 1 < P.length && y >= S0[i + 1]) i++;
-    panelTone.i = i; panelTone.f = i + 1 < P.length ? Math.max(0, Math.min(1, (y - (S0[i + 1] - vh)) / vh)) : 0;
-  };
-  const size = () => { S0 = starts(); cover(); };
-  const ro = new ResizeObserver(size); P.forEach(p => ro.observe(p));
-  addEventListener('scroll', cover, { passive: true });
-  // Index links go to a panel's start, past the header's scroll padding
+  const film = document.getElementById('film'); if (!film) return;
+  const caps = [...film.querySelectorAll('.cap')], pages = [...film.querySelectorAll('.cap .pg')];
+  const P = pages.length, projOf = pages.map(pg => caps.indexOf(pg.closest('.cap'))), first = caps.map((c, k) => projOf.indexOf(k));
+  const tier = +root.dataset.fx;
+  let goTo = null;
   document.querySelectorAll('.index a').forEach((a, i) => a.addEventListener('click', (e) => {
     e.preventDefault();
-    scrollTo({ top: starts()[i], behavior: reduce ? 'auto' : 'smooth' });
-    history.replaceState(null, '', a.hash);
+    if (goTo) goTo(first[i], true);
+    else scrollTo({ top: caps[i].getBoundingClientRect().top + scrollY - 90, behavior: reduce ? 'auto' : 'smooth' });
   }));
-  if (reduce) return;
-  // The seam before panel i is the last screen of scrolling before it is fully in
-  const target = (dir) => {
-    const y = scrollY, vh = innerHeight, S = starts();
-    for (let i = 0; i < P.length; i++) {
-      // A little slack, so the last bit of padding at a panel's end does not take its own notch
-      const from = S[i] - vh, slack = Math.min(150, vh * .16);
-      if (dir > 0 && y >= from - slack && y < S[i] - 2) return S[i];
-      if (dir < 0 && y > from + 2 && y <= S[i] + slack) return Math.max(0, from);
-    }
-    return null;
+  // The deck needs room for a screenshot and a column of notes side by side
+  if (reduce || basic() || !matchMedia('(min-width: 900px) and (min-height: 560px)').matches) return;
+  const cv = film.querySelector('.film-gl');
+  const gl = cv.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'high-performance' });
+  if (!gl) return;
+  film.classList.add('live'); film.style.setProperty('--pages', P);
+  // Figures draw in each time their page arrives, instead of once on first sight
+  const figs = pages.map(pg => pg.querySelector('.fig'));
+  figs.forEach(f => { if (f) { figIO.unobserve(f); f.classList.remove('seen'); } });
+
+  // Type scale: the largest one at which every page still fits its column, shared by all pages
+  const fitPages = () => {
+    let f = 1.3;
+    pages.forEach(pg => {
+      const inner = pg.firstElementChild, avail = pg.clientHeight * .96;
+      let lo = .7, hi = f;
+      for (let i = 0; i < 7; i++) { const m = (lo + hi) / 2; pg.style.setProperty('--fit', m); if (inner.offsetHeight <= avail) lo = m; else hi = m; }
+      f = Math.min(f, lo);
+    });
+    film.style.setProperty('--fit', f.toFixed(3)); pages.forEach(pg => pg.style.removeProperty('--fit'));
   };
-  let raf = 0, busy = false, quiet = 0;
-  const release = () => { clearTimeout(quiet); quiet = setTimeout(() => { if (!raf) busy = false; }, 220); };
-  const ease = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-  const go = (to) => {
-    const from = scrollY, t0 = performance.now(), D = Math.min(1250, 700 + Math.abs(to - from) * .4);
-    busy = true; cancelAnimationFrame(raf);
-    const step = (t) => {
-      const q = Math.min(1, (t - t0) / D);
-      scrollTo({ top: from + (to - from) * ease(q), behavior: 'instant' });
-      if (q < 1) raf = requestAnimationFrame(step); else { raf = 0; release(); }
+  fitPages(); document.fonts.ready.then(fitPages);
+  let fitT = 0; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitPages, 150); });
+
+  // The screenshot frame: two image layers that swap for a dissolve while the frame glides
+  const stage = film.querySelector('.film-stage'), media = document.createElement('div'), mIn = document.createElement('div');
+  media.className = 'media'; media.setAttribute('aria-hidden', 'true'); mIn.className = 'media-in';
+  const layers = [new Image(), new Image()];
+  layers.forEach(im => { im.alt = ''; im.decoding = 'async'; mIn.append(im); });
+  media.append(mIn); stage.append(media);
+  const shots = caps.map(c => c.querySelector('.cap-shot img'));
+  const srcs = shots.map(im => im.currentSrc || im.src), asp = shots.map(im => (+im.getAttribute('width') || 16) / (+im.getAttribute('height') || 10));
+  srcs.forEach(s => { const im = new Image(); im.src = s; });
+  // 1: notes on the left, screenshot on the right
+  const sideOf = (k) => caps[k].classList.contains('l') ? 1 : -1;
+  const rectOf = (k) => {
+    const Wv = innerWidth, Hv = innerHeight, top = .1 * Hv, avail = .85 * Hv;
+    let w = .44 * Wv, h = w / asp[k];
+    if (h > avail * .8) { h = avail * .8; w = h * asp[k]; }
+    // Kept to the notes' side of its half, so the orb shows on the outer side
+    return [sideOf(k) > 0 ? .48 * Wv : .52 * Wv - w, top + (avail - h) / 2, w, h];
+  };
+  let layer = 0, shown = -1;
+  const place = (k, instant) => {
+    const [x, y, w, h] = rectOf(k);
+    if (instant) media.style.transition = 'none';
+    Object.assign(media.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
+    if (instant) { void media.offsetWidth; media.style.transition = ''; }
+  };
+  const showShot = (k) => {
+    if (k === shown) return;
+    place(k, shown < 0); shown = k;
+    layers[layer].classList.remove('on'); layer ^= 1;
+    layers[layer].src = srcs[k]; layers[layer].classList.add('on');
+  };
+  addEventListener('resize', () => { if (shown >= 0) place(shown, true); });
+
+  // Shaders
+  const sh = (tp, src) => { const o = gl.createShader(tp); gl.shaderSource(o, src); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) console.warn(gl.getShaderInfoLog(o)); return o; };
+  const prog = (vs, fs, attrs) => { const p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); attrs.forEach((a, i) => gl.bindAttribLocation(p, i, a)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) console.warn(gl.getProgramInfoLog(p)); return p; };
+  // The orb, drawn flat: a disc whose edge ripples slowly, plus a droplet that orbits it and merges
+  // into it now and then. Each is lit as a sphere, and the two normals blend where they join.
+  const orbP = prog(`attribute vec2 q; uniform vec2 uC; uniform float uRad, uAsp, uMg; varying vec2 vP;
+void main(){ vP = q * uMg; gl_Position = vec4(uC + q * uMg * uRad * vec2(1. / uAsp, 1.), 0., 1.); }`, `precision highp float;
+uniform float uTime, uW, uAO, uPx, uSw; uniform vec2 uV, uM, uDir; uniform vec3 uCo, uFr, uCo2, uFr2, uSat; varying vec2 vP;
+void main(){
+  vec2 p = vP; float k = length(uV);
+  if (k > .001) { vec2 v = uV / k; p -= v * dot(p, v) * (k / (1. + k)); }
+  float an = atan(p.y, p.x), t = uTime, r = length(p);
+  float R = 1. + uW * (.5 * sin(3. * an + t) + .3 * sin(5. * an - 1.3 * t) + .2 * sin(2. * an + .7 * t));
+  vec2 q = p - uSat.xy; float rs = .24 * (1. + .25 * uSat.z);
+  float d1 = r - R, d2 = length(q) - rs, kk = .4, hh = clamp(.5 + .5 * (d2 - d1) / kk, 0., 1.);
+  float d = mix(d2, d1, hh) - kk * hh * (1. - hh);
+  float cov = 1. - smoothstep(-uPx, uPx, d);
+  if (cov < .003) discard;
+  vec3 n1 = vec3(p / R, sqrt(max(0., 1. - r * r / (R * R))));
+  vec3 n2 = vec3(q / rs, sqrt(max(0., 1. - dot(q, q) / (rs * rs))));
+  vec3 n = mix(n2, n1, hh); n.z = max(n.z, .2 * smoothstep(0., -.08, d)); n = normalize(n);
+  vec3 l = normalize(vec3(uM.x * .6 - .35, uM.y * .6 + .55, .75));
+  float df = max(dot(n, l), 0.), sp = pow(max(dot(reflect(-l, n), vec3(0., 0., 1.)), 0.), 28.), fr = pow(1. - n.z, 2.4);
+  // Light caught on the far side, and slow bands inside, so it reads as liquid glass
+  float back = pow(max(dot(n.xy, -l.xy), 0.), 2.) * (1. - n.z);
+  float band = .5 + .5 * sin(p.x * 2.2 + p.y * 1.4 + t * .8) * sin(p.y * 1.8 - t * .6);
+  // The next project's colour washes across from the side the orb is heading to
+  float edge = mix(1.5, -1.5, uSw), m = smoothstep(edge - .45, edge + .45, dot(vP, uDir) + .12 * sin(an * 4. + t));
+  vec3 co = mix(uCo, uCo2, m), fo = mix(uFr, uFr2, m);
+  vec3 col = mix(co, fo, .16 * band) * (.52 + .48 * df) + sp * .55 + fr * fo * .5 + back * fo * .35;
+  float a = min(1., uAO * (.85 + .7 * fr) + sp * .5) * cov;
+  gl_FragColor = vec4(col * a, a);
+}`, ['q']);
+  // A few motes on tilted orbits round the orb, each with a fading trail; two passes, behind the
+  // orb and then in front of it. Their angle is an integrated phase, so speed changes are smooth.
+  const haloP = prog(`precision highp float; attribute vec4 r; attribute float k;
+uniform vec2 uOrb; uniform float uOrbR, uAsp, uPh, uEx, uSide, uPx; varying float vA;
+void main(){
+  float dir = r.w > .5 ? 1. : -1.;
+  float an = r.y * 6.2832 + uPh * (.16 + .26 * r.z) * dir - dir * k * (.5 + .45 * r.x) * (1. + .9 * uEx);
+  float R = uOrbR * (1.1 + .42 * r.x + .18 * uEx), tilt = .3 + .5 * r.z, roll = (r.w - .5) * 1.4;
+  vec3 q = vec3(cos(an) * R, sin(an) * R * sin(tilt), sin(an) * R * cos(tilt));
+  float c = cos(roll), s = sin(roll); q.xy = mat2(c, s, -s, c) * q.xy;
+  vA = uSide * q.z >= 0. ? (.45 + .35 * r.z) * pow(1. - k, 1.6) : 0.;
+  gl_Position = vec4(uOrb + q.xy * vec2(1. / uAsp, 1.), 0., 1.);
+  gl_PointSize = uPx * (1. + r.z);
+}`, `precision mediump float; uniform vec3 uCol; uniform float uPt; varying float vA;
+void main(){
+  float a = vA;
+  if (uPt > .5) { vec2 q = gl_PointCoord * 2. - 1.; a *= 1. - smoothstep(.2, 1., length(q)); }
+  if (a < .01) discard; gl_FragColor = vec4(uCol * a, a);
+}`, ['r', 'k']);
+  const U = (p) => new Proxy({}, { get: (o, n) => o[n] ?? (o[n] = gl.getUniformLocation(p, n)) });
+  const uo = U(orbP), uh = U(haloP);
+  const buf = (data) => { const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); return b; };
+  const attr = (b, loc, n) => { gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, n, gl.FLOAT, false, 0, 0); };
+  const off = () => { for (let i = 0; i < 2; i++) gl.disableVertexAttribArray(i); };
+  const bQ = buf(new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]));
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const NM = tier === 2 ? 34 : 20, TS = 24, tR = [], tK = [], hR = [], hK = [];
+  for (let m = 0; m < NM; m++) { const q = [rnd(), rnd(), rnd(), rnd()]; for (let j = 0; j < TS; j++) { tR.push(...q, ...q); tK.push(j / TS, (j + 1) / TS); } hR.push(...q); hK.push(0); }
+  const bTR = buf(new Float32Array(tR)), bTK = buf(new Float32Array(tK)), bHR = buf(new Float32Array(hR)), bHK = buf(new Float32Array(hK));
+
+  // The orb's place for each project: on the screenshot's outer side, in that project's colours
+  const ORB = [[.9, .55, 1.05], [-.9, -.45, 1.05], [.92, -.5, 1.1], [-.92, .5, 1.1], [.95, .1, 1.15], [-.95, -.05, 1.1]];
+  // Body and rim colours, a clearly different hue per project (uw-course-lookup in UW red)
+  const PAL = [['1996AE', '9BE7F2'], ['D7263D', 'FFB070'], ['3A8F7E', 'E9D2A6'], ['2F6FE0', 'A9C8FF'], ['E0A21F', 'FFE1A0'], ['23A35A', 'A8F0C0']]
+    .map(([a, f]) => [a, f].map(x => x.match(/\w\w/g).map(h => parseInt(h, 16) / 255)));
+  const lerp = (a, b, t) => a + (b - a) * t, mix3 = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+  const io = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const oPose = (k) => ({ x: ORB[k][0], y: ORB[k][1], r: ORB[k][2], c: PAL[k][0], f: PAL[k][1], c2: PAL[k][0], f2: PAL[k][1], sw: 1, dir: [1, 0] });
+  let ot = null, proj = 0;
+  const orbAt = (now) => {
+    if (!ot) return oPose(proj);
+    const e = io(Math.min(1, (now - ot.t0) / ot.D)), { A, B } = ot;
+    // Swing low between the two sides, a little smaller in flight, like a drop
+    const cx = (A.x + B.x) / 2, cy = Math.min(A.y, B.y) - .6;
+    return { x: (1 - e) * (1 - e) * A.x + 2 * e * (1 - e) * cx + e * e * B.x, y: (1 - e) * (1 - e) * A.y + 2 * e * (1 - e) * cy + e * e * B.y,
+      r: lerp(A.r, B.r, e) * (1 - .14 * Math.sin(Math.PI * e)), c: A.c, f: A.f, c2: B.c, f2: B.f, sw: e, dir: [B.x - A.x, B.y - A.y] };
+  };
+
+  let W = 1, H = 1, dpr = 1, tiltX = 0, tiltY = 0, tx = 0, ty = 0, ry = 0, rx = 0, vel = [0, 0], boost = 0, phase = 0;
+  const INK = [.09, .13, .16];
+  const render = (now, dt) => {
+    const f = fit(cv, tier === 2 ? 2 : 1.25); W = f.W; H = f.H; dpr = f.d;
+    gl.viewport(0, 0, cv.width, cv.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    if (cur < 0 && !tr) return;
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    const o = orbAt(now), va = W / H, o2 = orbAt(now + 16);
+    // Stretch along the motion, eased so it swells and settles rather than snapping
+    let tv = [(o2.x - o.x) * va / .016 * .012, (o2.y - o.y) / .016 * .012];
+    const tk = Math.hypot(tv[0], tv[1]); if (tk > .3) tv = tv.map(v => v * .3 / tk);
+    vel = vel.map((v, i) => damp(v, tv[i], 8, dt));
+    // The motes speed up while the orb travels and slow down gently afterwards
+    const moving = ot && now - ot.t0 < ot.D;
+    boost = damp(boost, moving ? 1 : 0, moving ? 2.4 : 1, dt); phase += dt * (1 + 2.4 * boost);
+    const x = o.x + .012 * Math.sin(now / 2100), y = o.y + .018 * Math.sin(now / 1500), k = Math.hypot(vel[0], vel[1]);
+    const halo = (side) => {
+      gl.useProgram(haloP);
+      gl.uniform2f(uh.uOrb, x, y); gl.uniform1f(uh.uOrbR, o.r); gl.uniform1f(uh.uAsp, va); gl.uniform1f(uh.uPh, phase);
+      gl.uniform1f(uh.uEx, boost); gl.uniform1f(uh.uSide, side); gl.uniform1f(uh.uPx, 3 * dpr);
+      const mc = mix3(o.c, o.c2, o.sw), mf = mix3(o.f, o.f2, o.sw);
+      gl.uniform3fv(uh.uCol, isDark() ? mf : mix3(mc, INK, .35));
+      off(); attr(bTR, 0, 4); attr(bTK, 1, 1); gl.uniform1f(uh.uPt, 0); gl.drawArrays(gl.LINES, 0, NM * TS * 2);
+      off(); attr(bHR, 0, 4); attr(bHK, 1, 1); gl.uniform1f(uh.uPt, 1); gl.drawArrays(gl.POINTS, 0, NM);
     };
-    raf = requestAnimationFrame(step);
+    halo(-1);
+    const a = now / 2800, dist = 1.2 + .3 * Math.sin(now / 4100);
+    gl.useProgram(orbP); off(); attr(bQ, 0, 2);
+    gl.uniform2f(uo.uC, x, y); gl.uniform1f(uo.uRad, o.r); gl.uniform1f(uo.uAsp, va); gl.uniform1f(uo.uMg, 1.8 * (1 + k));
+    gl.uniform1f(uo.uPx, 2 / (o.r * H * dpr)); gl.uniform1f(uo.uTime, now / 1600); gl.uniform1f(uo.uW, .07 + .08 * k);
+    gl.uniform1f(uo.uAO, isDark() ? .55 : .5);
+    gl.uniform3f(uo.uSat, Math.cos(a) * dist * .45, Math.sin(a) * dist, Math.sin(a * 1.3) * dist * .6);
+    gl.uniform2fv(uo.uV, vel); gl.uniform2f(uo.uM, tiltX, -tiltY); gl.uniform3fv(uo.uCo, o.c); gl.uniform3fv(uo.uFr, o.f);
+    const dl = Math.hypot(o.dir[0] * va, o.dir[1]) || 1;
+    gl.uniform3fv(uo.uCo2, o.c2); gl.uniform3fv(uo.uFr2, o.f2); gl.uniform1f(uo.uSw, o.sw); gl.uniform2f(uo.uDir, o.dir[0] * va / dl, o.dir[1] / dl);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    halo(1);
+    // The screenshot turns to face the notes (its outer edge nearer), and a little toward the pointer
+    const nry = -sideOf(proj) * 5 + tiltX * 3, nrx = -tiltY * 2;
+    if (Math.abs(nry - ry) + Math.abs(nrx - rx) > .005) { ry = damp(ry, nry, 4, dt); rx = damp(rx, nrx, 4, dt); mIn.style.transform = `perspective(1600px) rotateY(${ry.toFixed(3)}deg) rotateX(${rx.toFixed(3)}deg)`; }
   };
-  addEventListener('wheel', (e) => {
-    if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
-    // Hold the rest of a gesture (trackpad inertia, a spun wheel) until it goes quiet
-    if (busy) { e.preventDefault(); release(); return; }
-    const to = target(Math.sign(e.deltaY)); if (to === null) return;
-    e.preventDefault(); go(to);
-  }, { passive: false });
+
+  // Deck state: cur is the page on show, tr the turn in progress
+  let cur = -1, tr = null, pending = null, raf = 0, last = 0, on = false;
+  const rail = film.querySelector('.film-rail i'), figT = [];
+  const start = (from, to) => {
+    const now = performance.now(), k = projOf[to], same = from >= 0 && projOf[from] === k;
+    const D = from < 0 ? 1500 : same ? 700 : 1300, lead = from < 0 ? 380 : same ? 240 : 560;
+    pages.forEach((pg, i) => { pg.style.setProperty('--in', lead + 'ms'); pg.classList.toggle('on', i === to); pg.classList.toggle('off', i === from); });
+    // Canvases on pages that are not showing stop drawing
+    pages.forEach((pg, i) => pg.querySelectorAll('canvas').forEach(c => { if (i === to) { delete c.dataset.paused; if (c._resume) c._resume(); } else c.dataset.paused = '1'; }));
+    // The arriving figure draws itself once its block has risen in; the others reset out of sight
+    figT.forEach(clearTimeout); figT.length = 0;
+    figs.forEach((fg, i) => { if (fg && i !== to) figT.push(setTimeout(() => fg.classList.remove('seen'), 500)); });
+    if (figs[to]) figT.push(setTimeout(() => figs[to].classList.add('seen'), lead + (+figs[to].style.getPropertyValue('--k') || 0) * 240 + 150));
+    if (!same) {
+      const B = oPose(k), o = orbAt(now), A = from < 0 ? { ...B, y: -2.4 } : { ...o, c: mix3(o.c, o.c2, o.sw), f: mix3(o.f, o.f2, o.sw) };
+      ot = { A, B, t0: now, D: from < 0 ? 1600 : 1300 }; proj = k; showShot(k);
+    }
+    rail.style.transform = `scaleY(${(to + 1) / P})`;
+    tr = { from, to, t0: now, D }; kick();
+  };
+  const tick = (now) => {
+    raf = 0;
+    const dt = Math.min(.05, Math.max(.001, (now - last) / 1000)); last = now;
+    tiltX = damp(tiltX, tx, 5, dt); tiltY = damp(tiltY, ty, 5, dt);
+    render(now, dt);
+    if (tr && now - tr.t0 >= tr.D) {
+      cur = tr.to; tr = null;
+      pages.forEach(pg => pg.classList.remove('off'));
+      if (pending !== null && pending !== cur) { const j = pending; pending = null; start(cur, j); } else pending = null;
+    }
+    if (on && !document.hidden) raf = requestAnimationFrame(tick);
+  };
+  function kick() { if (!raf && on) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+  if (fine) addEventListener('pointermove', (e) => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; }, { passive: true });
+
+  // Scroll geometry: one slot per page, the stage pinned across all of them
+  let top = 0, span = 1;
+  const measure = () => { top = film.getBoundingClientRect().top + scrollY; span = Math.max(1, film.offsetHeight - innerHeight); };
+  new ResizeObserver(measure).observe(film);
+  addEventListener('resize', measure);
+  const slot = (i) => top + span * i / (P - 1);
+  const nearest = (y) => Math.max(0, Math.min(P - 1, Math.round((y - top) / (span / (P - 1)))));
+  const zone = (y) => y > top - innerHeight * .4 && y < slot(P - 1) + innerHeight * .4;
+  let glideRaf = 0, quiet = 0, holding = false;
+  const glide = (to, D) => {
+    cancelAnimationFrame(glideRaf);
+    const from = scrollY, t0 = performance.now();
+    const step = (t) => { const q = Math.min(1, (t - t0) / D); scrollTo({ top: from + (to - from) * io(q), behavior: 'instant' }); glideRaf = q < 1 ? requestAnimationFrame(step) : 0; };
+    glideRaf = requestAnimationFrame(step);
+  };
+  const busy = () => !!tr || !!glideRaf || holding;
+  const hold = () => { holding = true; clearTimeout(quiet); quiet = setTimeout(() => { holding = false; }, 240); };
+  goTo = (j, move = true) => {
+    j = Math.max(0, Math.min(P - 1, j));
+    if (move) glide(slot(j), Math.min(1400, 520 + Math.abs(slot(j) - scrollY) * .3));
+    if (tr) { pending = j; return; }
+    if (j !== cur) start(cur, j);
+  };
+  const target = (dir) => {
+    const y = scrollY, vh = innerHeight, end = slot(P - 1);
+    if (dir > 0) { if (y < top - 24) return y >= top - vh * .4 ? 0 : null; if (y >= end - 2) return null; return Math.min(P - 1, nearest(y) + 1); }
+    if (y > end + 24) return y <= end + vh * .4 ? P - 1 : null; if (y <= top + 2) return null; return Math.max(0, nearest(y) - 1);
+  };
+  const input = (e, dir) => {
+    if (!zone(scrollY)) return;
+    if (busy()) { e.preventDefault(); hold(); return; }
+    const to = target(dir); if (to === null) return;
+    e.preventDefault(); hold(); goTo(to);
+  };
+  addEventListener('wheel', (e) => { if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return; input(e, Math.sign(e.deltaY)); }, { passive: false });
   addEventListener('keydown', (e) => {
     if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || /input|textarea|select/i.test(document.activeElement.tagName)) return;
     const dir = ['PageDown', 'ArrowDown'].includes(e.key) || (e.key === ' ' && !e.shiftKey) ? 1 : ['PageUp', 'ArrowUp'].includes(e.key) || (e.key === ' ' && e.shiftKey) ? -1 : 0;
-    if (!dir) return;
-    if (busy) { e.preventDefault(); return; }
-    const to = target(dir); if (to === null) return;
-    e.preventDefault(); go(to);
+    if (dir) input(e, dir);
   });
+  let y0 = null, decided = false, mine = false;
+  addEventListener('touchstart', (e) => { y0 = e.touches[0].clientY; decided = mine = false; }, { passive: true });
+  addEventListener('touchmove', (e) => {
+    if (y0 === null) return;
+    if (mine || (busy() && zone(scrollY))) { e.preventDefault(); return; }
+    const dy = y0 - e.touches[0].clientY;
+    if (decided || Math.abs(dy) < 10) return;
+    decided = true;
+    if (!zone(scrollY)) return;
+    const to = target(Math.sign(dy)); if (to === null) return;
+    mine = true; e.preventDefault(); goTo(to);
+  }, { passive: false });
+  addEventListener('touchend', () => { y0 = null; }, { passive: true });
+  // Scrollbar drags, find-in-page and anchors: follow the nearest page, on the same clock
+  addEventListener('scroll', () => {
+    if (glideRaf || !zone(scrollY) || cur < 0) return;
+    const j = nearest(scrollY);
+    if (tr) { if (j !== tr.to) pending = j; } else if (j !== cur) start(cur, j);
+  }, { passive: true });
+  new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) kick(); }).observe(film);
+  // While the projects fill the middle of the screen, the contour sheet behind the page fades out
+  new IntersectionObserver(([e]) => root.classList.toggle('film-in', e.isIntersecting), { rootMargin: '-35% 0px -35% 0px' }).observe(film);
+  // The first page arrives once the stage is mostly on screen
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && cur < 0 && !tr) start(-1, nearest(scrollY)); }, { threshold: .55 }).observe(stage);
+  document.addEventListener('visibilitychange', kick);
+  // ?lab: hooks for checking pages from a test script
+  if (new URLSearchParams(location.search).has('lab')) {
+    window.filmState = () => ({ cur, tr: tr && [tr.from, tr.to], y: Math.round(scrollY), slot: Math.round(slot(Math.max(0, cur))), P });
+    window.filmGo = (i) => goTo(i, true);
+  }
 })();
-
 
 </script>
 </body>
