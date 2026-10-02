@@ -25,7 +25,7 @@
       "notes": [
         "Every value carries its source: the landlord&rsquo;s site, the UW list, text read out of a description, or nothing. Unknown stays unknown instead of becoming a plausible guess.",
         "Landlords quote rent per person or per unit and rarely say which. Each price is tagged with its evidence; when none settles it, the price is read as whichever puts one person between $800 and $1,500.",
-        "Landlords who appear only on the UW list keep their phone and email off the page; it links to the UW listing instead."
+        "Phone and email of individual landlords who appear only on the UW list stay off the page; it links to that listing instead."
       ],
       "fig": "madison-rentals-provenance",
       "caption": "Where seven fields came from across all <span class=\"count\" data-to=\"605\">605</span> properties. Solid is a source, dashed is none. Furnished is unknown for 85% of them, and the map says so."
@@ -37,7 +37,7 @@
         "Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.28 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001)."
       ],
       "fig": "madison-rentals-distance",
-      "caption": "Rent per person for 403 properties with a listed rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 116, 105, 67, 38, 22, 26)."
+      "caption": "Rent per person for 403 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 116, 105, 67, 38, 22, 26)."
     }
   ],
   "stack": ["Leaflet", "Madison Metro GTFS", "OpenStreetMap", "Nominatim", "Esri World Imagery"],
