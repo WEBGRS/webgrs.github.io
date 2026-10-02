@@ -1,0 +1,26 @@
+{
+  "slug": "tophat-watch",
+  "name": "tophat-watch",
+  "order": 60,
+  "tier": "minor",
+  "kind": "Chrome extension",
+  "summary": "Alerts you when a Top Hat question opens",
+  "color": ["23A35A", "A8F0C0"],
+  "shot": {
+    "src": "assets/tophat-watch.jpg", "w": 1400, "h": 700,
+    "alt": "Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator"
+  },
+  "hook": "Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.",
+  "links": [["Source", "https://github.com/WEBGRS/tophat-watch"]],
+  "built": "Chrome extension, ntfy push",
+  "pages": [
+    {
+      "fig": "tophat-watch",
+      "caption": "The content script reports on every DOM change and every 5&nbsp;s. The service worker remembers what has already alerted, so an item alerts once each time it opens."
+    }
+  ],
+  "stack": ["Chrome MV3", "ntfy", "Playwright"],
+  "data_sources": ["ntfy"],
+  "repo": "https://github.com/WEBGRS/tophat-watch",
+  "blurb": "Chrome extension that alerts when a Top Hat question opens"
+}

@@ -15,7 +15,7 @@ H. Gu's portfolio site, live at **<https://webgrs.github.io>**. It's a single `i
 | Section | What it shows |
 |---|---|
 | Hero | A contour map of Madison drawn from real elevation data, with the name and a one-line intro |
-| Selected work | Six projects, each with its screenshot, notes and a figure of how it works |
+| Selected work | Major projects, each a few pages with its screenshot, notes and figures drawn from real code or data; smaller projects as compact cards below |
 | Decisions I'd defend | Three engineering calls from those projects |
 | Stack and Now | The tools and data sources, linked by project; what's happening this term |
 | Contact | Email and GitHub, with the two lakes redrawn as particles |
@@ -30,9 +30,9 @@ Once per session a short loader plays first: five real contour lines of a hill n
 
 ![route-animator's overview page: notes and a dotted globe on the left, the screenshot on the right with a teal orb behind it](docs/work-overview.jpg)
 
-The index lists the six projects. Hovering one shows its screenshot beside the cursor, with edges that ripple while the picture inside stays still.
+The index lists the major projects. Hovering one shows its screenshot beside the cursor, with edges that ripple while the picture inside stays still.
 
-Below the index the projects become pages on one pinned stage: an overview with links and what it's built with, then the decisions behind it and a figure of how it works. Route-animator and photo-organizer have enough to say for two pages; the rest fit on one. Every page uses the same type scale, the largest at which all of them fit.
+Below the index the projects become pages on one pinned stage: an overview with links and what it's built with, then the decisions behind it and a figure of how it works. A project has as many pages as it needs: the overview, then how it works, and for the data-heavy ones what the data says. Every page uses the same type scale, the largest at which all of them fit.
 
 ![route-animator's second page: three points and the altitude figure](docs/work-notes.jpg)
 
@@ -74,12 +74,15 @@ The page picks an effects tier on load and logs the choice and the reason to the
 
 ## Projects shown
 
+<!-- work:readme -->
 - [route-animator](https://github.com/WEBGRS/route-animator): satellite-globe route videos in the browser
-- [uw-course-lookup](https://github.com/WEBGRS/uw-course-lookup): UW–Madison course lookup, linking to MadGrades and Rate My Professors
+- [madison-rentals](https://github.com/WEBGRS/madison-rentals): rentals near UW–Madison on one map, with every value's source labeled
+- [uw-course-lookup](https://github.com/WEBGRS/uw-course-lookup): UW–Madison course lookup: grade history, instructor GPAs and open seats
 - [photo-organizer](https://github.com/WEBGRS/photo-organizer): offline CLIP photo sorter
 - [datamap](https://github.com/WEBGRS/datamap): paste data, get a choropleth map
 - [geo-spoof](https://github.com/WEBGRS/geo-spoof): Chrome extension that overrides the Geolocation API
 - [tophat-watch](https://github.com/WEBGRS/tophat-watch): Chrome extension that alerts when a Top Hat question opens
+<!-- /work:readme -->
 
 ## Run locally
 
@@ -96,9 +99,22 @@ Then open <http://localhost:8792>. Opening `index.html` straight from disk works
 | Script | What it does |
 |---|---|
 | `docs/screenshots.py` | Rebuilds the images in this README (Playwright with Chromium) |
-| `docs/figures.py` | Redraws the how-it-works figures and writes them into `index.html` |
+| `docs/build.py` | Writes the work index, the project pages, the smaller-project cards, the stack constellation data and the README project list from `docs/work/*.json`; `--check` fails if anything is stale |
+| `docs/figures.py` | The figure functions `build.py` calls, one per `fig` name |
+| `docs/data/extract_*.py` | Aggregate a project's data into the small JSON files its figures draw from |
+| `docs/check_deck.py` | Pages through the deck in headless Chromium and reports console errors and any page that overflows |
 | `docs/terrain/build_terrain.py` | Re-fetches the elevation tiles and rewrites the terrain data embedded in `index.html` |
 | `docs/land/build_land.py` | Rebuilds the 1° land mask for the route-animator globe |
+
+## Adding a project
+
+Every project is one file, `docs/work/<slug>.json`; nothing else in `index.html` is edited by hand.
+
+1. Put the screenshot in `assets/` (16:10 reads best) and write the JSON. `"tier": "major"` gives it pages on the pinned stage, `"tier": "minor"` a small card under it. Flipping the word promotes or demotes a project.
+2. For a major project, give each page its notes and, optionally, a `fig` name and caption. A figure is a function in `docs/figures.py` registered in `FIGS`; if it draws real data, an `extract_*.py` script writes the numbers it needs into `docs/data/`.
+3. `python docs/build.py`, then `python docs/check_deck.py` and look at the new pages in both themes.
+
+The orb behind a project takes its colour from the `color` pair in the JSON, so neighbouring projects should differ in hue; `build.py` warns when two are too close. The stage, the orb poses and the constellation all follow the number of projects, so none of them needs touching.
 
 ## Credits
 

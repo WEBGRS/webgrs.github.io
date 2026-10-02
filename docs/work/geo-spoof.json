@@ -1,0 +1,29 @@
+{
+  "slug": "geo-spoof",
+  "name": "geo-spoof",
+  "order": 50,
+  "tier": "minor",
+  "kind": "Chrome extension",
+  "summary": "Answers the Geolocation API with a point you pick",
+  "color": ["E0A21F", "FFE1A0"],
+  "shot": {
+    "src": "assets/geo-spoof.jpg", "w": 1400, "h": 822,
+    "alt": "A web page's geolocation call returning the Eiffel Tower coordinates set in Geo Spoof"
+  },
+  "hook": "Chrome extension that answers the Geolocation API with a point you pick on a map.",
+  "links": [["Source", "https://github.com/WEBGRS/geo-spoof"]],
+  "built": "Manifest V3, content-script patching",
+  "pages": [
+    {
+      "notes": [
+        "Patched calls still pass native-type checks, so pages that probe for tampering see ordinary functions."
+      ],
+      "fig": "geo-spoof",
+      "caption": "<code>bridge.js</code> reads settings in the isolated world and hands them to <code>inject.js</code>, which patches the page&rsquo;s own <code>navigator.geolocation</code> before any page script runs."
+    }
+  ],
+  "stack": ["Leaflet", "Chrome MV3", "OpenStreetMap", "Nominatim"],
+  "data_sources": ["OpenStreetMap", "Nominatim"],
+  "repo": "https://github.com/WEBGRS/geo-spoof",
+  "blurb": "Chrome extension that overrides the Geolocation API"
+}

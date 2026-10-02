@@ -1,8 +1,9 @@
-# Build the "how it works" figures and write them into index.html
-# Each figure replaces the text between <!-- fig:NAME --> and <!-- /fig:NAME -->
-import math, pathlib, random, re
+# The "how it works" figures, as functions that return an SVG. docs/build.py calls render(name)
+# and writes the result between <!-- fig:NAME --> and <!-- /fig:NAME --> in index.html.
+import json, math, pathlib, random, re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+DATA = ROOT / "docs" / "data"   # aggregates written by docs/data/extract_*.py
 CW, SW = 7.5, 6.5          # approx. glyph width at 14px / 12px
 
 
@@ -36,6 +37,12 @@ class Fig:
                  (x1 - 7 * math.cos(a + .45), y1 - 7 * math.sin(a + .45))]
             cls = "tip n acc" if accent else "tip n"
             self.add(f'<path class="{cls}" style="--d:{d + 4}" d="M{p[0][0]:.1f} {p[0][1]:.1f} L{p[1][0]:.1f} {p[1][1]:.1f} L{p[2][0]:.1f} {p[2][1]:.1f}Z"/>')
+
+    def rect(self, x, y, w, h, cls, d=0):
+        self.add(f'<rect class="n {cls}" style="--d:{d}" x="{x:.1f}" y="{y:.1f}" width="{max(w, 0):.1f}" height="{h}" rx="2"/>')
+
+    def dot(self, x, y, r=3, cls="dot", d=0):
+        self.add(f'<circle class="{cls} n" style="--d:{d}" cx="{x:.1f}" cy="{y:.1f}" r="{r}"/>')
 
     def text(self, x, y, s, cls="s", anchor="start", d=0):
         self.add(f'<text class="{cls} n" style="--d:{d}" x="{x:.1f}" y="{y:.1f}" text-anchor="{anchor}">{s}</text>')
@@ -184,11 +191,118 @@ def tophat():
     return f
 
 
-page = ROOT / "index.html"
-s = page.read_text(encoding="utf-8")
-for fig in [route(), courses(), photos(), datamap(), geo(), tophat()]:
-    pat = re.compile(rf"(<!-- fig:{re.escape(fig.name)} -->).*?(<!-- /fig:{re.escape(fig.name)} -->)", re.S)
-    assert pat.search(s), fig.name
-    s = pat.sub(lambda m: m.group(1) + "\n" + fig.svg() + "\n" + m.group(2), s)
-page.write_text(s, encoding="utf-8", newline="\n")
-print("figures written")
+def load(name):
+    return json.loads((DATA / f"{name}.json").read_text(encoding="utf-8"))
+
+
+# madison-rentals: where each property field came from, from docs/data/rentals.json
+def rentals_provenance():
+    d = load("rentals")
+    total = d["properties"]
+    f = Fig("madison-rentals-provenance", 520, 232, "Stacked bars: for seven property fields, the share of 605 properties whose value came from the landlord site, the UW list, a description, or no source")
+    x0, W = 128, 342
+    legend = [("s1", "landlord site", 0), ("s2", "UW list", 108), ("s3", "read from description", 184), ("s0", "not stated (%)", 352)]
+    for cls, text, dx in legend:
+        f.rect(dx, 2, 11, 11, f"seg {cls}", d=0)
+        f.text(dx + 17, 12, text, d=0)
+    for r, row in enumerate(d["prov"]):
+        y = 30 + r * 28
+        f.text(x0 - 12, y + 14, row["label"], cls="k", anchor="end", d=r)
+        x = x0
+        for cls, key in (("s1", "site"), ("s2", "uw"), ("s3", "inferred"), ("s0", "none")):
+            w = W * row[key] / total
+            if w > 0:
+                f.rect(x, y, w, 20, f"seg {cls}", d=r + 1)
+            x += w
+        f.text(520, y + 14, f"{round(100 * row['none'] / total)}%", cls="k a" if row["none"] / total > .5 else "k", anchor="end", d=r + 2)
+    return f
+
+
+# madison-rentals: rent per person against distance, from docs/data/rentals.json
+def rentals_distance():
+    d = load("rentals")["distance"]
+    f = Fig("madison-rentals-distance", 520, 236, "Scatter of rent per person against distance from campus for 403 properties, with the median of each distance band rising toward campus")
+    L, R, T, B = 46, 512, 10, 190
+    X = lambda mi: L + (R - L) * mi / 2.0
+    Y = lambda usd: B - (B - T) * (usd - 500) / 2000
+    for usd in (1000, 1500, 2000):
+        f.add(f'<path class="e dash n" style="--d:0" d="M{L} {Y(usd):.1f} L{R} {Y(usd):.1f}"/>')
+        f.text(L - 8, Y(usd) + 4, f"${usd:,}", anchor="end", d=0)
+    f.edge([(L, B), (R, B)], d=0, arrow=False)
+    for mi in (0, .5, 1, 1.5, 2):
+        f.text(X(mi), B + 18, f"{mi:g}", anchor="middle", d=0)
+    f.text((L + R) / 2, B + 38, "miles from Bascom Hall", anchor="middle", d=0)
+    # One path per stagger step: a zero-length round-capped segment is a dot, and far fewer nodes than circles
+    for step in range(3):
+        seg = "".join(f"M{X(mi):.1f} {Y(usd):.1f}h0" for i, (mi, usd) in enumerate(d["points"]) if i % 3 == step)
+        f.add(f'<path class="pts n" style="--d:{1 + step}" d="{seg}"/>')
+    pts = [(X((b["lo"] + b["hi"]) / 2), Y(b["median"])) for b in d["bands"]]
+    f.edge(pts, d=5, accent=True, arrow=False)
+    for (x, y), b in zip(pts, d["bands"]):
+        f.dot(x, y, 3.8, "dot hi", d=9)
+    first, last = d["bands"][0], d["bands"][4]
+    f.text(pts[0][0] + 8, pts[0][1] - 9, f"${first['median']:,}", cls="k a halo", d=10)
+    f.text(pts[4][0], pts[4][1] + 20, f"${last['median']:,}", cls="k a halo", anchor="middle", d=10)
+    f.text(R, T + 8, f"rank correlation {d['rho_adjusted']:.2f}, n = {d['n']}".replace("-", "−"), anchor="end", d=10)
+    return f
+
+
+# uw-course-lookup: build and serve, as the repo does it
+def course_arch():
+    f = Fig("uw-course-architecture", 520, 218, "Public sources feed a local SQLite build, which is deployed to a Cloudflare Worker that the GitHub Pages page queries")
+    f.node(0, 4, "Public sources", "MadGrades, Enroll, Reddit, chat", w=230, d=0)
+    f.node(0, 76, "build_db.py", "SQLite, never committed", w=230, d=2)
+    f.node(290, 76, "Cloudflare Worker", "origin check, rate limit", w=230, d=5, accent=True)
+    f.node(290, 160, "Page on GitHub Pages", "vanilla JS, 60 rows a time", w=230, d=7)
+    f.edge([(115, 54), (115, 76)], d=1)
+    f.edge([(230, 101), (290, 101)], d=3, accent=True)
+    f.text(260, 92, "deploy", anchor="middle", d=4)
+    f.edge([(405, 160), (405, 126)], d=6)
+    f.text(397, 148, "only from the site's origin", anchor="end", d=6)
+    return f
+
+
+# uw-course-lookup: same course, different instructor, from docs/data/course.json
+def course_spread():
+    d = load("course")
+    rows = d["spread"][:8]
+    f = Fig("uw-course-spread", 520, 222, "For eight courses, the span from the lowest to the highest instructor GPA in the same course")
+    L, R, T = 112, 452, 30
+    X = lambda g: L + (R - L) * (g - 1.8) / 2.2
+    for g in (2.0, 2.5, 3.0, 3.5, 4.0):
+        f.add(f'<path class="e dash n" style="--d:0" d="M{X(g):.1f} {T - 8} L{X(g):.1f} {T + len(rows) * 21 - 6}"/>')
+        f.text(X(g), T - 14, f"{g:.1f}", anchor="middle", d=0)
+    f.text(520, T - 14, "gap", anchor="end", d=0)
+    for i, r in enumerate(rows):
+        y = T + i * 21 + 6
+        f.text(L - 12, y + 5, r["code"], cls="k", anchor="end", d=i)
+        f.edge([(X(r["low"]), y), (X(r["high"]), y)], d=i, accent=True, arrow=False)
+        f.dot(X(r["low"]), y, 4.2, "dot", d=i + 3)
+        f.dot(X(r["high"]), y, 4.2, "dot hi", d=i + 3)
+        f.text(520, y + 5, f"{r['spread']:.2f}", cls="k", anchor="end", d=i + 4)
+    f.dot(L, T + len(rows) * 21 + 18, 4.2, "dot", d=8)
+    f.text(L + 12, T + len(rows) * 21 + 23, "lowest instructor", d=8)
+    f.dot(L + 158, T + len(rows) * 21 + 18, 4.2, "dot hi", d=8)
+    f.text(L + 170, T + len(rows) * 21 + 23, "highest instructor", d=8)
+    return f
+
+
+# Every "fig" name used in docs/work/*.json must be registered here
+FIGS = {
+    "route-animator": route,
+    "uw-course-lookup": courses,
+    "photo-organizer": photos,
+    "datamap": datamap,
+    "geo-spoof": geo,
+    "tophat-watch": tophat,
+    "madison-rentals-provenance": rentals_provenance,
+    "madison-rentals-distance": rentals_distance,
+    "uw-course-architecture": course_arch,
+    "uw-course-spread": course_spread,
+}
+
+
+def render(name):
+    if name not in FIGS:
+        raise KeyError(f"no figure named {name!r} in docs/figures.py (known: {', '.join(FIGS)})")
+    return FIGS[name]().svg()

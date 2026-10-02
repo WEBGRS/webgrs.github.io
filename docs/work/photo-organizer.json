@@ -1,0 +1,37 @@
+{
+  "slug": "photo-organizer",
+  "name": "photo-organizer",
+  "order": 30,
+  "tier": "major",
+  "kind": "Python, CLIP",
+  "summary": "Sorts a 310&nbsp;GB photo library on a local GPU",
+  "color": ["3A8F7E", "E9D2A6"],
+  "shot": {
+    "src": "assets/photo-organizer.jpg", "w": 1000, "h": 560,
+    "alt": "Photo organizer web UI showing a cluster of coastal landscape photos"
+  },
+  "hook": "Sorts a <span class=\"count\" data-to=\"310\">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.",
+  "links": [["Source", "https://github.com/WEBGRS/photo-organizer"]],
+  "built": "CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class=\"count\" data-to=\"7346\">7,346</span> files, 0 errors.",
+  "pages": [
+    {
+      "notes": [
+        "Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.",
+        "RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated."
+      ]
+    },
+    {
+      "title": "How it works",
+      "notes": [
+        "Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.",
+        "Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN."
+      ],
+      "fig": "photo-organizer",
+      "caption": "Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder."
+    }
+  ],
+  "stack": ["PyTorch", "open_clip", "HDBSCAN", "FastAPI"],
+  "data_sources": [],
+  "repo": "https://github.com/WEBGRS/photo-organizer",
+  "blurb": "offline CLIP photo sorter"
+}

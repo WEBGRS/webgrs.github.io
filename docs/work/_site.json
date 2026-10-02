@@ -1,0 +1,4 @@
+{
+  "stack": ["WebGL", "OffscreenCanvas", "Canvas 2D", "USGS 3DEP"],
+  "data_sources": ["USGS 3DEP"]
+}

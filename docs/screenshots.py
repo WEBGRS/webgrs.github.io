@@ -24,6 +24,11 @@ def shot(pg, name):
     pg.screenshot(path=str(OUT / f"{name}.jpg"), type="jpeg", quality=84, timeout=120000)
 
 
+def first_page(pg, slug):
+    # Index of a project's first page on the deck
+    return pg.evaluate(f"[...document.querySelectorAll('.film .pg')].findIndex(p => p.closest('.cap').id === '{slug}')")
+
+
 def to(pg, el_id, extra=0):
     pg.evaluate(f"scrollTo({{top: document.getElementById('{el_id}').getBoundingClientRect().top + scrollY + {extra}, behavior: 'instant'}})")
 
@@ -49,7 +54,7 @@ with sync_playwright() as p:
     pg.close()
     pg = page(b, "dark")
     to(pg, "film"); pg.wait_for_timeout(5000)
-    pg.evaluate("filmGo(2)"); pg.wait_for_timeout(6000)
+    pg.evaluate(f"filmGo({first_page(pg, 'uw-course-lookup')})"); pg.wait_for_timeout(6000)
     shot(pg, "work-dark")
     pg.close()
     # Phone: three screens side by side (hero, a project in the one-column list, contact)
@@ -59,11 +64,11 @@ with sync_playwright() as p:
     pg.add_init_script("localStorage.setItem('theme', 'light'); sessionStorage.setItem('intro', '1')")
     pg.goto(URL); pg.wait_for_timeout(4000)
     frames = []
-    # Hero; uw-course-lookup on the portrait work stage (page 3); contact
+    # Hero; uw-course-lookup on the portrait work stage; contact
     for step in ["hero", "work", "contact"]:
         if step == "work":
             to(pg, "film"); pg.wait_for_timeout(4500)
-            pg.evaluate("filmGo(2)"); pg.wait_for_timeout(5000)
+            pg.evaluate(f"filmGo({first_page(pg, 'uw-course-lookup')})"); pg.wait_for_timeout(5000)
         elif step == "contact":
             to(pg, "contact"); pg.wait_for_timeout(3000)
         pg.screenshot(path=str(OUT / "_m.png"), timeout=120000); frames.append(Image.open(OUT / "_m.png").convert("RGB").resize((390, 844)))
