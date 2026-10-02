@@ -326,6 +326,7 @@ footer .src{margin-left:auto}
 @keyframes rpl{from{transform:scale(.2); opacity:.9}to{transform:scale(var(--rs,6)); opacity:0}}
 .count{display:inline-block; font-variant-numeric:tabular-nums; text-align:right}
 .contact{position:relative; isolation:isolate; background:linear-gradient(to bottom, transparent, var(--paper) clamp(120px,14vw,200px))}
+@media (min-width:1001px){ #mail{margin-top:clamp(56px,6.5vw,94px)} }
 #dust{position:absolute; z-index:-1; top:clamp(24px,5vw,72px); right:0; width:min(64vw,860px); height:min(56vw,640px); pointer-events:none}
 /* Below 1000 px the particles get their own space above the heading instead of sitting on the text;
    phones leave them out, unless ?full asks for everything */
@@ -555,7 +556,7 @@ h2{--w:780}
 
   <section class="block" id="work" aria-labelledby="work-h">
     <div class="wrap">
-      <div class="shead"><h2 id="work-h"><span data-split="char">Selected work</span></h2><p>Built end to end, all still running.</p></div>
+      <div class="shead"><h2 id="work-h"><span data-split="char">Selected work</span></h2></div>
       <ul class="index" id="index">
         <!-- work:index -->
         <li><a href="#route-animator" data-i="0"><span class="nm">route-animator</span><span class="ds">Flies a route over a satellite globe and records the video in the browser</span><span class="kd">Web app</span></a></li>
@@ -964,7 +965,7 @@ h2{--w:780}
     </div>
     <!-- work:minor -->
     <div class="wrap minor">
-      <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3><p>Each does one job.</p></div>
+      <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3></div>
       <ul class="mini">
         <li>
           <a class="mini-shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="" loading="lazy" decoding="async"></a>
@@ -991,7 +992,7 @@ h2{--w:780}
 
   <section class="block" id="decisions" aria-labelledby="dec-h">
     <div class="wrap">
-      <div class="shead"><h2 id="dec-h"><span data-split="char">Decisions I'd defend</span></h2><p>The parts of these projects I actually think about.</p></div>
+      <div class="shead"><h2 id="dec-h"><span data-split="char">Decisions I'd defend</span></h2></div>
       <div class="decs">
         <div class="dec" style="--i:0">
           <h3><span data-split="word">Show the gap, don't fake the data.</span></h3>
@@ -1040,7 +1041,6 @@ h2{--w:780}
       <div>
         <h2 id="now-h"><span data-split="char">Now</span><span class="when">September 2026</span></h2>
         <dl class="kv">
-          <dt>Applying</dt><dd>Summer 2027 SWE and ML internships.</dd>
           <dt>Drilling</dt><dd>About 150 pattern-based algorithm problems, grouped by technique rather than count.</dd>
           <dt>Learning</dt><dd>Applied ML in depth: embeddings, retrieval, and the infrastructure around them.</dd>
           <dt>Coursework</dt><dd>CS 577 Introduction to Algorithms, CS 354 Machine Organization and Programming.</dd>
@@ -1053,13 +1053,11 @@ h2{--w:780}
     <canvas id="dust" aria-hidden="true"></canvas>
     <div class="wrap">
       <h2 id="contact-h"><span data-split="char">Contact</span></h2>
-      <p style="margin-top:14px">Email is the fastest way to reach me. Click the address to copy it.</p>
       <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-split="drop">hgu72@wisc.edu</span></button>
       <p class="sr" id="mail-status" role="status"></p>
       <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag=".05">Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag=".05">GitHub</a><a href="#contact" data-feedback data-mag=".05">Send feedback</a></div>
       <canvas class="sine" id="sine" aria-hidden="true"></canvas>
       <footer>
-        <span>One HTML file, no framework, no trackers.</span>
         <span>Terrain: USGS 3DEP via Terrain Tiles on AWS.</span>
         <a class="src" href="https://github.com/WEBGRS/webgrs.github.io" target="_blank" rel="noopener">View source</a>
       </footer>

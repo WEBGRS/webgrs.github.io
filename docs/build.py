@@ -103,7 +103,7 @@ def minor_block(specs):
     if not minor:
         return ""
     out = ['    <div class="wrap minor">',
-           '      <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3><p>Each does one job.</p></div>',
+           '      <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3></div>',
            '      <ul class="mini">']
     for d in minor:
         href = dict(d["links"]).get("Live site") or d["links"][0][1]
