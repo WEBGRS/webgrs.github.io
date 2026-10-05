@@ -1,11 +1,12 @@
 # Aggregate the rentals dataset into the numbers the two madison-rentals figures draw.
 #   python docs/data/extract_rentals.py [path/to/properties.js]
-# Reads the public dataset of the madison-rentals site (a sibling checkout by default) and writes
-# docs/data/rentals.json: counts only, no addresses, names or contact details.
+# Reads the dataset the public API serves, from the working copy in the private madison-housing repo (the public
+# madison-rentals page no longer carries it), and writes docs/data/rentals.json: counts only, no addresses, names
+# or contact details. Its built date must match the live /api/meta.
 import collections, json, math, pathlib, random, statistics as st, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-SRC = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE.parent.parent.parent / "madison-rentals-site" / "data" / "properties.js"
+SRC = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE.parent.parent.parent / "madison-housing" / "web" / "data" / "properties.js"
 
 raw = SRC.read_text(encoding="utf-8")
 data = json.loads(raw[raw.index("=") + 1:].rstrip().rstrip(";"))
@@ -34,10 +35,17 @@ pts = sorted((v[0][0], st.median(x[1] for x in v), st.median(x[2] for x in v)) f
 
 
 def rank(a):
+    """Ranks with ties averaged (distances are rounded, so ties are common)."""
     order = sorted(range(len(a)), key=lambda i: a[i])
-    r = [0] * len(a)
-    for k, i in enumerate(order):
-        r[i] = k
+    r = [0.0] * len(a)
+    i = 0
+    while i < len(a):
+        j = i
+        while j + 1 < len(a) and a[order[j + 1]] == a[order[i]]:
+            j += 1
+        for k in range(i, j + 1):
+            r[order[k]] = (i + j) / 2
+        i = j + 1
     return r
 
 

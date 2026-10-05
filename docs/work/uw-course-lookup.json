@@ -4,28 +4,38 @@
   "order": 20,
   "tier": "major",
   "kind": "Web app + API",
-  "summary": "Grade history and open seats for every Fall 2026 UW–Madison course",
+  "summary": "Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course",
   "color": ["D7263D", "FFB070"],
   "shot": {
     "src": "assets/uw-course-lookup.jpg", "w": 1400, "h": 897,
     "alt": "Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course"
   },
-  "hook": "Grade history, instructor-by-instructor GPA and open seats for all <span class=\"count\" data-to=\"4438\">4,438</span> Fall 2026 UW–Madison courses, in one search box.",
+  "hook": "Grade history, instructor GPAs and seats for all <span class=\"count\" data-to=\"4438\">4,438</span> Fall 2026 UW–Madison courses, plus a timetable planner that knows your degree.",
   "links": [["Live site", "https://webgrs.github.io/uw-course-lookup/"], ["Source", "https://github.com/WEBGRS/uw-course-lookup"]],
-  "built": "Vanilla JS page, Cloudflare Worker API, SQLite, GitHub Actions CI",
+  "built": "Vanilla JS, Cloudflare Workers and Workers AI, SQLite, GitHub Actions CI",
   "pages": [
     {
       "notes": [
         "A sticky A&ndash;F band morphs into whichever course you hover, with ticks marking the campus-wide split, so every row reads against the baseline.",
-        "Lenses such as <em>Instructor matters</em> and <em>Getting harder</em>, a dot plot of every instructor&rsquo;s GPA per course, saved plans and side-by-side compare."
+        "Lenses such as <em>Instructor matters</em>, a dot plot of every instructor&rsquo;s GPA, saved plans, side-by-side compare, and an assistant that can search courses and build a timetable."
       ]
+    },
+    {
+      "title": "The planner",
+      "notes": [
+        "Pick one of 212 degree programs and drop in your transcript or DARS. The file is read in the browser, not uploaded, and the planner shows what is done, in progress and left.",
+        "It searches for conflict-free timetables over each course&rsquo;s real enrollment packages (a lecture plus its discussion), honoring early starts, days off and seat availability, and returns six options with an .ics export.",
+        "If the request is impossible it says why, for example two required courses that always overlap."
+      ],
+      "fig": "uw-course-planner",
+      "caption": "The solver is a plain module with no DOM or network access, so the page, a Web Worker and the Node tests run the same code. It returns the best result it found, not a proof of optimality."
     },
     {
       "title": "How it works",
       "notes": [
-        "The page holds no course data. It asks a Cloudflare Worker for 60 rows at a time, so the first load is two requests and about 29&nbsp;KB.",
-        "The dataset is built locally and deployed to the Worker. It is not in the repository, and CI fails if a private file lands there.",
-        "The Worker answers only the site&rsquo;s own origin, rate-limits each client and has no bulk endpoint. That raises the cost of copying everything; it cannot prevent it."
+        "The page holds no course data. A Cloudflare Worker serves one page of results at a time to a browser that has passed an invisible human check.",
+        "Each visitor and each network has a daily allowance counted in course records. Requests are rate-limited and logged, never the assistant conversation, and CI fails if a private file is committed.",
+        "No endpoint returns the dataset in bulk. That raises the cost of copying everything; it cannot prevent it."
       ],
       "fig": "uw-course-architecture",
       "caption": "Build and serve. The data files are gitignored; the page, the Worker and the pipeline are public."
@@ -40,8 +50,8 @@
       "caption": "The eight largest gaps between the lowest and highest instructor GPA in one course, among 290 tracked courses. Each instructor has at least 30 graded students."
     }
   ],
-  "stack": ["SQLite", "Cloudflare Workers", "GitHub Actions", "MadGrades API", "Course Search & Enroll API", "Reddit via Firecrawl"],
+  "stack": ["SQLite", "Cloudflare Workers", "Workers AI", "GitHub Actions", "pdf.js", "MadGrades API", "Course Search & Enroll API", "Reddit via Firecrawl"],
   "data_sources": ["MadGrades API", "Course Search & Enroll API", "Reddit via Firecrawl"],
   "repo": "https://github.com/WEBGRS/uw-course-lookup",
-  "blurb": "UW–Madison course lookup: grade history, instructor GPAs and open seats"
+  "blurb": "UW–Madison course lookup: grade history, seats and a degree-aware timetable planner"
 }

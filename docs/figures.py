@@ -249,16 +249,33 @@ def rentals_distance():
 
 # uw-course-lookup: build and serve, as the repo does it
 def course_arch():
-    f = Fig("uw-course-architecture", 520, 218, "Public sources feed a local SQLite build, which is deployed to a Cloudflare Worker that the GitHub Pages page queries")
+    f = Fig("uw-course-architecture", 520, 218, "Public sources feed a local SQLite build, which is deployed to a guarded Cloudflare Worker that the GitHub Pages page queries")
     f.node(0, 4, "Public sources", "MadGrades, Enroll, Reddit, chat", w=230, d=0)
     f.node(0, 76, "build_db.py", "SQLite, never committed", w=230, d=2)
-    f.node(290, 76, "Cloudflare Worker", "origin check, rate limit", w=230, d=5, accent=True)
-    f.node(290, 160, "Page on GitHub Pages", "vanilla JS, 60 rows a time", w=230, d=7)
+    f.node(290, 76, "Cloudflare Worker", "session, quota, rate limit", w=230, d=5, accent=True)
+    f.node(290, 160, "Page on GitHub Pages", "human check, then 60 rows", w=230, d=7)
     f.edge([(115, 54), (115, 76)], d=1)
     f.edge([(230, 101), (290, 101)], d=3, accent=True)
     f.text(260, 92, "deploy", anchor="middle", d=4)
     f.edge([(405, 160), (405, 126)], d=6)
-    f.text(397, 148, "only from the site's origin", anchor="end", d=6)
+    f.text(397, 148, "signed session on every call", anchor="end", d=6)
+    return f
+
+
+# uw-course-lookup: the timetable planner, as the page runs it
+def course_planner():
+    f = Fig("uw-course-planner", 520, 176, "A transcript and a degree program give the unmet requirements; a depth-first solver picks conflict-free sections and returns six timetables")
+    f.node(0, 4, "Transcript or DARS", "read in the browser", w=156, d=0)
+    f.node(182, 4, "Degree rules", "212 programs", w=156, d=1)
+    f.node(364, 4, "Still needed", "requirement blocks", w=156, d=2)
+    f.node(0, 112, "Course packages", "lecture + discussion", w=156, d=3)
+    f.node(182, 112, "Solver", "depth-first search", w=156, d=5, accent=True)
+    f.node(364, 112, "Six timetables", "conflicts ruled out", w=156, d=7)
+    f.edge([(156, 29), (182, 29)], d=0)
+    f.edge([(338, 29), (364, 29)], d=1)
+    f.edge([(442, 54), (442, 83), (260, 83), (260, 112)], d=3)
+    f.edge([(156, 137), (182, 137)], d=4)
+    f.edge([(338, 137), (364, 137)], d=6, accent=True)
     return f
 
 
@@ -287,6 +304,55 @@ def course_spread():
     return f
 
 
+# madison-eats: from sources to the guarded page
+def food_pipeline():
+    f = Fig("madison-food-map-pipeline", 520, 216, "Licences, OpenStreetMap, six rating sources, inspections and Reddit are linked into one list, scored, and served one page at a time by a guarded Worker")
+    f.node(0, 4, "Base list", "licences + OSM", w=170, d=0)
+    f.node(0, 70, "Rating sources", "6 sources, stars + counts", w=170, d=1)
+    f.node(0, 136, "Other signals", "inspections, Reddit", w=170, d=2)
+    f.node(200, 70, "link", "match stores", w=120, d=3)
+    f.node(350, 70, "score", "percentile per app", w=170, d=5, accent=True)
+    f.node(350, 150, "Guarded Worker", "one page at a time", w=170, d=8)
+    f.edge([(170, 29), (185, 29), (185, 95), (200, 95)], d=2, arrow=False)
+    f.edge([(170, 95), (200, 95)], d=2)
+    f.edge([(170, 161), (185, 161), (185, 95)], d=2, arrow=False)
+    f.edge([(320, 95), (350, 95)], d=4, accent=True)
+    f.edge([(435, 120), (435, 150)], d=7)
+    f.text(0, 208, "Python, on my machine", d=2)
+    f.text(520, 208, "Cloudflare", anchor="end", d=8)
+    return f
+
+
+# madison-eats: how well the six rating sources agree, from docs/data/food.json
+def food_agreement():
+    d = load("food")["agreement"]
+    names = {"google": "Google", "dd": "DoorDash", "ue": "Uber Eats", "gh": "Grubhub", "es": "EatStreet", "toast": "Toast"}
+    S = d["sources"]
+    pair = {(a, b): (r, n) for a, b, r, n in d["pairs"]}
+    f = Fig("madison-food-map-agreement", 520, 234, "Rank correlation of star ratings between pairs of rating sources for the same places, from 0.26 to 0.61 apart from one pair near zero")
+    x0, cw, ch = 98, 80, 33
+    for c in range(5):
+        f.text(x0 + c * (cw + 4) + cw / 2, 12, names[S[c]], anchor="middle", d=0)
+    for r in range(5):
+        y = 24 + r * (ch + 3)
+        f.text(x0 - 8, y + 20, names[S[r + 1]], cls="k", anchor="end", d=r)
+        for c in range(r + 1):
+            x = x0 + c * (cw + 4)
+            rho, n = pair.get((S[c], S[r + 1]), (None, 0))
+            if rho is None:
+                f.text(x + 4, y + 20, "n < 20", d=r + 1)
+                continue
+            f.text(x + 4, y + 14, f"{rho:.2f}".replace("-", "−"), cls="k", d=r + 1)
+            f.text(x + cw - 4, y + 14, f"n={n}", anchor="end", d=r + 1)
+            if rho > 0.1:
+                f.rect(x + 4, y + 21, (cw - 8) * min(rho, .7) / .7, 6, "seg s1" if n >= 50 else "seg s3", d=r + 2)
+    f.rect(x0, 214, 20, 6, "seg s1", d=7)
+    f.text(x0 + 26, 221, "50 or more places", d=7)
+    f.rect(x0 + 160, 214, 20, 6, "seg s3", d=7)
+    f.text(x0 + 186, 221, "fewer than 50", d=7)
+    return f
+
+
 # Every "fig" name used in docs/work/*.json must be registered here
 FIGS = {
     "route-animator": route,
@@ -299,6 +365,9 @@ FIGS = {
     "madison-rentals-distance": rentals_distance,
     "uw-course-architecture": course_arch,
     "uw-course-spread": course_spread,
+    "uw-course-planner": course_planner,
+    "madison-food-map-pipeline": food_pipeline,
+    "madison-food-map-agreement": food_agreement,
 }
 
 

@@ -34,7 +34,7 @@
       "title": "What the data says",
       "notes": [
         "Closer costs more, and not just because of bedrooms: median rent per person is $1,200 within 0.4 mi of Bascom Hall and $978 at 1&ndash;1.25 mi.",
-        "Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.28 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001)."
+        "Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.29 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001)."
       ],
       "fig": "madison-rentals-distance",
       "caption": "Rent per person for 403 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 116, 105, 67, 38, 22, 26)."

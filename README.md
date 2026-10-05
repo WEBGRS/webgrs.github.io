@@ -77,7 +77,8 @@ The page picks an effects tier on load and logs the choice and the reason to the
 <!-- work:readme -->
 - [route-animator](https://github.com/WEBGRS/route-animator): satellite-globe route videos in the browser
 - [madison-rentals](https://github.com/WEBGRS/madison-rentals): rentals near UW–Madison on one map, with every value's source labeled
-- [uw-course-lookup](https://github.com/WEBGRS/uw-course-lookup): UW–Madison course lookup: grade history, instructor GPAs and open seats
+- [madison-food-map](https://github.com/WEBGRS/madison-food-map): every place to eat in Dane County, scored from six rating sources
+- [uw-course-lookup](https://github.com/WEBGRS/uw-course-lookup): UW–Madison course lookup: grade history, seats and a degree-aware timetable planner
 - [photo-organizer](https://github.com/WEBGRS/photo-organizer): offline CLIP photo sorter
 - [datamap](https://github.com/WEBGRS/datamap): paste data, get a choropleth map
 - [geo-spoof](https://github.com/WEBGRS/geo-spoof): Chrome extension that overrides the Geolocation API
@@ -113,6 +114,8 @@ Every project is one file, `docs/work/<slug>.json`; nothing else in `index.html`
 1. Put the screenshot in `assets/` (16:10 reads best) and write the JSON. `"tier": "major"` gives it pages on the pinned stage, `"tier": "minor"` a small card under it. Flipping the word promotes or demotes a project.
 2. For a major project, give each page its notes and, optionally, a `fig` name and caption. A figure is a function in `docs/figures.py` registered in `FIGS`; if it draws real data, an `extract_*.py` script writes the numbers it needs into `docs/data/`.
 3. `python docs/build.py`, then `python docs/check_deck.py` and look at the new pages in both themes.
+
+A project nobody can open (a private repository, a local tool) is a minor card with `"status"` in place of `links`, for example `"Private repository"`; a private repository is never linked. A card can also carry a `"credit"` line, shown small under it.
 
 The orb behind a project takes its colour from the `color` pair in the JSON, so neighbouring projects should differ in hue; `build.py` warns when two are too close. The stage, the orb poses and the constellation all follow the number of projects, so none of them needs touching.
 

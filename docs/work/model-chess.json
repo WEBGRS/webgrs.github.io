@@ -1,0 +1,22 @@
+{
+  "slug": "model-chess",
+  "name": "Model Chess",
+  "order": 45,
+  "tier": "minor",
+  "kind": "Web game",
+  "summary": "Chess where every piece is an AI model. Items mode, a workbench, and a rules engine checked against perft counts.",
+  "shot": {
+    "src": "assets/model-chess.jpg",
+    "w": 1400,
+    "h": 875,
+    "alt": "Model Chess in items mode: a board of AI-model pieces mid-game, a strength ladder from ELIZA to Claude, and the move list"
+  },
+  "status": "Private repository",
+  "credit": "Piece silhouettes: cburnett (Colin M.L. Burnett), via lichess.",
+  "stack": [
+    "SVG",
+    "Playwright",
+    "Stable Diffusion XL"
+  ],
+  "data_sources": []
+}

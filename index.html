@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>H. Gu, CS at UW–Madison</title>
-<meta name="description" content="CS undergraduate at UW–Madison building offline-first tools for maps, photos, and course data. Open to Summer 2027 SWE / ML internships.">
+<meta name="description" content="CS undergraduate at UW–Madison building web tools that turn messy public data into maps, schedules, and scores. Open to Summer 2027 SWE / ML internships.">
 <meta name="color-scheme" content="light">
 <meta property="og:title" content="H. Gu, CS at UW–Madison">
-<meta property="og:description" content="Offline-first tools for maps, photos, and course data.">
+<meta property="og:description" content="Web tools that turn messy public data into maps, schedules, and scores.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://webgrs.github.io/docs/light.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%231E5AA8' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%231E5AA8'/></svg>">
@@ -142,6 +142,8 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 .mini h4{margin:4px 0 0; font-size:clamp(1.3rem,2vw,1.6rem); line-height:1.1; font-weight:740; font-stretch:108%; letter-spacing:-.025em}
 .mini-ds{margin:8px 0 0; line-height:1.45}
 .mini .links{margin-top:10px}
+.mini-st{margin:10px 0 0; font-weight:560}
+.mini-cr{margin:6px 0 0; font-size:.86rem; line-height:1.4}
 @media (max-width:520px){ .mini li{grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:0 14px} .mini h4{font-size:1.2rem} }
 
 .peek{position:fixed; left:0; top:0; z-index:15; width:clamp(280px,26vw,420px); aspect-ratio:16/10; pointer-events:none; will-change:transform}
@@ -543,7 +545,7 @@ h2{--w:780}
     <div class="map" id="map" role="img" aria-label="Contour map of Madison, Wisconsin, with Lake Mendota and Lake Monona"><canvas id="terrain" aria-hidden="true"></canvas></div>
     <div class="wrap">
       <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0">H</span><span class="l" style="--i:1">.</span> <span class="l" style="--i:2">G</span><span class="l" style="--i:3">u</span></span></h1>
-      <p class="lede"><span data-split="word">I build small, offline-first tools for maps, photos, and course data.</span></p>
+      <p class="lede"><span data-split="word">I build web tools that turn messy public data into maps, schedules, and scores.</span></p>
       <p class="who" style="--i:0">Computer Science at UW–Madison, class of 2029.</p>
       <p class="avail" style="--i:1">Open to Summer 2027 SWE and ML internships</p>
       <div class="legend">
@@ -561,9 +563,10 @@ h2{--w:780}
         <!-- work:index -->
         <li><a href="#route-animator" data-i="0"><span class="nm">route-animator</span><span class="ds">Flies a route over a satellite globe and records the video in the browser</span><span class="kd">Web app</span></a></li>
         <li><a href="#madison-rentals" data-i="1"><span class="nm">Isthmus Rentals</span><span class="ds">Every rental near campus on one map, each value labeled with where it came from</span><span class="kd">Web app, data</span></a></li>
-        <li><a href="#uw-course-lookup" data-i="2"><span class="nm">uw-course-lookup</span><span class="ds">Grade history and open seats for every Fall 2026 UW–Madison course</span><span class="kd">Web app + API</span></a></li>
-        <li><a href="#photo-organizer" data-i="3"><span class="nm">photo-organizer</span><span class="ds">Sorts a 310&nbsp;GB photo library on a local GPU</span><span class="kd">Python, CLIP</span></a></li>
-        <li><a href="#datamap" data-i="4"><span class="nm">DataMap</span><span class="ds">Paste a column of numbers, get a choropleth</span><span class="kd">Web app</span></a></li>
+        <li><a href="#madison-food-map" data-i="2"><span class="nm">Madison Eats</span><span class="ds">Every place to eat in Dane County on one map, scored from six rating sources</span><span class="kd">Web app, data</span></a></li>
+        <li><a href="#uw-course-lookup" data-i="3"><span class="nm">uw-course-lookup</span><span class="ds">Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course</span><span class="kd">Web app + API</span></a></li>
+        <li><a href="#photo-organizer" data-i="4"><span class="nm">photo-organizer</span><span class="ds">Sorts a 310&nbsp;GB photo library on a local GPU</span><span class="kd">Python, CLIP</span></a></li>
+        <li><a href="#datamap" data-i="5"><span class="nm">DataMap</span><span class="ds">Paste a column of numbers, get a choropleth</span><span class="kd">Web app</span></a></li>
         <!-- /work:index -->
       </ul>
     </div>
@@ -576,7 +579,7 @@ h2{--w:780}
         <li class="cap l" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg" data-c="1996AE" data-f="9BE7F2" style="--i:0">
           <figure class="cap-shot"><img src="assets/route-animator.jpg" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">01 / 05 &middot; Web app</p>
+            <p class="cap-n" data-k style="--k:0">01 / 06 &middot; Web app</p>
             <h3 aria-label="route-animator"><span aria-hidden="true"><span class="ch" style="--c:0">r</span><span class="ch" style="--c:1">o</span><span class="ch" style="--c:2">u</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">e</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">a</span><span class="ch" style="--c:7">n</span><span class="ch" style="--c:8">i</span><span class="ch" style="--c:9">m</span><span class="ch" style="--c:10">a</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">r</span></span></h3>
             <p class="hook" data-k style="--k:2">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
             <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></p>
@@ -614,7 +617,7 @@ h2{--w:780}
         <li class="cap r" id="madison-rentals" data-src="assets/madison-rentals.jpg" data-c="7A4FD0" data-f="D9C6FF" style="--i:1">
           <figure class="cap-shot"><img src="assets/madison-rentals.jpg" width="1400" height="875" alt="Map of rentals near the UW–Madison campus, with filters and a price-colored pin for each property" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">02 / 05 &middot; Web app, data</p>
+            <p class="cap-n" data-k style="--k:0">02 / 06 &middot; Web app, data</p>
             <h3 aria-label="Isthmus Rentals"><span aria-hidden="true"><span class="ch" style="--c:0">I</span><span class="ch" style="--c:1">s</span><span class="ch" style="--c:2">t</span><span class="ch" style="--c:3">h</span><span class="ch" style="--c:4">m</span><span class="ch" style="--c:5">u</span><span class="ch" style="--c:6">s</span><span class="ch" style="--c:7">&nbsp;</span><span class="ch" style="--c:8">R</span><span class="ch" style="--c:9">e</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">a</span><span class="ch" style="--c:13">l</span><span class="ch" style="--c:14">s</span></span></h3>
             <p class="hook" data-k style="--k:2"><span class="count" data-to="605">605</span> rentals near campus on one map, every value labeled by where it came from, every gap turned into a question.</p>
             <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/madison-rentals/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/madison-rentals" target="_blank" rel="noopener">Source</a></p>
@@ -688,7 +691,7 @@ h2{--w:780}
             <p class="pg-h" data-k style="--k:0"><b>Isthmus Rentals</b> &middot; What the data says</p>
             <ul>
               <li data-k style="--k:1">Closer costs more, and not just because of bedrooms: median rent per person is $1,200 within 0.4 mi of Bascom Hall and $978 at 1&ndash;1.25 mi.</li>
-              <li data-k style="--k:2">Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.28 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001).</li>
+              <li data-k style="--k:2">Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.29 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001).</li>
             </ul>
             <figure class="fig" data-k style="--k:3"><!-- fig:madison-rentals-distance -->
 <svg viewBox="0 0 520 236" role="img" aria-label="Scatter of rent per person against distance from campus for 403 properties, with the median of each distance band rising toward campus">
@@ -718,37 +721,174 @@ h2{--w:780}
 <circle class="dot hi n" style="--d:9" cx="465.4" cy="151.8" r="3.8"/>
 <text class="k a halo n" style="--d:10" x="100.6" y="118.0" text-anchor="start">$1,200</text>
 <text class="k a halo n" style="--d:10" x="308.1" y="167.0" text-anchor="middle">$978</text>
-<text class="s n" style="--d:10" x="512.0" y="18.0" text-anchor="end">rank correlation −0.28, n = 403</text>
+<text class="s n" style="--d:10" x="512.0" y="18.0" text-anchor="end">rank correlation −0.29, n = 403</text>
 </svg>
 <!-- /fig:madison-rentals-distance --><figcaption>Rent per person for 403 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 116, 105, 67, 38, 22, 26).</figcaption></figure>
           </div></div>
         </li>
-        <li class="cap l" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" data-c="D7263D" data-f="FFB070" style="--i:2">
+        <li class="cap l" id="madison-food-map" data-src="assets/madison-food-map.jpg" data-c="D99A00" data-f="FFE29A" style="--i:2">
+          <figure class="cap-shot"><img src="assets/madison-food-map.jpg" width="1400" height="875" alt="Madison Eats: a grid of photo cards for restaurants, each with an overall score, its rank within its cuisine and a few highlights" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">03 / 06 &middot; Web app, data</p>
+            <h3 aria-label="Madison Eats"><span aria-hidden="true"><span class="ch" style="--c:0">M</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">d</span><span class="ch" style="--c:3">i</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">n</span><span class="ch" style="--c:7">&nbsp;</span><span class="ch" style="--c:8">E</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">t</span><span class="ch" style="--c:11">s</span></span></h3>
+            <p class="hook" data-k style="--k:2"><span class="count" data-to="2292">2,292</span> places to eat in Dane County, scored from six rating sources, with the delivery apps that carry each one.</p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/madison-food-map/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/madison-food-map" target="_blank" rel="noopener">Source</a></p>
+            <p class="built" data-k style="--k:3">Python collectors, vanilla JS, Leaflet, Cloudflare Workers</p>
+            <ul>
+              <li data-k style="--k:4">Photo cards, a map and a delivery-app tab, searchable in English or Chinese, with filters for cuisine, occasion and open now. Each place shows highlights such as its rank within its cuisine.</li>
+              <li data-k style="--k:5"><span class="count" data-to="1160">1,160</span> places can be ordered on at least one app: DoorDash 859, Uber Eats 817, Grubhub 539, EatStreet 274, Toast 182.</li>
+            </ul>
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>Madison Eats</b> &middot; How it works</p>
+            <ul>
+              <li data-k style="--k:1">County food licences and OpenStreetMap give the base list. Collectors for six rating sources, county inspections and r/madisonwi are linked to it by name and address.</li>
+              <li data-k style="--k:2">Sources grade on different curves (Toast averages 4.8 stars, EatStreet 4.0), so each rating becomes a percentile among Madison places on the same app, and places with few ratings are pulled toward the middle.</li>
+              <li data-k style="--k:3">The public page carries no data. A Cloudflare Worker returns one page or one place at a time, behind a human check, daily quotas and a request log.</li>
+            </ul>
+            <figure class="fig" data-k style="--k:4"><!-- fig:madison-food-map-pipeline -->
+<svg viewBox="0 0 520 216" role="img" aria-label="Licences, OpenStreetMap, six rating sources, inspections and Reddit are linked into one list, scored, and served one page at a time by a guarded Worker">
+<g class="n" style="--d:0"><rect x="0" y="4" width="170" height="50" rx="6"/><text x="13" y="26" class="k">Base list</text><text x="13" y="43" class="s">licences + OSM</text></g>
+<g class="n" style="--d:1"><rect x="0" y="70" width="170" height="50" rx="6"/><text x="13" y="92" class="k">Rating sources</text><text x="13" y="109" class="s">6 sources, stars + counts</text></g>
+<g class="n" style="--d:2"><rect x="0" y="136" width="170" height="50" rx="6"/><text x="13" y="158" class="k">Other signals</text><text x="13" y="175" class="s">inspections, Reddit</text></g>
+<g class="n" style="--d:3"><rect x="200" y="70" width="120" height="50" rx="6"/><text x="213" y="92" class="k">link</text><text x="213" y="109" class="s">match stores</text></g>
+<g class="n acc" style="--d:5"><rect x="350" y="70" width="170" height="50" rx="6"/><text x="363" y="92" class="k">score</text><text x="363" y="109" class="s">percentile per app</text></g>
+<g class="n" style="--d:8"><rect x="350" y="150" width="170" height="50" rx="6"/><text x="363" y="172" class="k">Guarded Worker</text><text x="363" y="189" class="s">one page at a time</text></g>
+<path class="e draw" style="--d:2" d="M170.0 29.0 L185.0 29.0 L185.0 95.0 L200.0 95.0" pathLength="1"/>
+<path class="e draw" style="--d:2" d="M170.0 95.0 L200.0 95.0" pathLength="1"/>
+<path class="tip n" style="--d:6" d="M200.0 95.0 L193.7 98.0 L193.7 92.0Z"/>
+<path class="e draw" style="--d:2" d="M170.0 161.0 L185.0 161.0 L185.0 95.0" pathLength="1"/>
+<path class="e acc draw" style="--d:4" d="M320.0 95.0 L350.0 95.0" pathLength="1"/>
+<path class="tip n acc" style="--d:8" d="M350.0 95.0 L343.7 98.0 L343.7 92.0Z"/>
+<path class="e draw" style="--d:7" d="M435.0 120.0 L435.0 150.0" pathLength="1"/>
+<path class="tip n" style="--d:11" d="M435.0 150.0 L432.0 143.7 L438.0 143.7Z"/>
+<text class="s n" style="--d:2" x="0.0" y="208.0" text-anchor="start">Python, on my machine</text>
+<text class="s n" style="--d:8" x="520.0" y="208.0" text-anchor="end">Cloudflare</text>
+</svg>
+<!-- /fig:madison-food-map-pipeline --><figcaption>From collectors to the page. Collection and scoring live in a private repository; the public one holds the page only.</figcaption></figure>
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>Madison Eats</b> &middot; What the data says</p>
+            <ul>
+              <li data-k style="--k:1">The sources agree only loosely. Rank correlations between pairs of sources run from 0.26 to 0.61 for the same places, and Uber Eats and Toast are uncorrelated. The score gives a source more weight when it agrees with the others.</li>
+              <li data-k style="--k:2">Checked against a signal left out of the score, a random award winner outranks a random non-winner 66% of the time with the award bonus removed (168 winners).</li>
+            </ul>
+            <figure class="fig" data-k style="--k:3"><!-- fig:madison-food-map-agreement -->
+<svg viewBox="0 0 520 234" role="img" aria-label="Rank correlation of star ratings between pairs of rating sources for the same places, from 0.26 to 0.61 apart from one pair near zero">
+<text class="s n" style="--d:0" x="138.0" y="12.0" text-anchor="middle">Google</text>
+<text class="s n" style="--d:0" x="222.0" y="12.0" text-anchor="middle">DoorDash</text>
+<text class="s n" style="--d:0" x="306.0" y="12.0" text-anchor="middle">Uber Eats</text>
+<text class="s n" style="--d:0" x="390.0" y="12.0" text-anchor="middle">Grubhub</text>
+<text class="s n" style="--d:0" x="474.0" y="12.0" text-anchor="middle">EatStreet</text>
+<text class="k n" style="--d:0" x="90.0" y="44.0" text-anchor="end">DoorDash</text>
+<text class="k n" style="--d:1" x="102.0" y="38.0" text-anchor="start">0.59</text>
+<text class="s n" style="--d:1" x="174.0" y="38.0" text-anchor="end">n=693</text>
+<rect class="n seg s1" style="--d:2" x="102.0" y="45.0" width="60.7" height="6" rx="2"/>
+<text class="k n" style="--d:1" x="90.0" y="80.0" text-anchor="end">Uber Eats</text>
+<text class="k n" style="--d:2" x="102.0" y="74.0" text-anchor="start">0.42</text>
+<text class="s n" style="--d:2" x="174.0" y="74.0" text-anchor="end">n=652</text>
+<rect class="n seg s1" style="--d:3" x="102.0" y="81.0" width="43.2" height="6" rx="2"/>
+<text class="k n" style="--d:2" x="186.0" y="74.0" text-anchor="start">0.59</text>
+<text class="s n" style="--d:2" x="258.0" y="74.0" text-anchor="end">n=601</text>
+<rect class="n seg s1" style="--d:3" x="186.0" y="81.0" width="60.7" height="6" rx="2"/>
+<text class="k n" style="--d:2" x="90.0" y="116.0" text-anchor="end">Grubhub</text>
+<text class="k n" style="--d:3" x="102.0" y="110.0" text-anchor="start">0.43</text>
+<text class="s n" style="--d:3" x="174.0" y="110.0" text-anchor="end">n=469</text>
+<rect class="n seg s1" style="--d:4" x="102.0" y="117.0" width="44.2" height="6" rx="2"/>
+<text class="k n" style="--d:3" x="186.0" y="110.0" text-anchor="start">0.50</text>
+<text class="s n" style="--d:3" x="258.0" y="110.0" text-anchor="end">n=468</text>
+<rect class="n seg s1" style="--d:4" x="186.0" y="117.0" width="51.4" height="6" rx="2"/>
+<text class="k n" style="--d:3" x="270.0" y="110.0" text-anchor="start">0.44</text>
+<text class="s n" style="--d:3" x="342.0" y="110.0" text-anchor="end">n=449</text>
+<rect class="n seg s1" style="--d:4" x="270.0" y="117.0" width="45.3" height="6" rx="2"/>
+<text class="k n" style="--d:3" x="90.0" y="152.0" text-anchor="end">EatStreet</text>
+<text class="k n" style="--d:4" x="102.0" y="146.0" text-anchor="start">0.61</text>
+<text class="s n" style="--d:4" x="174.0" y="146.0" text-anchor="end">n=188</text>
+<rect class="n seg s1" style="--d:5" x="102.0" y="153.0" width="62.7" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="186.0" y="146.0" text-anchor="start">0.56</text>
+<text class="s n" style="--d:4" x="258.0" y="146.0" text-anchor="end">n=150</text>
+<rect class="n seg s1" style="--d:5" x="186.0" y="153.0" width="57.6" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="270.0" y="146.0" text-anchor="start">0.47</text>
+<text class="s n" style="--d:4" x="342.0" y="146.0" text-anchor="end">n=147</text>
+<rect class="n seg s1" style="--d:5" x="270.0" y="153.0" width="48.3" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="354.0" y="146.0" text-anchor="start">0.33</text>
+<text class="s n" style="--d:4" x="426.0" y="146.0" text-anchor="end">n=126</text>
+<rect class="n seg s1" style="--d:5" x="354.0" y="153.0" width="33.9" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="90.0" y="188.0" text-anchor="end">Toast</text>
+<text class="k n" style="--d:5" x="102.0" y="182.0" text-anchor="start">0.40</text>
+<text class="s n" style="--d:5" x="174.0" y="182.0" text-anchor="end">n=84</text>
+<rect class="n seg s1" style="--d:6" x="102.0" y="189.0" width="41.1" height="6" rx="2"/>
+<text class="k n" style="--d:5" x="186.0" y="182.0" text-anchor="start">0.49</text>
+<text class="s n" style="--d:5" x="258.0" y="182.0" text-anchor="end">n=44</text>
+<rect class="n seg s3" style="--d:6" x="186.0" y="189.0" width="50.4" height="6" rx="2"/>
+<text class="k n" style="--d:5" x="270.0" y="182.0" text-anchor="start">−0.04</text>
+<text class="s n" style="--d:5" x="342.0" y="182.0" text-anchor="end">n=44</text>
+<text class="k n" style="--d:5" x="354.0" y="182.0" text-anchor="start">0.26</text>
+<text class="s n" style="--d:5" x="426.0" y="182.0" text-anchor="end">n=31</text>
+<rect class="n seg s3" style="--d:6" x="354.0" y="189.0" width="26.7" height="6" rx="2"/>
+<text class="s n" style="--d:5" x="438.0" y="188.0" text-anchor="start">n < 20</text>
+<rect class="n seg s1" style="--d:7" x="98.0" y="214.0" width="20.0" height="6" rx="2"/>
+<text class="s n" style="--d:7" x="124.0" y="221.0" text-anchor="start">50 or more places</text>
+<rect class="n seg s3" style="--d:7" x="258.0" y="214.0" width="20.0" height="6" rx="2"/>
+<text class="s n" style="--d:7" x="284.0" y="221.0" text-anchor="start">fewer than 50</text>
+</svg>
+<!-- /fig:madison-food-map-agreement --><figcaption>Rank correlation of star ratings between pairs of sources, over the 2,292 places shown. n is the number of places rated on both.</figcaption></figure>
+          </div></div>
+        </li>
+        <li class="cap r" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" data-c="D7263D" data-f="FFB070" style="--i:3">
           <figure class="cap-shot"><img src="assets/uw-course-lookup.jpg" width="1400" height="897" alt="Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">03 / 05 &middot; Web app + API</p>
+            <p class="cap-n" data-k style="--k:0">04 / 06 &middot; Web app + API</p>
             <h3 aria-label="uw-course-lookup"><span aria-hidden="true"><span class="ch" style="--c:0">u</span><span class="ch" style="--c:1">w</span><span class="ch" style="--c:2">-</span><span class="ch" style="--c:3">c</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">u</span><span class="ch" style="--c:6">r</span><span class="ch" style="--c:7">s</span><span class="ch" style="--c:8">e</span><span class="ch" style="--c:9">-</span><span class="ch" style="--c:10">l</span><span class="ch" style="--c:11">o</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">k</span><span class="ch" style="--c:14">u</span><span class="ch" style="--c:15">p</span></span></h3>
-            <p class="hook" data-k style="--k:2">Grade history, instructor-by-instructor GPA and open seats for all <span class="count" data-to="4438">4,438</span> Fall 2026 UW–Madison courses, in one search box.</p>
+            <p class="hook" data-k style="--k:2">Grade history, instructor GPAs and seats for all <span class="count" data-to="4438">4,438</span> Fall 2026 UW–Madison courses, plus a timetable planner that knows your degree.</p>
             <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></p>
-            <p class="built" data-k style="--k:3">Vanilla JS page, Cloudflare Worker API, SQLite, GitHub Actions CI</p>
+            <p class="built" data-k style="--k:3">Vanilla JS, Cloudflare Workers and Workers AI, SQLite, GitHub Actions CI</p>
             <ul>
               <li data-k style="--k:4">A sticky A&ndash;F band morphs into whichever course you hover, with ticks marking the campus-wide split, so every row reads against the baseline.</li>
-              <li data-k style="--k:5">Lenses such as <em>Instructor matters</em> and <em>Getting harder</em>, a dot plot of every instructor&rsquo;s GPA per course, saved plans and side-by-side compare.</li>
+              <li data-k style="--k:5">Lenses such as <em>Instructor matters</em>, a dot plot of every instructor&rsquo;s GPA, saved plans, side-by-side compare, and an assistant that can search courses and build a timetable.</li>
             </ul>
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; The planner</p>
+            <ul>
+              <li data-k style="--k:1">Pick one of 212 degree programs and drop in your transcript or DARS. The file is read in the browser, not uploaded, and the planner shows what is done, in progress and left.</li>
+              <li data-k style="--k:2">It searches for conflict-free timetables over each course&rsquo;s real enrollment packages (a lecture plus its discussion), honoring early starts, days off and seat availability, and returns six options with an .ics export.</li>
+              <li data-k style="--k:3">If the request is impossible it says why, for example two required courses that always overlap.</li>
+            </ul>
+            <figure class="fig" data-k style="--k:4"><!-- fig:uw-course-planner -->
+<svg viewBox="0 0 520 176" role="img" aria-label="A transcript and a degree program give the unmet requirements; a depth-first solver picks conflict-free sections and returns six timetables">
+<g class="n" style="--d:0"><rect x="0" y="4" width="156" height="50" rx="6"/><text x="13" y="26" class="k">Transcript or DARS</text><text x="13" y="43" class="s">read in the browser</text></g>
+<g class="n" style="--d:1"><rect x="182" y="4" width="156" height="50" rx="6"/><text x="195" y="26" class="k">Degree rules</text><text x="195" y="43" class="s">212 programs</text></g>
+<g class="n" style="--d:2"><rect x="364" y="4" width="156" height="50" rx="6"/><text x="377" y="26" class="k">Still needed</text><text x="377" y="43" class="s">requirement blocks</text></g>
+<g class="n" style="--d:3"><rect x="0" y="112" width="156" height="50" rx="6"/><text x="13" y="134" class="k">Course packages</text><text x="13" y="151" class="s">lecture + discussion</text></g>
+<g class="n acc" style="--d:5"><rect x="182" y="112" width="156" height="50" rx="6"/><text x="195" y="134" class="k">Solver</text><text x="195" y="151" class="s">depth-first search</text></g>
+<g class="n" style="--d:7"><rect x="364" y="112" width="156" height="50" rx="6"/><text x="377" y="134" class="k">Six timetables</text><text x="377" y="151" class="s">conflicts ruled out</text></g>
+<path class="e draw" style="--d:0" d="M156.0 29.0 L182.0 29.0" pathLength="1"/>
+<path class="tip n" style="--d:4" d="M182.0 29.0 L175.7 32.0 L175.7 26.0Z"/>
+<path class="e draw" style="--d:1" d="M338.0 29.0 L364.0 29.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M364.0 29.0 L357.7 32.0 L357.7 26.0Z"/>
+<path class="e draw" style="--d:3" d="M442.0 54.0 L442.0 83.0 L260.0 83.0 L260.0 112.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M260.0 112.0 L257.0 105.7 L263.0 105.7Z"/>
+<path class="e draw" style="--d:4" d="M156.0 137.0 L182.0 137.0" pathLength="1"/>
+<path class="tip n" style="--d:8" d="M182.0 137.0 L175.7 140.0 L175.7 134.0Z"/>
+<path class="e acc draw" style="--d:6" d="M338.0 137.0 L364.0 137.0" pathLength="1"/>
+<path class="tip n acc" style="--d:10" d="M364.0 137.0 L357.7 140.0 L357.7 134.0Z"/>
+</svg>
+<!-- /fig:uw-course-planner --><figcaption>The solver is a plain module with no DOM or network access, so the page, a Web Worker and the Node tests run the same code. It returns the best result it found, not a proof of optimality.</figcaption></figure>
           </div></div>
           <div class="pg"><div class="pg-in">
             <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; How it works</p>
             <ul>
-              <li data-k style="--k:1">The page holds no course data. It asks a Cloudflare Worker for 60 rows at a time, so the first load is two requests and about 29&nbsp;KB.</li>
-              <li data-k style="--k:2">The dataset is built locally and deployed to the Worker. It is not in the repository, and CI fails if a private file lands there.</li>
-              <li data-k style="--k:3">The Worker answers only the site&rsquo;s own origin, rate-limits each client and has no bulk endpoint. That raises the cost of copying everything; it cannot prevent it.</li>
+              <li data-k style="--k:1">The page holds no course data. A Cloudflare Worker serves one page of results at a time to a browser that has passed an invisible human check.</li>
+              <li data-k style="--k:2">Each visitor and each network has a daily allowance counted in course records. Requests are rate-limited and logged, never the assistant conversation, and CI fails if a private file is committed.</li>
+              <li data-k style="--k:3">No endpoint returns the dataset in bulk. That raises the cost of copying everything; it cannot prevent it.</li>
             </ul>
             <figure class="fig" data-k style="--k:4"><!-- fig:uw-course-architecture -->
-<svg viewBox="0 0 520 218" role="img" aria-label="Public sources feed a local SQLite build, which is deployed to a Cloudflare Worker that the GitHub Pages page queries">
+<svg viewBox="0 0 520 218" role="img" aria-label="Public sources feed a local SQLite build, which is deployed to a guarded Cloudflare Worker that the GitHub Pages page queries">
 <g class="n" style="--d:0"><rect x="0" y="4" width="230" height="50" rx="6"/><text x="13" y="26" class="k">Public sources</text><text x="13" y="43" class="s">MadGrades, Enroll, Reddit, chat</text></g>
 <g class="n" style="--d:2"><rect x="0" y="76" width="230" height="50" rx="6"/><text x="13" y="98" class="k">build_db.py</text><text x="13" y="115" class="s">SQLite, never committed</text></g>
-<g class="n acc" style="--d:5"><rect x="290" y="76" width="230" height="50" rx="6"/><text x="303" y="98" class="k">Cloudflare Worker</text><text x="303" y="115" class="s">origin check, rate limit</text></g>
-<g class="n" style="--d:7"><rect x="290" y="160" width="230" height="50" rx="6"/><text x="303" y="182" class="k">Page on GitHub Pages</text><text x="303" y="199" class="s">vanilla JS, 60 rows a time</text></g>
+<g class="n acc" style="--d:5"><rect x="290" y="76" width="230" height="50" rx="6"/><text x="303" y="98" class="k">Cloudflare Worker</text><text x="303" y="115" class="s">session, quota, rate limit</text></g>
+<g class="n" style="--d:7"><rect x="290" y="160" width="230" height="50" rx="6"/><text x="303" y="182" class="k">Page on GitHub Pages</text><text x="303" y="199" class="s">human check, then 60 rows</text></g>
 <path class="e draw" style="--d:1" d="M115.0 54.0 L115.0 76.0" pathLength="1"/>
 <path class="tip n" style="--d:5" d="M115.0 76.0 L112.0 69.7 L118.0 69.7Z"/>
 <path class="e acc draw" style="--d:3" d="M230.0 101.0 L290.0 101.0" pathLength="1"/>
@@ -756,7 +896,7 @@ h2{--w:780}
 <text class="s n" style="--d:4" x="260.0" y="92.0" text-anchor="middle">deploy</text>
 <path class="e draw" style="--d:6" d="M405.0 160.0 L405.0 126.0" pathLength="1"/>
 <path class="tip n" style="--d:10" d="M405.0 126.0 L408.0 132.3 L402.0 132.3Z"/>
-<text class="s n" style="--d:6" x="397.0" y="148.0" text-anchor="end">only from the site's origin</text>
+<text class="s n" style="--d:6" x="397.0" y="148.0" text-anchor="end">signed session on every call</text>
 </svg>
 <!-- /fig:uw-course-architecture --><figcaption>Build and serve. The data files are gitignored; the page, the Worker and the pipeline are public.</figcaption></figure>
           </div></div>
@@ -827,10 +967,10 @@ h2{--w:780}
 <!-- /fig:uw-course-spread --><figcaption>The eight largest gaps between the lowest and highest instructor GPA in one course, among 290 tracked courses. Each instructor has at least 30 graded students.</figcaption></figure>
           </div></div>
         </li>
-        <li class="cap r" id="photo-organizer" data-src="assets/photo-organizer.jpg" data-c="3A8F7E" data-f="E9D2A6" style="--i:3">
+        <li class="cap l" id="photo-organizer" data-src="assets/photo-organizer.jpg" data-c="3A8F7E" data-f="E9D2A6" style="--i:4">
           <figure class="cap-shot"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">04 / 05 &middot; Python, CLIP</p>
+            <p class="cap-n" data-k style="--k:0">05 / 06 &middot; Python, CLIP</p>
             <h3 aria-label="photo-organizer"><span aria-hidden="true"><span class="ch" style="--c:0">p</span><span class="ch" style="--c:1">h</span><span class="ch" style="--c:2">o</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">o</span><span class="ch" style="--c:7">r</span><span class="ch" style="--c:8">g</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">i</span><span class="ch" style="--c:12">z</span><span class="ch" style="--c:13">e</span><span class="ch" style="--c:14">r</span></span></h3>
             <p class="hook" data-k style="--k:2">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
             <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
@@ -907,10 +1047,10 @@ h2{--w:780}
 <!-- /fig:photo-organizer --><figcaption>Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</figcaption></figure>
           </div></div>
         </li>
-        <li class="cap l" id="datamap" data-src="assets/datamap.jpg" data-c="2F6FE0" data-f="A9C8FF" style="--i:4">
+        <li class="cap r" id="datamap" data-src="assets/datamap.jpg" data-c="2F6FE0" data-f="A9C8FF" style="--i:5">
           <figure class="cap-shot"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">05 / 05 &middot; Web app</p>
+            <p class="cap-n" data-k style="--k:0">06 / 06 &middot; Web app</p>
             <h3 aria-label="DataMap"><span aria-hidden="true"><span class="ch" style="--c:0">D</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">t</span><span class="ch" style="--c:3">a</span><span class="ch" style="--c:4">M</span><span class="ch" style="--c:5">a</span><span class="ch" style="--c:6">p</span></span></h3>
             <p class="hook" data-k style="--k:2">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
             <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></p>
@@ -968,6 +1108,25 @@ h2{--w:780}
       <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3></div>
       <ul class="mini">
         <li>
+          <div class="mini-shot"><img src="assets/model-chess.jpg" width="1400" height="875" alt="Model Chess in items mode: a board of AI-model pieces mid-game, a strength ladder from ELIZA to Claude, and the move list" loading="lazy" decoding="async"></div>
+          <div class="mini-tx">
+            <p class="mini-kd">Web game</p>
+            <h4>Model Chess</h4>
+            <p class="mini-ds">Chess where every piece is an AI model. Items mode, a workbench, and a rules engine checked against perft counts.</p>
+            <p class="mini-st">Private repository</p>
+            <p class="mini-cr">Piece silhouettes: cburnett (Colin M.L. Burnett), via lichess.</p>
+          </div>
+        </li>
+        <li class="noshot">
+          <div class="mini-tx">
+            <p class="mini-kd">Game, TypeScript</p>
+            <h4>Dafeiyu</h4>
+            <p class="mini-ds">A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.</p>
+            <p class="mini-st">Private repository</p>
+            <p class="mini-cr">Fan-made and non-commercial; not affiliated with DeepSeek.</p>
+          </div>
+        </li>
+        <li>
           <a class="mini-shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="" loading="lazy" decoding="async"></a>
           <div class="mini-tx">
             <p class="mini-kd">Chrome extension</p>
@@ -983,6 +1142,22 @@ h2{--w:780}
             <h4>tophat-watch</h4>
             <p class="mini-ds">Alerts you when a Top Hat question opens</p>
             <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
+          </div>
+        </li>
+        <li class="noshot">
+          <div class="mini-tx">
+            <p class="mini-kd">Cloudflare Worker module</p>
+            <h4>webgrs-guard</h4>
+            <p class="mini-ds">Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a D1 request log.</p>
+            <p class="mini-st">Private repository</p>
+          </div>
+        </li>
+        <li class="noshot">
+          <div class="mini-tx">
+            <p class="mini-kd">Video pipeline</p>
+            <h4>video-studio</h4>
+            <p class="mini-ds">Storyboard JSON to a finished showcase video: scripted capture, local narration, Remotion.</p>
+            <p class="mini-st">Local project, not published</p>
           </div>
         </li>
       </ul>
@@ -1011,18 +1186,23 @@ h2{--w:780}
   </section>
 
   <section class="block" id="now" aria-labelledby="now-h">
-    <p class="sr"><!-- work:sr -->Tools used in these projects: MapLibre GL, Canvas 2D, MediaRecorder, WebGL, Leaflet, Chrome MV3, Playwright, D3, TopoJSON, OKLCH, SQLite, Cloudflare Workers, GitHub Actions, PyTorch, open_clip, HDBSCAN, FastAPI, OffscreenCanvas. Data sources: Esri World Imagery, Madison Metro GTFS, OpenStreetMap, Nominatim, ntfy, World Bank, US Census, ISO 3166, MadGrades API, Course Search & Enroll API, Reddit via Firecrawl, USGS 3DEP.<!-- /work:sr --></p>
+    <p class="sr"><!-- work:sr -->Tools used in these projects: MapLibre GL, Canvas 2D, MediaRecorder, WebGL, Leaflet, Cloudflare Workers, Cloudflare Turnstile, Chrome MV3, Playwright, D3, TopoJSON, OKLCH, SVG, Stable Diffusion XL, Remotion, Whisper, SQLite, Workers AI, GitHub Actions, pdf.js, Cloudflare D1, PyTorch, open_clip, HDBSCAN, FastAPI, TypeScript, React, Vite, Electron, OffscreenCanvas. Data sources: Esri World Imagery, Madison Metro GTFS, OpenStreetMap, Nominatim, Public Health Madison & Dane County, ntfy, World Bank, US Census, ISO 3166, MadGrades API, Course Search & Enroll API, Reddit via Firecrawl, USGS 3DEP.<!-- /work:sr --></p>
     <!-- work:stack -->
     <script type="application/json" id="stack-data">
 {
   "this site": ["WebGL", "OffscreenCanvas", "Canvas 2D", "USGS 3DEP"],
   "route-animator": ["MapLibre GL", "Canvas 2D", "MediaRecorder", "WebGL", "Esri World Imagery"],
   "Isthmus Rentals": ["Leaflet", "Madison Metro GTFS", "OpenStreetMap", "Nominatim", "Esri World Imagery"],
+  "Madison Eats": ["Leaflet", "Cloudflare Workers", "Cloudflare Turnstile", "OpenStreetMap", "Esri World Imagery", "Public Health Madison & Dane County"],
   "geo-spoof": ["Leaflet", "Chrome MV3", "OpenStreetMap", "Nominatim"],
   "tophat-watch": ["Chrome MV3", "ntfy", "Playwright"],
   "DataMap": ["D3", "TopoJSON", "OKLCH", "Playwright", "World Bank", "US Census", "ISO 3166"],
-  "uw-course-lookup": ["SQLite", "Cloudflare Workers", "GitHub Actions", "MadGrades API", "Course Search & Enroll API", "Reddit via Firecrawl"],
-  "photo-organizer": ["PyTorch", "open_clip", "HDBSCAN", "FastAPI"]
+  "Model Chess": ["SVG", "Playwright", "Stable Diffusion XL"],
+  "video-studio": ["Remotion", "Playwright", "Whisper"],
+  "uw-course-lookup": ["SQLite", "Cloudflare Workers", "Workers AI", "GitHub Actions", "pdf.js", "MadGrades API", "Course Search & Enroll API", "Reddit via Firecrawl"],
+  "webgrs-guard": ["Cloudflare Workers", "Cloudflare D1", "Cloudflare Turnstile"],
+  "photo-organizer": ["PyTorch", "open_clip", "HDBSCAN", "FastAPI"],
+  "Dafeiyu": ["TypeScript", "React", "Vite", "Electron"]
 }
     </script>
     <!-- /work:stack -->
@@ -1032,14 +1212,14 @@ h2{--w:780}
       <div>
         <h2 id="stack-h"><span data-split="char">Stack</span></h2>
         <dl class="kv">
-          <dt>Languages</dt><dd>Python, Java, JavaScript, SQL / SQLite, Bash</dd>
-          <dt>ML</dt><dd>PyTorch, open_clip, HDBSCAN, NumPy</dd>
-          <dt>Web</dt><dd>FastAPI, Flask, vanilla JS, HTML/CSS</dd>
-          <dt>Tooling</dt><dd>Git, Playwright, Linux over SSH, CUDA</dd>
+          <dt>Languages</dt><dd>Python, JavaScript, TypeScript, Java, SQL / SQLite, Bash</dd>
+          <dt>ML</dt><dd>PyTorch, open_clip, HDBSCAN, NumPy, Stable Diffusion XL, Whisper</dd>
+          <dt>Web</dt><dd>Cloudflare Workers (D1, Turnstile), FastAPI, vanilla JS, HTML/CSS</dd>
+          <dt>Tooling</dt><dd>Git, Playwright, Remotion, Linux over SSH, CUDA</dd>
         </dl>
       </div>
       <div>
-        <h2 id="now-h"><span data-split="char">Now</span><span class="when">September 2026</span></h2>
+        <h2 id="now-h"><span data-split="char">Now</span><span class="when">October 2026</span></h2>
         <dl class="kv">
           <dt>Drilling</dt><dd>About 150 pattern-based algorithm problems, grouped by technique rather than count.</dd>
           <dt>Learning</dt><dd>Applied ML in depth: embeddings, retrieval, and the infrastructure around them.</dd>

@@ -24,9 +24,10 @@ def load():
             continue
         d = json.loads(f.read_text(encoding="utf-8"))
         d["_file"] = f.name
-        for k in ("slug", "name", "order", "tier", "kind", "summary", "links"):
+        for k in ("slug", "name", "order", "tier", "kind", "summary"):
             if k not in d:
                 die(f"{f.name}: missing '{k}'")
+        d.setdefault("links", [])
         if d["tier"] not in TIERS:
             die(f"{f.name}: tier must be one of {TIERS}")
         if d["slug"] != f.stem:
@@ -34,8 +35,11 @@ def load():
         for _, href in d["links"]:
             if not href.startswith("https://"):
                 die(f"{f.name}: link {href!r} must be https")
-        if d["tier"] == "minor" and not (d.get("hook") or d.get("summary")):
-            die(f"{f.name}: a minor project needs a hook or a summary")
+        if d["tier"] == "major" and not d["links"]:
+            die(f"{f.name}: a major project needs at least one link")
+        # A project nobody can open (private repository, local only) says so instead of linking
+        if d["tier"] == "minor" and not d["links"] and not d.get("status"):
+            die(f"{f.name}: a minor project without links needs a 'status' such as \"Private repository\"")
         if d["tier"] == "minor" and "shot" in d:
             for key in ("src",):
                 if not (ROOT / d["shot"][key]).is_file():
@@ -106,17 +110,26 @@ def minor_block(specs):
            '      <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3></div>',
            '      <ul class="mini">']
     for d in minor:
-        href = dict(d["links"]).get("Live site") or d["links"][0][1]
+        href = (dict(d["links"]).get("Live site") or d["links"][0][1]) if d["links"] else None
         out.append('        <li>' if "shot" in d else '        <li class="noshot">')
         if "shot" in d:
             sh = d["shot"]
-            out.append(f'          <a class="mini-shot" href="{attr(href)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">'
-                       f'<img src="{attr(sh["src"])}" width="{sh["w"]}" height="{sh["h"]}" alt="" loading="lazy" decoding="async"></a>')
+            img = f'<img src="{attr(sh["src"])}" width="{sh["w"]}" height="{sh["h"]}" alt="{attr(sh.get("alt", ""))}" loading="lazy" decoding="async">'
+            if href:   # a linked card hides its decorative link from screen readers; an unlinked one keeps the alt text
+                img = img.replace(f'alt="{attr(sh.get("alt", ""))}"', 'alt=""')
+                out.append(f'          <a class="mini-shot" href="{attr(href)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{img}</a>')
+            else:
+                out.append(f'          <div class="mini-shot">{img}</div>')
         out.append('          <div class="mini-tx">')
         out.append(f'            <p class="mini-kd">{esc(d["kind"])}</p>')
         out.append(f'            <h4>{esc(d["name"])}</h4>')
         out.append(f'            <p class="mini-ds">{d["summary"]}</p>')
-        out.append(f'            <p class="links">{link_row(d["links"])}</p>')
+        if d["links"]:
+            out.append(f'            <p class="links">{link_row(d["links"])}</p>')
+        else:
+            out.append(f'            <p class="mini-st">{esc(d["status"])}</p>')
+        if d.get("credit"):
+            out.append(f'            <p class="mini-cr">{d["credit"]}</p>')
         out.append("          </div>")
         out.append("        </li>")
     out += ['      </ul>', '    </div>']

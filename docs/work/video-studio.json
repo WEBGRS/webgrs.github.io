@@ -1,0 +1,15 @@
+{
+  "slug": "video-studio",
+  "name": "video-studio",
+  "order": 80,
+  "tier": "minor",
+  "kind": "Video pipeline",
+  "summary": "Storyboard JSON to a finished showcase video: scripted capture, local narration, Remotion.",
+  "status": "Local project, not published",
+  "stack": [
+    "Remotion",
+    "Playwright",
+    "Whisper"
+  ],
+  "data_sources": []
+}

@@ -1,0 +1,47 @@
+{
+  "slug": "madison-food-map",
+  "name": "Madison Eats",
+  "order": 17,
+  "tier": "major",
+  "kind": "Web app, data",
+  "summary": "Every place to eat in Dane County on one map, scored from six rating sources",
+  "color": ["D99A00", "FFE29A"],
+  "shot": {
+    "src": "assets/madison-food-map.jpg", "w": 1400, "h": 875,
+    "alt": "Madison Eats: a grid of photo cards for restaurants, each with an overall score, its rank within its cuisine and a few highlights"
+  },
+  "hook": "<span class=\"count\" data-to=\"2292\">2,292</span> places to eat in Dane County, scored from six rating sources, with the delivery apps that carry each one.",
+  "links": [["Live site", "https://webgrs.github.io/madison-food-map/"], ["Source", "https://github.com/WEBGRS/madison-food-map"]],
+  "built": "Python collectors, vanilla JS, Leaflet, Cloudflare Workers",
+  "pages": [
+    {
+      "notes": [
+        "Photo cards, a map and a delivery-app tab, searchable in English or Chinese, with filters for cuisine, occasion and open now. Each place shows highlights such as its rank within its cuisine.",
+        "<span class=\"count\" data-to=\"1160\">1,160</span> places can be ordered on at least one app: DoorDash 859, Uber Eats 817, Grubhub 539, EatStreet 274, Toast 182."
+      ]
+    },
+    {
+      "title": "How it works",
+      "notes": [
+        "County food licences and OpenStreetMap give the base list. Collectors for six rating sources, county inspections and r/madisonwi are linked to it by name and address.",
+        "Sources grade on different curves (Toast averages 4.8 stars, EatStreet 4.0), so each rating becomes a percentile among Madison places on the same app, and places with few ratings are pulled toward the middle.",
+        "The public page carries no data. A Cloudflare Worker returns one page or one place at a time, behind a human check, daily quotas and a request log."
+      ],
+      "fig": "madison-food-map-pipeline",
+      "caption": "From collectors to the page. Collection and scoring live in a private repository; the public one holds the page only."
+    },
+    {
+      "title": "What the data says",
+      "notes": [
+        "The sources agree only loosely. Rank correlations between pairs of sources run from 0.26 to 0.61 for the same places, and Uber Eats and Toast are uncorrelated. The score gives a source more weight when it agrees with the others.",
+        "Checked against a signal left out of the score, a random award winner outranks a random non-winner 66% of the time with the award bonus removed (168 winners)."
+      ],
+      "fig": "madison-food-map-agreement",
+      "caption": "Rank correlation of star ratings between pairs of sources, over the 2,292 places shown. n is the number of places rated on both."
+    }
+  ],
+  "stack": ["Leaflet", "Cloudflare Workers", "Cloudflare Turnstile", "OpenStreetMap", "Esri World Imagery", "Public Health Madison & Dane County"],
+  "data_sources": ["OpenStreetMap", "Esri World Imagery", "Public Health Madison & Dane County"],
+  "repo": "https://github.com/WEBGRS/madison-food-map",
+  "blurb": "every place to eat in Dane County, scored from six rating sources"
+}
