@@ -6,16 +6,39 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "docs" / "data"   # aggregates written by docs/data/extract_*.py
 CW, SW = 7.5, 6.5          # approx. glyph width at 14px / 12px
 
+# Each figure is drawn once per language. LANG is set by render(); strings go through T(), which looks them up in
+# docs/work/_figs.zh.json. A string with no letters (a number, a percentage) is the same in both languages.
+LANG = "en"
+ZH = {}
+MISSING = set()
+
+
+def T(s, **kw):
+    out = s
+    if LANG == "zh" and re.search(r"[A-Za-z]{2,}", s):
+        if s in ZH:
+            out = ZH[s]
+        else:
+            MISSING.add(s)
+    return out.format(**kw) if kw else out
+
+
+def textw(s, size=14):
+    """Estimated width: CJK glyphs are full width, Latin ones about half."""
+    return sum(size if ord(c) > 0x2E80 else size * .54 for c in s)
+
 
 class Fig:
     def __init__(self, name, w, h, label):
-        self.name, self.w, self.h, self.label, self.parts = name, w, h, label, []
+        self.name, self.w, self.h, self.label, self.parts = name, w, h, T(label), []
 
     def add(self, s):
         self.parts.append(s)
 
-    def node(self, x, y, text, sub=None, d=0, w=None, accent=False):
-        w = w or max(len(text) * CW, len(sub or "") * SW) + 26
+    def node(self, x, y, text, sub=None, d=0, w=None, accent=False, tr=True):
+        if tr:
+            text, sub = T(text), (T(sub) if sub else None)
+        w = w or max(textw(text, 14), textw(sub or "", 12)) + 26
         h = 50 if sub else 34
         cls = "n acc" if accent else "n"
         s = f'<g class="{cls}" style="--d:{d}"><rect x="{x}" y="{y}" width="{w:.0f}" height="{h}" rx="6"/>'
@@ -44,12 +67,14 @@ class Fig:
     def dot(self, x, y, r=3, cls="dot", d=0):
         self.add(f'<circle class="{cls} n" style="--d:{d}" cx="{x:.1f}" cy="{y:.1f}" r="{r}"/>')
 
-    def text(self, x, y, s, cls="s", anchor="start", d=0):
+    def text(self, x, y, s, cls="s", anchor="start", d=0, tr=True):
+        if tr:
+            s = T(s)
         self.add(f'<text class="{cls} n" style="--d:{d}" x="{x:.1f}" y="{y:.1f}" text-anchor="{anchor}">{s}</text>')
 
     def svg(self):
         body = "\n".join(self.parts)
-        return (f'<svg viewBox="0 0 {self.w} {self.h}" role="img" aria-label="{self.label}">\n{body}\n</svg>')
+        return (f'<svg class="{"zh" if LANG == "zh" else "en"}" viewBox="0 0 {self.w} {self.h}" role="img" aria-label="{self.label}">\n{body}\n</svg>')
 
 
 # route-animator: altitude over one flying leg, from altOf() and easeP()
@@ -114,7 +139,7 @@ def courses():
 def photos():
     f = Fig("photo-organizer", 520, 214, "Photos are embedded with CLIP, split into people and scenery, and scenery is clustered")
     f.node(0, 4, "7,346 files", w=206, d=0)
-    f.node(0, 70, "CLIP ViT-B/32", "cached by path, size, mtime", w=206, d=2)
+    f.node(0, 70, "CLIP ViT-B/32", T("cached by path, size, mtime"), w=206, d=2, tr=False)
     f.node(0, 152, "people or scenery", "zero-shot text prompts", w=206, d=4)
     f.edge([(40, 38), (40, 70)], d=1)
     f.edge([(40, 120), (40, 152)], d=3)
@@ -222,9 +247,9 @@ def rentals_provenance():
 def rentals_distance():
     d = load("rentals")["distance"]
     f = Fig("madison-rentals-distance", 520, 236, "Scatter of rent per person against distance from campus for 403 properties, with the median of each distance band rising toward campus")
-    L, R, T, B = 46, 512, 10, 190
+    L, R, Tp, B = 46, 512, 10, 190
     X = lambda mi: L + (R - L) * mi / 2.0
-    Y = lambda usd: B - (B - T) * (usd - 500) / 2000
+    Y = lambda usd: B - (B - Tp) * (usd - 500) / 2000
     for usd in (1000, 1500, 2000):
         f.add(f'<path class="e dash n" style="--d:0" d="M{L} {Y(usd):.1f} L{R} {Y(usd):.1f}"/>')
         f.text(L - 8, Y(usd) + 4, f"${usd:,}", anchor="end", d=0)
@@ -243,7 +268,7 @@ def rentals_distance():
     first, last = d["bands"][0], d["bands"][4]
     f.text(pts[0][0] + 8, pts[0][1] - 9, f"${first['median']:,}", cls="k a halo", d=10)
     f.text(pts[4][0], pts[4][1] + 20, f"${last['median']:,}", cls="k a halo", anchor="middle", d=10)
-    f.text(R, T + 8, f"rank correlation {d['rho_adjusted']:.2f}, n = {d['n']}".replace("-", "−"), anchor="end", d=10)
+    f.text(R, Tp + 8, T("rank correlation {rho}, n = {n}", rho=f"{d['rho_adjusted']:.2f}".replace("-", "−"), n=d["n"]), anchor="end", d=10, tr=False)
     return f
 
 
@@ -251,8 +276,8 @@ def rentals_distance():
 def course_arch():
     f = Fig("uw-course-architecture", 520, 218, "Public sources feed a local SQLite build, which is deployed to a guarded Cloudflare Worker that the GitHub Pages page queries")
     f.node(0, 4, "Public sources", "MadGrades, Enroll, Reddit, chat", w=230, d=0)
-    f.node(0, 76, "build_db.py", "SQLite, never committed", w=230, d=2)
-    f.node(290, 76, "Cloudflare Worker", "session, quota, rate limit", w=230, d=5, accent=True)
+    f.node(0, 76, "build_db.py", T("SQLite, never committed"), w=230, d=2, tr=False)
+    f.node(290, 76, "Cloudflare Worker", T("session, quota, rate limit"), w=230, d=5, accent=True, tr=False)
     f.node(290, 160, "Page on GitHub Pages", "human check, then 60 rows", w=230, d=7)
     f.edge([(115, 54), (115, 76)], d=1)
     f.edge([(230, 101), (290, 101)], d=3, accent=True)
@@ -284,23 +309,23 @@ def course_spread():
     d = load("course")
     rows = d["spread"][:8]
     f = Fig("uw-course-spread", 520, 222, "For eight courses, the span from the lowest to the highest instructor GPA in the same course")
-    L, R, T = 112, 452, 30
+    L, R, Tp = 112, 452, 30
     X = lambda g: L + (R - L) * (g - 1.8) / 2.2
     for g in (2.0, 2.5, 3.0, 3.5, 4.0):
-        f.add(f'<path class="e dash n" style="--d:0" d="M{X(g):.1f} {T - 8} L{X(g):.1f} {T + len(rows) * 21 - 6}"/>')
-        f.text(X(g), T - 14, f"{g:.1f}", anchor="middle", d=0)
-    f.text(520, T - 14, "gap", anchor="end", d=0)
+        f.add(f'<path class="e dash n" style="--d:0" d="M{X(g):.1f} {Tp - 8} L{X(g):.1f} {Tp + len(rows) * 21 - 6}"/>')
+        f.text(X(g), Tp - 14, f"{g:.1f}", anchor="middle", d=0)
+    f.text(520, Tp - 14, "gap", anchor="end", d=0)
     for i, r in enumerate(rows):
-        y = T + i * 21 + 6
-        f.text(L - 12, y + 5, r["code"], cls="k", anchor="end", d=i)
+        y = Tp + i * 21 + 6
+        f.text(L - 12, y + 5, r["code"], cls="k", anchor="end", d=i, tr=False)
         f.edge([(X(r["low"]), y), (X(r["high"]), y)], d=i, accent=True, arrow=False)
         f.dot(X(r["low"]), y, 4.2, "dot", d=i + 3)
         f.dot(X(r["high"]), y, 4.2, "dot hi", d=i + 3)
         f.text(520, y + 5, f"{r['spread']:.2f}", cls="k", anchor="end", d=i + 4)
-    f.dot(L, T + len(rows) * 21 + 18, 4.2, "dot", d=8)
-    f.text(L + 12, T + len(rows) * 21 + 23, "lowest instructor", d=8)
-    f.dot(L + 158, T + len(rows) * 21 + 18, 4.2, "dot hi", d=8)
-    f.text(L + 170, T + len(rows) * 21 + 23, "highest instructor", d=8)
+    f.dot(L, Tp + len(rows) * 21 + 18, 4.2, "dot", d=8)
+    f.text(L + 12, Tp + len(rows) * 21 + 23, "lowest instructor", d=8)
+    f.dot(L + 158, Tp + len(rows) * 21 + 18, 4.2, "dot hi", d=8)
+    f.text(L + 170, Tp + len(rows) * 21 + 23, "highest instructor", d=8)
     return f
 
 
@@ -319,7 +344,7 @@ def food_pipeline():
     f.edge([(320, 95), (350, 95)], d=4, accent=True)
     f.edge([(435, 120), (435, 150)], d=7)
     f.text(0, 208, "Python, on my machine", d=2)
-    f.text(520, 208, "Cloudflare", anchor="end", d=8)
+    f.text(520, 208, "Cloudflare", anchor="end", d=8, tr=False)
     return f
 
 
@@ -332,10 +357,10 @@ def food_agreement():
     f = Fig("madison-food-map-agreement", 520, 234, "Rank correlation of star ratings between pairs of rating sources for the same places, from 0.26 to 0.61 apart from one pair near zero")
     x0, cw, ch = 98, 80, 33
     for c in range(5):
-        f.text(x0 + c * (cw + 4) + cw / 2, 12, names[S[c]], anchor="middle", d=0)
+        f.text(x0 + c * (cw + 4) + cw / 2, 12, names[S[c]], anchor="middle", d=0, tr=False)
     for r in range(5):
         y = 24 + r * (ch + 3)
-        f.text(x0 - 8, y + 20, names[S[r + 1]], cls="k", anchor="end", d=r)
+        f.text(x0 - 8, y + 20, names[S[r + 1]], cls="k", anchor="end", d=r, tr=False)
         for c in range(r + 1):
             x = x0 + c * (cw + 4)
             rho, n = pair.get((S[c], S[r + 1]), (None, 0))
@@ -371,7 +396,15 @@ FIGS = {
 }
 
 
-def render(name):
+def render(name, lang="en"):
+    """One figure as an SVG string, drawn in the given language ('en' or 'zh')."""
+    global LANG
     if name not in FIGS:
         raise KeyError(f"no figure named {name!r} in docs/figures.py (known: {', '.join(FIGS)})")
-    return FIGS[name]().svg()
+    if lang == "zh" and not ZH:
+        ZH.update(json.loads((ROOT / "docs" / "work" / "_figs.zh.json").read_text(encoding="utf-8")))
+    LANG = lang
+    try:
+        return FIGS[name]().svg()
+    finally:
+        LANG = "en"

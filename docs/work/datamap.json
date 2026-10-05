@@ -5,14 +5,28 @@
   "tier": "major",
   "kind": "Web app",
   "summary": "Paste a column of numbers, get a choropleth",
-  "color": ["2F6FE0", "A9C8FF"],
+  "color": [
+    "2F6FE0",
+    "A9C8FF"
+  ],
   "shot": {
-    "src": "assets/datamap.jpg", "w": 1340, "h": 838,
+    "src": "assets/datamap.jpg",
+    "w": 1340,
+    "h": 838,
     "alt": "DataMap showing a choropleth of 2025 GDP by US state"
   },
   "hook": "Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.",
-  "links": [["Live site", "https://webgrs.github.io/datamap/"], ["Source", "https://github.com/WEBGRS/datamap"]],
-  "built": "OKLCH ramps, quantile breaks, no dependencies, Playwright tests",
+  "links": [
+    [
+      "Live site",
+      "https://webgrs.github.io/datamap/"
+    ],
+    [
+      "Source",
+      "https://github.com/WEBGRS/datamap"
+    ]
+  ],
+  "built": "OKLCH ramps, quantile breaks, runs offline, Playwright tests",
   "pages": [
     {
       "notes": [
@@ -23,8 +37,20 @@
       "caption": "Seven-class ramps exactly as DataMap&rsquo;s <code>color.js</code> builds them. Every hue reuses one lightness track, so each column shares an L value."
     }
   ],
-  "stack": ["D3", "TopoJSON", "OKLCH", "Playwright", "World Bank", "US Census", "ISO 3166"],
-  "data_sources": ["World Bank", "US Census", "ISO 3166"],
+  "stack": [
+    "D3",
+    "TopoJSON",
+    "OKLCH",
+    "Playwright",
+    "World Bank",
+    "US Census",
+    "ISO 3166"
+  ],
+  "data_sources": [
+    "World Bank",
+    "US Census",
+    "ISO 3166"
+  ],
   "repo": "https://github.com/WEBGRS/datamap",
   "blurb": "paste data, get a choropleth map"
 }

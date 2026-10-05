@@ -1,0 +1,22 @@
+{
+  "kind": "Python、CLIP",
+  "summary": "在本地 GPU 上整理 310&nbsp;GB 的照片库",
+  "hook": "在本地 GPU 上，把 <span class=\"count\" data-to=\"310\">310</span>&nbsp;GB 的旅行照片库分成人像、风景和按旅行划分的聚类，全程不上传任何东西。",
+  "built": "CLIP ViT-B/32、HDBSCAN、使用 CUDA 的 PyTorch、FastAPI。<span class=\"count\" data-to=\"7346\">7,346</span> 个文件，0 个错误。",
+  "pages": [
+    {
+      "notes": [
+        "用零样本分类区分人像和风景，再按嵌入向量把风景聚成每个地区的旅行级分组。",
+        "RAW 文件和 XMP 附属文件会跟着对应的 JPEG 一起移动；源目录只做复制，从不改动。"
+      ]
+    },
+    {
+      "title": "运作方式",
+      "notes": [
+        "嵌入缓存以路径、大小和修改时间为键，所以对 7 千个文件重跑只要几分钟，而不是几小时。",
+        "本地 FastAPI 网页界面，可以浏览、改名和重新归档，还能通过局域网在手机上访问。"
+      ],
+      "caption": "示意图。只有风景会被聚类；HDBSCAN 无法归入任何旅行的照片会放进 <code>misc</code> 文件夹。"
+    }
+  ]
+}

@@ -60,6 +60,15 @@ On a portrait phone the work section is paged like the desktop one, with the scr
 
 Phones leave out what needs a mouse or a wide screen: the map's elevation readout, the stack constellation and the contact particles. Tablets keep the particles, above the contact heading instead of behind it; without hover they skip the readout too. `?full` brings back the constellation, the particles and the orb by the Now list on a phone, whatever it costs.
 
+## English and Chinese
+
+A button in the header (`中文` / `EN`) switches the whole page between the two languages. The choice is remembered, and `?lang=zh` or `?lang=en` in a link overrides it. Both versions are in the HTML and `<html lang>` decides which one shows (`.en` and `.zh` elements, hidden with CSS), so nothing is translated at run time and the scroll effects, the pinned work stage and the figures need no special cases. The work pages refit when the language changes. Project names, tool names and the hero map labels stay in English.
+
+- A project's text lives in two files: `docs/work/<slug>.json` and `docs/work/<slug>.zh.json`. `build.py` refuses to build if the Chinese file is missing a field the page prints.
+- Figures are drawn once per language; their strings are looked up in `docs/work/_figs.zh.json`, and a missing entry fails the build.
+- The hand-written text in `index.html` (hero, headings, Decisions, Stack, Now, Contact) is written as an `.en` / `.zh` pair in place. Chinese lines that animate use `data-split="char"`, because Chinese has no spaces to split words on.
+- `python docs/check_deck.py --lang zh` pages through the deck in Chinese.
+
 ## Performance and accessibility
 
 The page picks an effects tier on load and logs the choice and the reason to the console:
@@ -111,7 +120,7 @@ Then open <http://localhost:8792>. Opening `index.html` straight from disk works
 
 Every project is one file, `docs/work/<slug>.json`; nothing else in `index.html` is edited by hand.
 
-1. Put the screenshot in `assets/` (16:10 reads best) and write the JSON. `"tier": "major"` gives it pages on the pinned stage, `"tier": "minor"` a small card under it. Flipping the word promotes or demotes a project.
+1. Put the screenshot in `assets/` (16:10 reads best) and write the JSON, plus `<slug>.zh.json` with the Chinese for every field the page prints. `"tier": "major"` gives it pages on the pinned stage, `"tier": "minor"` a small card under it. Flipping the word promotes or demotes a project.
 2. For a major project, give each page its notes and, optionally, a `fig` name and caption. A figure is a function in `docs/figures.py` registered in `FIGS`; if it draws real data, an `extract_*.py` script writes the numbers it needs into `docs/data/`.
 3. `python docs/build.py`, then `python docs/check_deck.py` and look at the new pages in both themes.
 

@@ -1,0 +1,5 @@
+{
+  "kind": "Cloudflare Worker 模块",
+  "summary": "我的数据站共用的请求防护：Turnstile 会话、每日配额、限流、D1 请求日志。",
+  "status": "私有仓库"
+}

@@ -1,6 +1,6 @@
 # Smoke-test the work deck: turn every page, then look at the stack constellation, and report console
 # errors. Needs Playwright with Chromium.
-#   python docs/check_deck.py [--shots DIR] [--url URL]
+#   python docs/check_deck.py [--shots DIR] [--url URL] [--theme dark] [--lang zh] [--size 390x844]
 import argparse, pathlib, sys
 from playwright.sync_api import sync_playwright
 
@@ -9,6 +9,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--shots", help="save a screenshot of every page into this folder")
 ap.add_argument("--url", default=(ROOT / "index.html").as_uri())
 ap.add_argument("--theme", default="light")
+ap.add_argument("--lang", default="en", choices=["en", "zh"])
 ap.add_argument("--size", default="1440x900")
 a = ap.parse_args()
 W, H = map(int, a.size.split("x"))
@@ -26,7 +27,7 @@ with sync_playwright() as p:
     pg.on("console", lambda m: problems.append(f"console {m.type}: {m.text}") if m.type in ("error", "warning") else None)
     pg.on("pageerror", lambda e: problems.append(f"pageerror: {e}"))
     pg.on("requestfailed", lambda r: problems.append(f"request failed: {r.url}"))
-    pg.add_init_script(f"localStorage.setItem('theme', '{a.theme}'); sessionStorage.setItem('intro', '1')")
+    pg.add_init_script(f"localStorage.setItem('theme', '{a.theme}'); localStorage.setItem('lang', '{a.lang}'); sessionStorage.setItem('intro', '1')")
     pg.goto(URL)
     pg.wait_for_timeout(3500)
     pg.evaluate("scrollTo({top: document.getElementById('film').getBoundingClientRect().top + scrollY, behavior: 'instant'})")

@@ -1,0 +1,6 @@
+{
+  "kind": "网页游戏",
+  "summary": "每个棋子都是一个 AI 模型的国际象棋。有道具模式、工作台，规则引擎通过了标准 perft 计数验证。",
+  "status": "私有仓库",
+  "credit": "棋子轮廓：cburnett（Colin M.L. Burnett），来自 lichess。"
+}

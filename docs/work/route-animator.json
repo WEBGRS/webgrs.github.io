@@ -5,18 +5,33 @@
   "tier": "major",
   "kind": "Web app",
   "summary": "Flies a route over a satellite globe and records the video in the browser",
-  "color": ["1996AE", "9BE7F2"],
+  "color": [
+    "1996AE",
+    "9BE7F2"
+  ],
   "shot": {
-    "src": "assets/route-animator.jpg", "w": 1000, "h": 625,
+    "src": "assets/route-animator.jpg",
+    "w": 1000,
+    "h": 625,
     "alt": "A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator",
     "peek": "assets/route-animator-peek.jpg"
   },
   "hook": "The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.",
-  "links": [["Live site", "https://webgrs.github.io/route-animator/"], ["Source", "https://github.com/WEBGRS/route-animator"]],
+  "links": [
+    [
+      "Live site",
+      "https://webgrs.github.io/route-animator/"
+    ],
+    [
+      "Source",
+      "https://github.com/WEBGRS/route-animator"
+    ]
+  ],
   "built": "MapLibre GL, Canvas 2D, in-browser video capture",
   "pages": [
     {
-      "extra": "<div class=\"globe-wrap\" data-k style=\"--k:{k}\" aria-hidden=\"true\"><canvas class=\"globe\" id=\"globe\"></canvas><p class=\"globe-cap\">In blue, the route in the screenshot: Madison, Reykjavík, Paris</p></div>"
+      "extra": "<div class=\"globe-wrap\" data-k style=\"--k:{k}\" aria-hidden=\"true\"><canvas class=\"globe\" id=\"globe\"></canvas><p class=\"globe-cap\">{cap}</p></div>",
+      "extra_cap": "In blue, the route in the screenshot: Madison, Reykjavík, Paris"
     },
     {
       "title": "How it works",
@@ -29,8 +44,16 @@
       "caption": "Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%."
     }
   ],
-  "stack": ["MapLibre GL", "Canvas 2D", "MediaRecorder", "WebGL", "Esri World Imagery"],
-  "data_sources": ["Esri World Imagery"],
+  "stack": [
+    "MapLibre GL",
+    "Canvas 2D",
+    "MediaRecorder",
+    "WebGL",
+    "Esri World Imagery"
+  ],
+  "data_sources": [
+    "Esri World Imagery"
+  ],
   "repo": "https://github.com/WEBGRS/route-animator",
   "blurb": "satellite-globe route videos in the browser"
 }

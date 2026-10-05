@@ -2,6 +2,8 @@
 #   python docs/build.py            write the regions
 #   python docs/build.py --check    exit 1 if a file is out of date (nothing is written)
 # Each region sits between <!-- work:NAME --> and <!-- /work:NAME -->; everything else is hand-written.
+# Every project has an English file (<slug>.json) and a Chinese one (<slug>.zh.json). The page carries both; CSS shows
+# the one that matches <html lang>. Figures are drawn once per language (strings in work/_figs.zh.json).
 import colorsys, html, json, pathlib, re, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -20,9 +22,13 @@ def die(msg):
 def load():
     specs = []
     for f in sorted((HERE / "work").glob("*.json")):
-        if f.name.startswith("_"):
+        if f.name.startswith("_") or f.name.endswith(".zh.json"):
             continue
         d = json.loads(f.read_text(encoding="utf-8"))
+        zf = f.with_name(f.stem + ".zh.json")
+        if not zf.is_file():
+            die(f"{f.name}: needs a Chinese companion {zf.name}")
+        d["zh"] = json.loads(zf.read_text(encoding="utf-8"))
         d["_file"] = f.name
         for k in ("slug", "name", "order", "tier", "kind", "summary"):
             if k not in d:
@@ -67,6 +73,7 @@ def load():
                     die(f"{f.name}: figure '{pg['fig']}' is not registered in docs/figures.py")
                 if "fig" in pg and "caption" not in pg:
                     die(f"{f.name}: a page with a figure needs a 'caption'")
+        check_zh(d)
         specs.append(d)
     slugs = [d["slug"] for d in specs]
     if len(set(slugs)) != len(slugs):
@@ -88,8 +95,43 @@ def hue(hexs):
     return colorsys.rgb_to_hsv(r, g, b)[0] * 360
 
 
+ZH_LINKS = {"Live site": "在线站点", "Source": "源码"}
+
+
+def L(en, zh):
+    """Both versions of a text; the page shows the one that matches <html lang>."""
+    if not zh or zh == en:
+        return en
+    return f'<span class="en">{en}</span><span class="zh" lang="zh-CN">{zh}</span>'
+
+
+def check_zh(d):
+    """The Chinese companion must cover every field the page prints."""
+    z, name = d["zh"], d["_file"]
+    need = ["kind", "summary"] + (["hook"] if d["tier"] == "major" else [])
+    if d.get("status"):
+        need.append("status")
+    if d.get("credit"):
+        need.append("credit")
+    for k in need:
+        if not z.get(k):
+            die(f"{name}: Chinese companion is missing '{k}'")
+    if d["tier"] == "major":
+        zp = z.get("pages", [])
+        if len(zp) != len(d.get("pages") or []):
+            die(f"{name}: Chinese companion needs {len(d.get('pages') or [])} pages, has {len(zp)}")
+        for i, (pg, zq) in enumerate(zip(d.get("pages") or [], zp)):
+            for key in ("title", "caption"):
+                if key in pg and not zq.get(key):
+                    die(f"{name}: page {i + 1} is missing Chinese '{key}'")
+            if len(pg.get("notes", [])) != len(zq.get("notes", [])):
+                die(f"{name}: page {i + 1} needs {len(pg.get('notes', []))} Chinese notes")
+            if "extra_cap" in pg and not zq.get("extra_cap"):
+                die(f"{name}: page {i + 1} is missing Chinese 'extra_cap'")
+
+
 def link_row(links):
-    return "".join(f'<a href="{attr(h)}" target="_blank" rel="noopener">{esc(t)}</a>' for t, h in links)
+    return "".join(f'<a href="{attr(h)}" target="_blank" rel="noopener">{L(esc(t), ZH_LINKS.get(t, t))}</a>' for t, h in links)
 
 
 def index_entries(specs):
@@ -97,7 +139,7 @@ def index_entries(specs):
     out = []
     for i, d in enumerate(feat):
         out.append(f'        <li><a href="#{d["slug"]}" data-i="{i}"><span class="nm">{esc(d["name"])}</span>'
-                   f'<span class="ds">{d["summary"]}</span><span class="kd">{esc(d["kind"])}</span></a></li>')
+                   f'<span class="ds">{L(d["summary"], d["zh"]["summary"])}</span><span class="kd">{L(esc(d["kind"]), esc(d["zh"]["kind"]))}</span></a></li>')
     return "\n".join(out)
 
 
@@ -107,7 +149,7 @@ def minor_block(specs):
     if not minor:
         return ""
     out = ['    <div class="wrap minor">',
-           '      <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3></div>',
+           '      <div class="shead"><h3 id="minor-h"><span class="en" data-split="char">Smaller projects</span><span class="zh" lang="zh-CN" data-split="char">其他小项目</span></h3></div>',
            '      <ul class="mini">']
     for d in minor:
         href = (dict(d["links"]).get("Live site") or d["links"][0][1]) if d["links"] else None
@@ -121,42 +163,44 @@ def minor_block(specs):
             else:
                 out.append(f'          <div class="mini-shot">{img}</div>')
         out.append('          <div class="mini-tx">')
-        out.append(f'            <p class="mini-kd">{esc(d["kind"])}</p>')
+        out.append(f'            <p class="mini-kd">{L(esc(d["kind"]), esc(d["zh"]["kind"]))}</p>')
         out.append(f'            <h4>{esc(d["name"])}</h4>')
-        out.append(f'            <p class="mini-ds">{d["summary"]}</p>')
+        out.append(f'            <p class="mini-ds">{L(d["summary"], d["zh"]["summary"])}</p>')
         if d["links"]:
             out.append(f'            <p class="links">{link_row(d["links"])}</p>')
         else:
-            out.append(f'            <p class="mini-st">{esc(d["status"])}</p>')
+            out.append(f'            <p class="mini-st">{L(esc(d["status"]), esc(d["zh"]["status"]))}</p>')
         if d.get("credit"):
-            out.append(f'            <p class="mini-cr">{d["credit"]}</p>')
+            out.append(f'            <p class="mini-cr">{L(d["credit"], d["zh"]["credit"])}</p>')
         out.append("          </div>")
         out.append("        </li>")
     out += ['      </ul>', '    </div>']
     return "\n".join(out)
 
 
-def notes_html(notes, k):
+def notes_html(notes, zh_notes, k):
     if not notes:
         return [], k
     out = ["            <ul>"]
-    for n in notes:
-        out.append(f'              <li data-k style="--k:{k}">{n}</li>')
+    for n, zn in zip(notes, zh_notes):
+        out.append(f'              <li data-k style="--k:{k}">{L(n, zn)}</li>')
         k += 1
     out.append("            </ul>")
     return out, k
 
 
-def tail_html(pg, k, slug):
+def tail_html(pg, zq, k, slug):
     out = []
     if pg.get("extra"):
-        out.append("            " + pg["extra"].replace("{k}", str(k)))
+        extra = pg["extra"].replace("{k}", str(k)).replace("{cap}", L(pg.get("extra_cap", ""), zq.get("extra_cap", "")))
+        out.append("            " + extra)
         k += 1
     if pg.get("fig"):
         name = pg["fig"]
         out.append(f'            <figure class="fig" data-k style="--k:{k}"><!-- fig:{name} -->')
-        out.append(figures.render(name))
-        out.append(f'<!-- /fig:{name} --><figcaption>{pg["caption"]}</figcaption></figure>')
+        out.append(figures.render(name, "en"))
+        out.append(figures.render(name, "zh"))
+        out.append(f'<!-- /fig:{name} --><figcaption>{L(pg["caption"], zq["caption"])}</figcaption></figure>')
         k += 1
     return out, k
 
@@ -173,22 +217,23 @@ def caps(specs):
         out.append(f'          <figure class="cap-shot"><img src="{attr(sh["src"])}" width="{sh["w"]}" height="{sh["h"]}" '
                    f'alt="{attr(sh["alt"])}" loading="lazy" decoding="async"></figure>')
         pages = d.get("pages") or [{}]
-        for p, pg in enumerate(pages):
+        zpages = d["zh"].get("pages") or [{} for _ in pages]
+        for p, (pg, zq) in enumerate(zip(pages, zpages)):
             out.append('          <div class="pg"><div class="pg-in">')
             if p == 0:
                 letters = "".join(f'<span class="ch" style="--c:{c}">{"&nbsp;" if ch == " " else esc(ch)}</span>' for c, ch in enumerate(d["name"]))
-                out.append(f'            <p class="cap-n" data-k style="--k:0">{i + 1:02d} / {total} &middot; {esc(d["kind"])}</p>')
+                out.append(f'            <p class="cap-n" data-k style="--k:0">{i + 1:02d} / {total} &middot; {L(esc(d["kind"]), esc(d["zh"]["kind"]))}</p>')
                 out.append(f'            <h3 aria-label="{attr(d["name"])}"><span aria-hidden="true">{letters}</span></h3>')
-                out.append(f'            <p class="hook" data-k style="--k:2">{d["hook"]}</p>')
+                out.append(f'            <p class="hook" data-k style="--k:2">{L(d["hook"], d["zh"]["hook"])}</p>')
                 out.append(f'            <p class="links" data-k style="--k:3">{link_row(d["links"])}</p>')
-                out.append(f'            <p class="built" data-k style="--k:3">{d["built"]}</p>')
+                out.append(f'            <p class="built" data-k style="--k:3">{L(d["built"], d["zh"].get("built"))}</p>')
                 k = 4
             else:
-                out.append(f'            <p class="pg-h" data-k style="--k:0"><b>{esc(d["name"])}</b> &middot; {esc(pg.get("title", "How it works"))}</p>')
+                out.append(f'            <p class="pg-h" data-k style="--k:0"><b>{esc(d["name"])}</b> &middot; {L(esc(pg.get("title", "How it works")), esc(zq.get("title", "运作方式")))}</p>')
                 k = 1
-            lines, k = notes_html(pg.get("notes"), k)
+            lines, k = notes_html(pg.get("notes"), zq.get("notes", []), k)
             out += lines
-            lines, k = tail_html(pg, k, d["slug"])
+            lines, k = tail_html(pg, zq, k, d["slug"])
             out += lines
             out.append("          </div></div>")
         out.append("        </li>")
@@ -223,7 +268,9 @@ def sr_sentence(specs):
                 continue
             seen.add(x)
             (srcs if x in data else tools).append(x)
-    return f"Tools used in these projects: {', '.join(tools)}. Data sources: {', '.join(srcs)}."
+    en = f"Tools used in these projects: {', '.join(tools)}. Data sources: {', '.join(srcs)}."
+    zh = f"这些项目用到的工具：{'、'.join(tools)}。数据来源：{'、'.join(srcs)}。"
+    return L(en, zh)
 
 
 def readme_list(specs):

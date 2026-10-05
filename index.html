@@ -20,6 +20,7 @@
 (function () {
   var r = document.documentElement, n = navigator, t = 2, why = 'default', q = /[?&]fx=([012])/.exec(location.search);
   r.classList.add('js');
+  try { var lq = /[?&]lang=(zh|en)/.exec(location.search), ls = lq ? lq[1] : localStorage.getItem('lang'); if (ls === 'zh') r.lang = 'zh-CN'; } catch (e) {}
   try {
     var c = n.hardwareConcurrency || 4, m = n.deviceMemory || 8;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) { t = 0; why = 'reduced motion'; }
@@ -70,12 +71,20 @@ a:hover{text-decoration-thickness:2px}
 .nav{display:flex; gap:24px; margin:0 0 0 auto; padding:0; list-style:none; font-size:.95rem; font-weight:500}
 .nav a{color:var(--muted); text-decoration:none; padding:6px 0; background:linear-gradient(currentColor,currentColor) left bottom/0 1.5px no-repeat; transition:color .2s, background-size .35s var(--out)}
 .nav a:hover,.nav a[aria-current="true"]{color:var(--ink); background-size:100% 1.5px}
-@media (max-width:640px){ .nav{display:none} .tog{margin-left:auto} }
+@media (max-width:640px){ .nav{display:none} .tools{margin-left:auto} }
 .tog{display:grid; place-items:center; width:36px; height:36px; border:1px solid var(--rule); border-radius:50%; background:none; color:var(--ink); cursor:pointer; transition:transform .15s var(--out), border-color .2s}
 .tog:hover{border-color:var(--faint)}
 .tog:active{transform:scale(.94)}
 .tog svg{transition:transform .5s var(--io)}
 :root[data-dark="1"] .tog svg{transform:rotate(180deg)}
+.tools{display:flex; align-items:center; gap:10px}
+.tog.lang{width:auto; min-width:36px; padding:0 12px; border-radius:18px; font:600 .84rem/1 var(--font)}
+
+/* Language: both versions sit in the page and <html lang> picks one. The Chinese one drops the tracking,
+   width axis and capitals that the Latin display type relies on. */
+html:not([lang^="zh"]) .zh, html[lang^="zh"] .en{display:none !important}
+.zh{letter-spacing:normal; font-stretch:100%; text-transform:none}
+html[lang^="zh"]{--font:"Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif}
 
 /* hero */
 .hero{position:relative; overflow:clip; background:var(--paper); min-height:max(640px,100svh); display:flex; flex-direction:column; justify-content:flex-end; padding:96px 0 0}
@@ -113,7 +122,7 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
 /* work index */
 .index{margin:0; padding:0; list-style:none; border-top:1px solid var(--rule)}
 .index a{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) 9.5em; align-items:center; gap:4px 32px; padding:clamp(18px,2.4vw,30px) 0; border-bottom:1px solid var(--rule); color:var(--ink); text-decoration:none; transition:opacity .25s var(--out)}
-.index .nm{font-size:clamp(1.7rem,4.2vw,3.5rem); line-height:1; font-weight:720; letter-spacing:-.035em; font-stretch:100%; white-space:nowrap; transition:font-stretch .5s var(--out), color .2s}
+.index .nm{font-size:clamp(1.7rem,4.2vw,3.5rem); line-height:1; font-weight:720; letter-spacing:-.035em; font-stretch:100%; white-space:nowrap; transition:font-stretch .28s var(--out), color .2s}
 .index .ds{color:var(--muted); line-height:1.45}
 .index .kd{color:var(--faint); font-size:.92rem; text-align:right}
 .index a{position:relative; isolation:isolate}
@@ -408,7 +417,7 @@ footer .src{margin-left:auto}
 @keyframes drop-in{from{opacity:0; transform:translateY(-70%) rotate(-12deg)}to{opacity:1; transform:none}}
 .index .nm .sc{transform-origin:50% 80%}
 .rev.done .sc, .rev.done .sw{animation:none !important; opacity:1 !important}
-.index a.wave .nm .sc{animation:weight-wave .75s ease-in-out both; animation-delay:calc(var(--i) * 30ms)}
+.index a.wave .nm .sc{animation:weight-wave .42s ease-in-out both; animation-delay:calc(var(--i) * 14ms)}
 @keyframes weight-wave{45%{-webkit-text-stroke:.045em currentColor; transform:translateY(-7%)}}
 h2{--w:780}
 
@@ -493,7 +502,7 @@ h2{--w:780}
 @media (hover:none){
   .index a:active::before{clip-path:inset(0); transition-duration:.15s}
   .index a:active .nm{translate:6px 0}
-  .index .nm{transition:translate .3s var(--out), font-stretch .5s var(--out), color .2s}
+  .index .nm{transition:translate .3s var(--out), font-stretch .28s var(--out), color .2s}
   .after a:active, .links a:active{opacity:.55}
 }
 
@@ -529,14 +538,17 @@ h2{--w:780}
   <div class="wrap">
     <a class="mark" href="#top">H. Gu</a>
     <ul class="nav" aria-label="Sections">
-      <li><a href="#work">Work</a></li>
-      <li><a href="#decisions">Decisions</a></li>
-      <li><a href="#now">Now</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#work"><span class="en">Work</span><span class="zh" lang="zh-CN">项目</span></a></li>
+      <li><a href="#decisions"><span class="en">Decisions</span><span class="zh" lang="zh-CN">决定</span></a></li>
+      <li><a href="#now"><span class="en">Now</span><span class="zh" lang="zh-CN">近况</span></a></li>
+      <li><a href="#contact"><span class="en">Contact</span><span class="zh" lang="zh-CN">联系</span></a></li>
     </ul>
+    <div class="tools">
+    <button class="tog lang" id="lang" type="button" aria-label="切换到中文" data-mag><span class="en" lang="zh-CN">中文</span><span class="zh" lang="en">EN</span></button>
     <button class="tog" id="theme" type="button" aria-label="Switch to dark theme" data-mag>
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 1.75a7.25 7.25 0 0 1 0 14.5z" fill="currentColor"/></svg>
     </button>
+    </div>
   </div>
 </header>
 
@@ -545,12 +557,12 @@ h2{--w:780}
     <div class="map" id="map" role="img" aria-label="Contour map of Madison, Wisconsin, with Lake Mendota and Lake Monona"><canvas id="terrain" aria-hidden="true"></canvas></div>
     <div class="wrap">
       <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0">H</span><span class="l" style="--i:1">.</span> <span class="l" style="--i:2">G</span><span class="l" style="--i:3">u</span></span></h1>
-      <p class="lede"><span data-split="word">I build web tools that turn messy public data into maps, schedules, and scores.</span></p>
-      <p class="who" style="--i:0">Computer Science at UW–Madison, class of 2029.</p>
-      <p class="avail" style="--i:1">Open to Summer 2027 SWE and ML internships</p>
+      <p class="lede"><span class="en" data-split="word">I build web tools that turn messy public data into maps, schedules, and scores.</span><span class="zh" lang="zh-CN" data-split="char">我做网页工具，把杂乱的公开数据变成地图、课表和评分。</span></p>
+      <p class="who" style="--i:0"><span class="en">Computer Science at UW–Madison, class of 2029.</span><span class="zh" lang="zh-CN">威斯康星大学麦迪逊分校（UW–Madison）计算机科学专业，2029 届。</span></p>
+      <p class="avail" style="--i:1"><span class="en">Open to Summer 2027 SWE and ML internships</span><span class="zh" lang="zh-CN">正在寻找 2027 年夏季的软件工程和机器学习实习</span></p>
       <div class="legend">
         <div class="scale" aria-hidden="true"><div class="bar-s" id="sbar"><i></i><i></i><i></i><i></i></div><div class="ticks"><span>0</span><span id="shalf"></span><span id="sfull"></span></div></div>
-        <span class="note"><svg class="north" viewBox="0 0 18 30" aria-hidden="true"><text x="9" y="8" text-anchor="middle">N</text><path pathLength="1" d="M9 11 L15 29 L9 25 L3 29 Z"/><path class="fill" d="M9 11 L9 25 L3 29 Z"/></svg><span>Madison, Wisconsin<br>Contour interval 5 m</span></span>
+        <span class="note"><svg class="north" viewBox="0 0 18 30" aria-hidden="true"><text x="9" y="8" text-anchor="middle">N</text><path pathLength="1" d="M9 11 L15 29 L9 25 L3 29 Z"/><path class="fill" d="M9 11 L9 25 L3 29 Z"/></svg><span><span class="en">Madison, Wisconsin<br>Contour interval 5 m</span><span class="zh" lang="zh-CN">威斯康星州麦迪逊<br>等高距 5 米</span></span></span>
         <span class="readout" id="readout" aria-live="off"><b id="ro-a" data-dec="manual">Bascom Hill</b><span id="ro-b" data-dec="manual"><span class="ro-ld"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i></span></span></span>
       </div>
     </div>
@@ -558,15 +570,15 @@ h2{--w:780}
 
   <section class="block" id="work" aria-labelledby="work-h">
     <div class="wrap">
-      <div class="shead"><h2 id="work-h"><span data-split="char">Selected work</span></h2></div>
+      <div class="shead"><h2 id="work-h"><span class="en" data-split="char">Selected work</span><span class="zh" lang="zh-CN" data-split="char">精选项目</span></h2></div>
       <ul class="index" id="index">
         <!-- work:index -->
-        <li><a href="#route-animator" data-i="0"><span class="nm">route-animator</span><span class="ds">Flies a route over a satellite globe and records the video in the browser</span><span class="kd">Web app</span></a></li>
-        <li><a href="#madison-rentals" data-i="1"><span class="nm">Isthmus Rentals</span><span class="ds">Every rental near campus on one map, each value labeled with where it came from</span><span class="kd">Web app, data</span></a></li>
-        <li><a href="#madison-food-map" data-i="2"><span class="nm">Madison Eats</span><span class="ds">Every place to eat in Dane County on one map, scored from six rating sources</span><span class="kd">Web app, data</span></a></li>
-        <li><a href="#uw-course-lookup" data-i="3"><span class="nm">uw-course-lookup</span><span class="ds">Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course</span><span class="kd">Web app + API</span></a></li>
-        <li><a href="#photo-organizer" data-i="4"><span class="nm">photo-organizer</span><span class="ds">Sorts a 310&nbsp;GB photo library on a local GPU</span><span class="kd">Python, CLIP</span></a></li>
-        <li><a href="#datamap" data-i="5"><span class="nm">DataMap</span><span class="ds">Paste a column of numbers, get a choropleth</span><span class="kd">Web app</span></a></li>
+        <li><a href="#route-animator" data-i="0"><span class="nm">route-animator</span><span class="ds"><span class="en">Flies a route over a satellite globe and records the video in the browser</span><span class="zh" lang="zh-CN">在卫星地球上飞出一条路线，并直接在浏览器里录成视频</span></span><span class="kd"><span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></span></a></li>
+        <li><a href="#madison-rentals" data-i="1"><span class="nm">Isthmus Rentals</span><span class="ds"><span class="en">Every rental near campus on one map, each value labeled with where it came from</span><span class="zh" lang="zh-CN">校园周边的租房信息都在一张地图上，每个数值都标明来源</span></span><span class="kd"><span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></span></a></li>
+        <li><a href="#madison-food-map" data-i="2"><span class="nm">Madison Eats</span><span class="ds"><span class="en">Every place to eat in Dane County on one map, scored from six rating sources</span><span class="zh" lang="zh-CN">戴恩县所有能吃饭的地方放在一张地图上，按六个评分来源打分</span></span><span class="kd"><span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></span></a></li>
+        <li><a href="#uw-course-lookup" data-i="3"><span class="nm">uw-course-lookup</span><span class="ds"><span class="en">Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course</span><span class="zh" lang="zh-CN">Fall 2026 全部 UW–Madison 课程的成绩、座位，外加了解你学位要求的课表规划器</span></span><span class="kd"><span class="en">Web app + API</span><span class="zh" lang="zh-CN">网页应用 + API</span></span></a></li>
+        <li><a href="#photo-organizer" data-i="4"><span class="nm">photo-organizer</span><span class="ds"><span class="en">Sorts a 310&nbsp;GB photo library on a local GPU</span><span class="zh" lang="zh-CN">在本地 GPU 上整理 310&nbsp;GB 的照片库</span></span><span class="kd"><span class="en">Python, CLIP</span><span class="zh" lang="zh-CN">Python、CLIP</span></span></a></li>
+        <li><a href="#datamap" data-i="5"><span class="nm">DataMap</span><span class="ds"><span class="en">Paste a column of numbers, get a choropleth</span><span class="zh" lang="zh-CN">粘贴一列数字，得到一张分级统计地图</span></span><span class="kd"><span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></span></a></li>
         <!-- /work:index -->
       </ul>
     </div>
@@ -579,22 +591,22 @@ h2{--w:780}
         <li class="cap l" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg" data-c="1996AE" data-f="9BE7F2" style="--i:0">
           <figure class="cap-shot"><img src="assets/route-animator.jpg" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">01 / 06 &middot; Web app</p>
+            <p class="cap-n" data-k style="--k:0">01 / 06 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
             <h3 aria-label="route-animator"><span aria-hidden="true"><span class="ch" style="--c:0">r</span><span class="ch" style="--c:1">o</span><span class="ch" style="--c:2">u</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">e</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">a</span><span class="ch" style="--c:7">n</span><span class="ch" style="--c:8">i</span><span class="ch" style="--c:9">m</span><span class="ch" style="--c:10">a</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">r</span></span></h3>
-            <p class="hook" data-k style="--k:2">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</p>
-            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener">Source</a></p>
-            <p class="built" data-k style="--k:3">MapLibre GL, Canvas 2D, in-browser video capture</p>
-            <div class="globe-wrap" data-k style="--k:4" aria-hidden="true"><canvas class="globe" id="globe"></canvas><p class="globe-cap">In blue, the route in the screenshot: Madison, Reykjavík, Paris</p></div>
+            <p class="hook" data-k style="--k:2"><span class="en">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</span><span class="zh" lang="zh-CN">收费的路线视频工具要注册账号、加水印、限制导出。这个工具只是一个 HTML 文件。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">MapLibre GL, Canvas 2D, in-browser video capture</span><span class="zh" lang="zh-CN">MapLibre GL、Canvas 2D、浏览器内录制视频</span></p>
+            <div class="globe-wrap" data-k style="--k:4" aria-hidden="true"><canvas class="globe" id="globe"></canvas><p class="globe-cap"><span class="en">In blue, the route in the screenshot: Madison, Reykjavík, Paris</span><span class="zh" lang="zh-CN">蓝线是截图里的那条路线：麦迪逊、雷克雅未克、巴黎</span></p></div>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>route-animator</b> &middot; How it works</p>
+            <p class="pg-h" data-k style="--k:0"><b>route-animator</b> &middot; <span class="en">How it works</span><span class="zh" lang="zh-CN">运作方式</span></p>
             <ul>
-              <li data-k style="--k:1">Flies a vehicle along a multi-stop route over a satellite globe and records it with MediaRecorder. No server ever sees the clip.</li>
-              <li data-k style="--k:2">Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</li>
-              <li data-k style="--k:3">Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</li>
+              <li data-k style="--k:1"><span class="en">Flies a vehicle along a multi-stop route over a satellite globe and records it with MediaRecorder. No server ever sees the clip.</span><span class="zh" lang="zh-CN">让交通工具沿着多站路线飞过卫星地球，并用 MediaRecorder 录制，视频不会经过任何服务器。</span></li>
+              <li data-k style="--k:2"><span class="en">Every vehicle is drawn top-down on canvas, because emoji are three-quarter views and read wrong from directly overhead.</span><span class="zh" lang="zh-CN">每种交通工具都用 canvas 俯视绘制，因为 emoji 是四分之三侧视图，从正上方看会显得别扭。</span></li>
+              <li data-k style="--k:3"><span class="en">Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight.</span><span class="zh" lang="zh-CN">高度按每段航程内的时间变化，而不是按距离；按距离算的话，爬升会吃掉航程的三分之一。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:4"><!-- fig:route-animator -->
-<svg viewBox="0 0 520 230" role="img" aria-label="Altitude over one flying leg, keyed to time versus keyed to eased distance">
+<svg class="en" viewBox="0 0 520 230" role="img" aria-label="Altitude over one flying leg, keyed to time versus keyed to eased distance">
 <path class="e draw" style="--d:0" d="M58.0 180.0 L512.0 180.0" pathLength="1"/>
 <text class="s n" style="--d:0" x="48.0" y="56.0" text-anchor="end">cruise</text>
 <text class="s n" style="--d:0" x="48.0" y="184.0" text-anchor="end">ground</text>
@@ -611,31 +623,48 @@ h2{--w:780}
 <path class="e n" style="--d:7" d="M300 34 L324 34"/>
 <text class="s n" style="--d:7" x="332.0" y="38.0" text-anchor="start">keyed to eased distance</text>
 </svg>
-<!-- /fig:route-animator --><figcaption>Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 230" role="img" aria-label="单段飞行的高度曲线：按时间计算与按缓动距离计算的对比">
+<path class="e draw" style="--d:0" d="M58.0 180.0 L512.0 180.0" pathLength="1"/>
+<text class="s n" style="--d:0" x="48.0" y="56.0" text-anchor="end">巡航</text>
+<text class="s n" style="--d:0" x="48.0" y="184.0" text-anchor="end">地面</text>
+<text class="s n" style="--d:0" x="58.0" y="206.0" text-anchor="start">航段起点</text>
+<text class="s n" style="--d:0" x="512.0" y="206.0" text-anchor="end">航段终点</text>
+<path class="e draw" style="--d:2" d="M58.0 180.0 L59.1 180.0 L60.3 180.0 L61.4 180.0 L62.5 180.0 L63.7 180.0 L64.8 180.0 L65.9 180.0 L67.1 180.0 L68.2 180.0 L69.3 180.0 L70.5 180.0 L71.6 180.0 L72.8 180.0 L73.9 180.0 L75.0 180.0 L76.2 180.0 L77.3 180.0 L78.4 180.0 L79.6 180.0 L80.7 180.0 L81.8 180.0 L83.0 180.0 L84.1 180.0 L85.2 180.0 L86.4 180.0 L87.5 180.0 L88.6 180.0 L89.8 180.0 L90.9 180.0 L92.0 180.0 L93.2 180.0 L94.3 180.0 L95.5 180.0 L96.6 180.0 L97.7 180.0 L98.9 180.0 L100.0 180.0 L101.1 180.0 L102.3 180.0 L103.4 180.0 L104.5 180.0 L105.7 180.0 L106.8 180.0 L107.9 180.0 L109.1 180.0 L110.2 180.0 L111.3 180.0 L112.5 180.0 L113.6 180.0 L114.8 180.0 L115.9 180.0 L117.0 180.0 L118.2 180.0 L119.3 180.0 L120.4 180.0 L121.6 180.0 L122.7 180.0 L123.8 180.0 L125.0 180.0 L126.1 180.0 L127.2 180.0 L128.4 180.0 L129.5 180.0 L130.6 180.0 L131.8 180.0 L132.9 180.0 L134.0 180.0 L135.2 180.0 L136.3 180.0 L137.4 180.0 L138.6 180.0 L139.7 179.9 L140.9 179.9 L142.0 179.7 L143.1 179.6 L144.3 179.4 L145.4 179.1 L146.5 178.8 L147.7 178.5 L148.8 178.1 L149.9 177.7 L151.1 177.2 L152.2 176.6 L153.3 176.1 L154.5 175.4 L155.6 174.7 L156.7 174.0 L157.9 173.2 L159.0 172.3 L160.2 171.4 L161.3 170.5 L162.4 169.5 L163.6 168.4 L164.7 167.2 L165.8 166.0 L167.0 164.8 L168.1 163.5 L169.2 162.1 L170.4 160.7 L171.5 159.2 L172.6 157.6 L173.8 156.0 L174.9 154.3 L176.0 152.6 L177.2 150.8 L178.3 149.0 L179.4 147.1 L180.6 145.1 L181.7 143.1 L182.9 141.1 L184.0 139.0 L185.1 136.8 L186.3 134.6 L187.4 132.4 L188.5 130.1 L189.7 127.8 L190.8 125.4 L191.9 123.0 L193.1 120.5 L194.2 118.1 L195.3 115.6 L196.5 113.0 L197.6 110.5 L198.7 107.9 L199.9 105.4 L201.0 102.8 L202.1 100.2 L203.3 97.6 L204.4 95.0 L205.6 92.5 L206.7 89.9 L207.8 87.4 L209.0 84.8 L210.1 82.4 L211.2 79.9 L212.4 77.5 L213.5 75.2 L214.6 72.9 L215.8 70.7 L216.9 68.6 L218.0 66.5 L219.2 64.6 L220.3 62.7 L221.4 61.0 L222.6 59.4 L223.7 57.9 L224.8 56.5 L226.0 55.3 L227.1 54.3 L228.2 53.5 L229.4 52.8 L230.5 52.3 L231.7 52.1 L232.8 52.0 L233.9 52.0 L235.1 52.0 L236.2 52.0 L237.3 52.0 L238.5 52.0 L239.6 52.0 L240.7 52.0 L241.9 52.0 L243.0 52.0 L244.1 52.0 L245.3 52.0 L246.4 52.0 L247.5 52.0 L248.7 52.0 L249.8 52.0 L250.9 52.0 L252.1 52.0 L253.2 52.0 L254.4 52.0 L255.5 52.0 L256.6 52.0 L257.8 52.0 L258.9 52.0 L260.0 52.0 L261.2 52.0 L262.3 52.0 L263.4 52.0 L264.6 52.0 L265.7 52.0 L266.8 52.0 L268.0 52.0 L269.1 52.0 L270.2 52.0 L271.4 52.0 L272.5 52.0 L273.6 52.0 L274.8 52.0 L275.9 52.0 L277.1 52.0 L278.2 52.0 L279.3 52.0 L280.5 52.0 L281.6 52.0 L282.7 52.0 L283.9 52.0 L285.0 52.0 L286.1 52.0 L287.3 52.0 L288.4 52.0 L289.5 52.0 L290.7 52.0 L291.8 52.0 L292.9 52.0 L294.1 52.0 L295.2 52.0 L296.4 52.0 L297.5 52.0 L298.6 52.0 L299.8 52.0 L300.9 52.0 L302.0 52.0 L303.2 52.0 L304.3 52.0 L305.4 52.0 L306.6 52.0 L307.7 52.0 L308.8 52.0 L310.0 52.0 L311.1 52.0 L312.2 52.0 L313.4 52.0 L314.5 52.0 L315.6 52.0 L316.8 52.0 L317.9 52.0 L319.0 52.0 L320.2 52.0 L321.3 52.0 L322.5 52.0 L323.6 52.0 L324.7 52.0 L325.9 52.0 L327.0 52.0 L328.1 52.0 L329.3 52.0 L330.4 52.0 L331.5 52.0 L332.7 52.0 L333.8 52.0 L334.9 52.0 L336.1 52.0 L337.2 52.0 L338.3 52.1 L339.5 52.3 L340.6 52.8 L341.8 53.5 L342.9 54.3 L344.0 55.3 L345.2 56.5 L346.3 57.9 L347.4 59.4 L348.6 61.0 L349.7 62.7 L350.8 64.6 L352.0 66.5 L353.1 68.6 L354.2 70.7 L355.4 72.9 L356.5 75.2 L357.6 77.5 L358.8 79.9 L359.9 82.4 L361.0 84.8 L362.2 87.4 L363.3 89.9 L364.5 92.5 L365.6 95.0 L366.7 97.6 L367.9 100.2 L369.0 102.8 L370.1 105.4 L371.3 107.9 L372.4 110.5 L373.5 113.0 L374.7 115.6 L375.8 118.1 L376.9 120.5 L378.1 123.0 L379.2 125.4 L380.3 127.8 L381.5 130.1 L382.6 132.4 L383.7 134.6 L384.9 136.8 L386.0 139.0 L387.1 141.1 L388.3 143.1 L389.4 145.1 L390.6 147.1 L391.7 149.0 L392.8 150.8 L394.0 152.6 L395.1 154.3 L396.2 156.0 L397.4 157.6 L398.5 159.2 L399.6 160.7 L400.8 162.1 L401.9 163.5 L403.0 164.8 L404.2 166.0 L405.3 167.2 L406.4 168.4 L407.6 169.5 L408.7 170.5 L409.9 171.4 L411.0 172.3 L412.1 173.2 L413.3 174.0 L414.4 174.7 L415.5 175.4 L416.7 176.1 L417.8 176.6 L418.9 177.2 L420.1 177.7 L421.2 178.1 L422.3 178.5 L423.5 178.8 L424.6 179.1 L425.7 179.4 L426.9 179.6 L428.0 179.7 L429.1 179.9 L430.3 179.9 L431.4 180.0 L432.5 180.0 L433.7 180.0 L434.8 180.0 L436.0 180.0 L437.1 180.0 L438.2 180.0 L439.4 180.0 L440.5 180.0 L441.6 180.0 L442.8 180.0 L443.9 180.0 L445.0 180.0 L446.2 180.0 L447.3 180.0 L448.4 180.0 L449.6 180.0 L450.7 180.0 L451.8 180.0 L453.0 180.0 L454.1 180.0 L455.2 180.0 L456.4 180.0 L457.5 180.0 L458.7 180.0 L459.8 180.0 L460.9 180.0 L462.1 180.0 L463.2 180.0 L464.3 180.0 L465.5 180.0 L466.6 180.0 L467.7 180.0 L468.9 180.0 L470.0 180.0 L471.1 180.0 L472.3 180.0 L473.4 180.0 L474.5 180.0 L475.7 180.0 L476.8 180.0 L478.0 180.0 L479.1 180.0 L480.2 180.0 L481.4 180.0 L482.5 180.0 L483.6 180.0 L484.8 180.0 L485.9 180.0 L487.0 180.0 L488.2 180.0 L489.3 180.0 L490.4 180.0 L491.6 180.0 L492.7 180.0 L493.8 180.0 L495.0 180.0 L496.1 180.0 L497.2 180.0 L498.4 180.0 L499.5 180.0 L500.6 180.0 L501.8 180.0 L502.9 180.0 L504.1 180.0 L505.2 180.0 L506.3 180.0 L507.5 180.0 L508.6 180.0 L509.7 180.0 L510.9 180.0 L512.0 180.0" pathLength="1"/>
+<path class="e acc draw" style="--d:1" d="M58.0 180.0 L59.1 180.0 L60.3 180.0 L61.4 180.0 L62.5 180.0 L63.7 180.0 L64.8 180.0 L65.9 180.0 L67.1 180.0 L68.2 180.0 L69.3 180.0 L70.5 180.0 L71.6 180.0 L72.8 180.0 L73.9 180.0 L75.0 180.0 L76.2 180.0 L77.3 180.0 L78.4 180.0 L79.6 180.0 L80.7 180.0 L81.8 180.0 L83.0 179.8 L84.1 179.6 L85.2 179.3 L86.4 178.9 L87.5 178.4 L88.6 177.9 L89.8 177.3 L90.9 176.6 L92.0 175.8 L93.2 174.9 L94.3 174.0 L95.5 173.1 L96.6 172.0 L97.7 170.9 L98.9 169.7 L100.0 168.5 L101.1 167.2 L102.3 165.9 L103.4 164.5 L104.5 163.0 L105.7 161.5 L106.8 160.0 L107.9 158.4 L109.1 156.8 L110.2 155.1 L111.3 153.4 L112.5 151.6 L113.6 149.9 L114.8 148.0 L115.9 146.2 L117.0 144.3 L118.2 142.4 L119.3 140.5 L120.4 138.5 L121.6 136.5 L122.7 134.5 L123.8 132.5 L125.0 130.5 L126.1 128.5 L127.2 126.4 L128.4 124.3 L129.5 122.3 L130.6 120.2 L131.8 118.1 L132.9 116.0 L134.0 113.9 L135.2 111.8 L136.3 109.7 L137.4 107.7 L138.6 105.6 L139.7 103.5 L140.9 101.5 L142.0 99.5 L143.1 97.5 L144.3 95.5 L145.4 93.5 L146.5 91.5 L147.7 89.6 L148.8 87.7 L149.9 85.8 L151.1 84.0 L152.2 82.1 L153.3 80.4 L154.5 78.6 L155.6 76.9 L156.7 75.2 L157.9 73.6 L159.0 72.0 L160.2 70.5 L161.3 69.0 L162.4 67.5 L163.6 66.1 L164.7 64.8 L165.8 63.5 L167.0 62.3 L168.1 61.1 L169.2 60.0 L170.4 58.9 L171.5 58.0 L172.6 57.1 L173.8 56.2 L174.9 55.4 L176.0 54.7 L177.2 54.1 L178.3 53.6 L179.4 53.1 L180.6 52.7 L181.7 52.4 L182.9 52.2 L184.0 52.0 L185.1 52.0 L186.3 52.0 L187.4 52.0 L188.5 52.0 L189.7 52.0 L190.8 52.0 L191.9 52.0 L193.1 52.0 L194.2 52.0 L195.3 52.0 L196.5 52.0 L197.6 52.0 L198.7 52.0 L199.9 52.0 L201.0 52.0 L202.1 52.0 L203.3 52.0 L204.4 52.0 L205.6 52.0 L206.7 52.0 L207.8 52.0 L209.0 52.0 L210.1 52.0 L211.2 52.0 L212.4 52.0 L213.5 52.0 L214.6 52.0 L215.8 52.0 L216.9 52.0 L218.0 52.0 L219.2 52.0 L220.3 52.0 L221.4 52.0 L222.6 52.0 L223.7 52.0 L224.8 52.0 L226.0 52.0 L227.1 52.0 L228.2 52.0 L229.4 52.0 L230.5 52.0 L231.7 52.0 L232.8 52.0 L233.9 52.0 L235.1 52.0 L236.2 52.0 L237.3 52.0 L238.5 52.0 L239.6 52.0 L240.7 52.0 L241.9 52.0 L243.0 52.0 L244.1 52.0 L245.3 52.0 L246.4 52.0 L247.5 52.0 L248.7 52.0 L249.8 52.0 L250.9 52.0 L252.1 52.0 L253.2 52.0 L254.4 52.0 L255.5 52.0 L256.6 52.0 L257.8 52.0 L258.9 52.0 L260.0 52.0 L261.2 52.0 L262.3 52.0 L263.4 52.0 L264.6 52.0 L265.7 52.0 L266.8 52.0 L268.0 52.0 L269.1 52.0 L270.2 52.0 L271.4 52.0 L272.5 52.0 L273.6 52.0 L274.8 52.0 L275.9 52.0 L277.1 52.0 L278.2 52.0 L279.3 52.0 L280.5 52.0 L281.6 52.0 L282.7 52.0 L283.9 52.0 L285.0 52.0 L286.1 52.0 L287.3 52.0 L288.4 52.0 L289.5 52.0 L290.7 52.0 L291.8 52.0 L292.9 52.0 L294.1 52.0 L295.2 52.0 L296.4 52.0 L297.5 52.0 L298.6 52.0 L299.8 52.0 L300.9 52.0 L302.0 52.0 L303.2 52.0 L304.3 52.0 L305.4 52.0 L306.6 52.0 L307.7 52.0 L308.8 52.0 L310.0 52.0 L311.1 52.0 L312.2 52.0 L313.4 52.0 L314.5 52.0 L315.6 52.0 L316.8 52.0 L317.9 52.0 L319.0 52.0 L320.2 52.0 L321.3 52.0 L322.5 52.0 L323.6 52.0 L324.7 52.0 L325.9 52.0 L327.0 52.0 L328.1 52.0 L329.3 52.0 L330.4 52.0 L331.5 52.0 L332.7 52.0 L333.8 52.0 L334.9 52.0 L336.1 52.0 L337.2 52.0 L338.3 52.0 L339.5 52.0 L340.6 52.0 L341.8 52.0 L342.9 52.0 L344.0 52.0 L345.2 52.0 L346.3 52.0 L347.4 52.0 L348.6 52.0 L349.7 52.0 L350.8 52.0 L352.0 52.0 L353.1 52.0 L354.2 52.0 L355.4 52.0 L356.5 52.0 L357.6 52.0 L358.8 52.0 L359.9 52.0 L361.0 52.0 L362.2 52.0 L363.3 52.0 L364.5 52.0 L365.6 52.0 L366.7 52.0 L367.9 52.0 L369.0 52.0 L370.1 52.0 L371.3 52.0 L372.4 52.0 L373.5 52.0 L374.7 52.0 L375.8 52.0 L376.9 52.0 L378.1 52.0 L379.2 52.0 L380.3 52.0 L381.5 52.0 L382.6 52.0 L383.7 52.0 L384.9 52.0 L386.0 52.0 L387.1 52.2 L388.3 52.4 L389.4 52.7 L390.6 53.1 L391.7 53.6 L392.8 54.1 L394.0 54.7 L395.1 55.4 L396.2 56.2 L397.4 57.1 L398.5 58.0 L399.6 58.9 L400.8 60.0 L401.9 61.1 L403.0 62.3 L404.2 63.5 L405.3 64.8 L406.4 66.1 L407.6 67.5 L408.7 69.0 L409.9 70.5 L411.0 72.0 L412.1 73.6 L413.3 75.2 L414.4 76.9 L415.5 78.6 L416.7 80.4 L417.8 82.1 L418.9 84.0 L420.1 85.8 L421.2 87.7 L422.3 89.6 L423.5 91.5 L424.6 93.5 L425.7 95.5 L426.9 97.5 L428.0 99.5 L429.1 101.5 L430.3 103.5 L431.4 105.6 L432.5 107.7 L433.7 109.7 L434.8 111.8 L436.0 113.9 L437.1 116.0 L438.2 118.1 L439.4 120.2 L440.5 122.3 L441.6 124.3 L442.8 126.4 L443.9 128.5 L445.0 130.5 L446.2 132.5 L447.3 134.5 L448.4 136.5 L449.6 138.5 L450.7 140.5 L451.8 142.4 L453.0 144.3 L454.1 146.2 L455.2 148.0 L456.4 149.9 L457.5 151.6 L458.7 153.4 L459.8 155.1 L460.9 156.8 L462.1 158.4 L463.2 160.0 L464.3 161.5 L465.5 163.0 L466.6 164.5 L467.7 165.9 L468.9 167.2 L470.0 168.5 L471.1 169.7 L472.3 170.9 L473.4 172.0 L474.5 173.1 L475.7 174.0 L476.8 174.9 L478.0 175.8 L479.1 176.6 L480.2 177.3 L481.4 177.9 L482.5 178.4 L483.6 178.9 L484.8 179.3 L485.9 179.6 L487.0 179.8 L488.2 180.0 L489.3 180.0 L490.4 180.0 L491.6 180.0 L492.7 180.0 L493.8 180.0 L495.0 180.0 L496.1 180.0 L497.2 180.0 L498.4 180.0 L499.5 180.0 L500.6 180.0 L501.8 180.0 L502.9 180.0 L504.1 180.0 L505.2 180.0 L506.3 180.0 L507.5 180.0 L508.6 180.0 L509.7 180.0 L510.9 180.0 L512.0 180.0" pathLength="1"/>
+<path class="e dash n acc" style="--d:6" d="M185.1 46 L185.1 180"/>
+<text class="k a n" style="--d:6" x="185.1" y="40.0" text-anchor="middle">28%</text>
+<path class="e dash n" style="--d:6" d="M232.4 46 L232.4 180"/>
+<text class="k n" style="--d:6" x="232.4" y="40.0" text-anchor="middle">38%</text>
+<path class="e acc n" style="--d:7" d="M300 14 L324 14"/>
+<text class="s n" style="--d:7" x="332.0" y="18.0" text-anchor="start">按时间计算（已采用）</text>
+<path class="e n" style="--d:7" d="M300 34 L324 34"/>
+<text class="s n" style="--d:7" x="332.0" y="38.0" text-anchor="start">按缓动距离计算</text>
+</svg>
+<!-- /fig:route-animator --><figcaption><span class="en">Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%.</span><span class="zh" lang="zh-CN">单段航程的高度曲线，由 route-animator 自己的 <code>altOf()</code> 绘出。若按缓动后的距离计算，飞机在航程的 18% 之前一直停在跑道上，到 38% 时仍在爬升。</span></figcaption></figure>
           </div></div>
         </li>
         <li class="cap r" id="madison-rentals" data-src="assets/madison-rentals.jpg" data-c="7A4FD0" data-f="D9C6FF" style="--i:1">
           <figure class="cap-shot"><img src="assets/madison-rentals.jpg" width="1400" height="875" alt="Map of rentals near the UW–Madison campus, with filters and a price-colored pin for each property" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">02 / 06 &middot; Web app, data</p>
+            <p class="cap-n" data-k style="--k:0">02 / 06 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
             <h3 aria-label="Isthmus Rentals"><span aria-hidden="true"><span class="ch" style="--c:0">I</span><span class="ch" style="--c:1">s</span><span class="ch" style="--c:2">t</span><span class="ch" style="--c:3">h</span><span class="ch" style="--c:4">m</span><span class="ch" style="--c:5">u</span><span class="ch" style="--c:6">s</span><span class="ch" style="--c:7">&nbsp;</span><span class="ch" style="--c:8">R</span><span class="ch" style="--c:9">e</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">a</span><span class="ch" style="--c:13">l</span><span class="ch" style="--c:14">s</span></span></h3>
-            <p class="hook" data-k style="--k:2"><span class="count" data-to="605">605</span> rentals near campus on one map, every value labeled by where it came from, every gap turned into a question.</p>
-            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/madison-rentals/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/madison-rentals" target="_blank" rel="noopener">Source</a></p>
-            <p class="built" data-k style="--k:3">Leaflet, vanilla JS, Python collectors, Madison Metro GTFS</p>
+            <p class="hook" data-k style="--k:2"><span class="en"><span class="count" data-to="605">605</span> rentals near campus on one map, every value labeled by where it came from, every gap turned into a question.</span><span class="zh" lang="zh-CN"><span class="count" data-to="605">605</span> 处校园周边的租房放在一张地图上，每个数值都标明来源，每处缺失都变成一个要问的问题。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/madison-rentals/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/madison-rentals" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">Leaflet, vanilla JS, Python collectors, Madison Metro GTFS</span><span class="zh" lang="zh-CN">Leaflet、原生 JS、Python 采集脚本、Madison Metro GTFS</span></p>
             <ul>
-              <li data-k style="--k:4"><span class="count" data-to="2988">2,988</span> units and floor plans from 67 landlords, merged from their own sites and the UW Off-Campus Housing service.</li>
-              <li data-k style="--k:5">Filters for bedrooms, price per person or per unit, distance from a landmark or your own saved places, utilities, pets and laundry. 305 Madison Metro stops come from the city&rsquo;s GTFS feed.</li>
+              <li data-k style="--k:4"><span class="en"><span class="count" data-to="2988">2,988</span> units and floor plans from 67 landlords, merged from their own sites and the UW Off-Campus Housing service.</span><span class="zh" lang="zh-CN"><span class="count" data-to="2988">2,988</span> 个单元和户型，来自 67 位房东，由他们自己的网站和 UW Off-Campus Housing 服务合并而成。</span></li>
+              <li data-k style="--k:5"><span class="en">Filters for bedrooms, price per person or per unit, distance from a landmark or your own saved places, utilities, pets and laundry. 305 Madison Metro stops come from the city&rsquo;s GTFS feed.</span><span class="zh" lang="zh-CN">可按卧室数、每人或整套的价格、到地标或自己保存的地点的距离、水电、宠物和洗衣筛选。305 个 Madison Metro 站点来自市政府的 GTFS 数据。</span></li>
             </ul>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>Isthmus Rentals</b> &middot; How it works</p>
+            <p class="pg-h" data-k style="--k:0"><b>Isthmus Rentals</b> &middot; <span class="en">How it works</span><span class="zh" lang="zh-CN">运作方式</span></p>
             <ul>
-              <li data-k style="--k:1">Every value carries its source: the landlord&rsquo;s site, the UW list, text read out of a description, or nothing. Unknown stays unknown instead of becoming a plausible guess.</li>
-              <li data-k style="--k:2">Landlords quote rent per person or per unit and rarely say which. Each price is tagged with its evidence; when none settles it, the price is read as whichever puts one person between $800 and $1,500.</li>
-              <li data-k style="--k:3">Phone and email of individual landlords who appear only on the UW list stay off the page; it links to that listing instead.</li>
+              <li data-k style="--k:1"><span class="en">Every value carries its source: the landlord&rsquo;s site, the UW list, text read out of a description, or nothing. Unknown stays unknown instead of becoming a plausible guess.</span><span class="zh" lang="zh-CN">每个值都带着来源：房东网站、UW 列表、从描述里读出的文字，或者没有来源。未知就保持未知，不会被一个看似合理的猜测替代。</span></li>
+              <li data-k style="--k:2"><span class="en">Landlords quote rent per person or per unit and rarely say which. Each price is tagged with its evidence; when none settles it, the price is read as whichever puts one person between $800 and $1,500.</span><span class="zh" lang="zh-CN">房东报价有的按人、有的按整套，而且很少说明是哪种。每个价格都标有依据；依据都不成立时，就按能让一个人的租金落在 $800 到 $1,500 之间的那种理解来读。</span></li>
+              <li data-k style="--k:3"><span class="en">Phone and email of individual landlords who appear only on the UW list stay off the page; it links to that listing instead.</span><span class="zh" lang="zh-CN">只出现在 UW 列表上的个人房东，电话和邮箱不会出现在页面上，页面改为链接到那条列表。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:4"><!-- fig:madison-rentals-provenance -->
-<svg viewBox="0 0 520 232" role="img" aria-label="Stacked bars: for seven property fields, the share of 605 properties whose value came from the landlord site, the UW list, a description, or no source">
+<svg class="en" viewBox="0 0 520 232" role="img" aria-label="Stacked bars: for seven property fields, the share of 605 properties whose value came from the landlord site, the UW list, a description, or no source">
 <rect class="n seg s1" style="--d:0" x="0.0" y="2.0" width="11.0" height="11" rx="2"/>
 <text class="s n" style="--d:0" x="17.0" y="12.0" text-anchor="start">landlord site</text>
 <rect class="n seg s2" style="--d:0" x="108.0" y="2.0" width="11.0" height="11" rx="2"/>
@@ -685,16 +714,66 @@ h2{--w:780}
 <rect class="n seg s0" style="--d:7" x="177.7" y="198.0" width="292.3" height="20" rx="2"/>
 <text class="k a n" style="--d:8" x="520.0" y="212.0" text-anchor="end">85%</text>
 </svg>
-<!-- /fig:madison-rentals-provenance --><figcaption>Where seven fields came from across all <span class="count" data-to="605">605</span> properties. Solid is a source, dashed is none. Furnished is unknown for 85% of them, and the map says so.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 232" role="img" aria-label="堆叠条形图：七个房源字段的值，来自房东网站、UW 列表、描述文字，或没有来源的占比（605 处房源）">
+<rect class="n seg s1" style="--d:0" x="0.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="17.0" y="12.0" text-anchor="start">房东网站</text>
+<rect class="n seg s2" style="--d:0" x="108.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="125.0" y="12.0" text-anchor="start">UW 列表</text>
+<rect class="n seg s3" style="--d:0" x="184.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="201.0" y="12.0" text-anchor="start">从描述中读出</text>
+<rect class="n seg s0" style="--d:0" x="352.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="369.0" y="12.0" text-anchor="start">未说明 (%)</text>
+<text class="k n" style="--d:0" x="116.0" y="44.0" text-anchor="end">押金</text>
+<rect class="n seg s1" style="--d:1" x="128.0" y="30.0" width="85.4" height="20" rx="2"/>
+<rect class="n seg s0" style="--d:1" x="213.4" y="30.0" width="256.6" height="20" rx="2"/>
+<text class="k a n" style="--d:2" x="520.0" y="44.0" text-anchor="end">75%</text>
+<text class="k n" style="--d:1" x="116.0" y="72.0" text-anchor="end">水电</text>
+<rect class="n seg s1" style="--d:2" x="128.0" y="58.0" width="110.8" height="20" rx="2"/>
+<rect class="n seg s2" style="--d:2" x="238.8" y="58.0" width="62.2" height="20" rx="2"/>
+<rect class="n seg s3" style="--d:2" x="301.0" y="58.0" width="29.4" height="20" rx="2"/>
+<rect class="n seg s0" style="--d:2" x="330.4" y="58.0" width="139.6" height="20" rx="2"/>
+<text class="k n" style="--d:3" x="520.0" y="72.0" text-anchor="end">41%</text>
+<text class="k n" style="--d:2" x="116.0" y="100.0" text-anchor="end">宠物</text>
+<rect class="n seg s1" style="--d:3" x="128.0" y="86.0" width="147.5" height="20" rx="2"/>
+<rect class="n seg s2" style="--d:3" x="275.5" y="86.0" width="50.9" height="20" rx="2"/>
+<rect class="n seg s3" style="--d:3" x="326.4" y="86.0" width="2.8" height="20" rx="2"/>
+<rect class="n seg s0" style="--d:3" x="329.2" y="86.0" width="140.8" height="20" rx="2"/>
+<text class="k n" style="--d:4" x="520.0" y="100.0" text-anchor="end">41%</text>
+<text class="k n" style="--d:3" x="116.0" y="128.0" text-anchor="end">停车</text>
+<rect class="n seg s1" style="--d:4" x="128.0" y="114.0" width="90.4" height="20" rx="2"/>
+<rect class="n seg s2" style="--d:4" x="218.4" y="114.0" width="71.2" height="20" rx="2"/>
+<rect class="n seg s3" style="--d:4" x="289.7" y="114.0" width="71.8" height="20" rx="2"/>
+<rect class="n seg s0" style="--d:4" x="361.5" y="114.0" width="108.5" height="20" rx="2"/>
+<text class="k n" style="--d:5" x="520.0" y="128.0" text-anchor="end">32%</text>
+<text class="k n" style="--d:4" x="116.0" y="156.0" text-anchor="end">洗衣</text>
+<rect class="n seg s1" style="--d:5" x="128.0" y="142.0" width="67.3" height="20" rx="2"/>
+<rect class="n seg s2" style="--d:5" x="195.3" y="142.0" width="87.6" height="20" rx="2"/>
+<rect class="n seg s3" style="--d:5" x="282.9" y="142.0" width="92.1" height="20" rx="2"/>
+<rect class="n seg s0" style="--d:5" x="375.0" y="142.0" width="95.0" height="20" rx="2"/>
+<text class="k n" style="--d:6" x="520.0" y="156.0" text-anchor="end">28%</text>
+<text class="k n" style="--d:5" x="116.0" y="184.0" text-anchor="end">空调</text>
+<rect class="n seg s1" style="--d:6" x="128.0" y="170.0" width="30.5" height="20" rx="2"/>
+<rect class="n seg s2" style="--d:6" x="158.5" y="170.0" width="41.8" height="20" rx="2"/>
+<rect class="n seg s3" style="--d:6" x="200.4" y="170.0" width="46.4" height="20" rx="2"/>
+<rect class="n seg s0" style="--d:6" x="246.7" y="170.0" width="223.3" height="20" rx="2"/>
+<text class="k a n" style="--d:7" x="520.0" y="184.0" text-anchor="end">65%</text>
+<text class="k n" style="--d:6" x="116.0" y="212.0" text-anchor="end">带家具</text>
+<rect class="n seg s1" style="--d:7" x="128.0" y="198.0" width="5.7" height="20" rx="2"/>
+<rect class="n seg s2" style="--d:7" x="133.7" y="198.0" width="14.1" height="20" rx="2"/>
+<rect class="n seg s3" style="--d:7" x="147.8" y="198.0" width="30.0" height="20" rx="2"/>
+<rect class="n seg s0" style="--d:7" x="177.7" y="198.0" width="292.3" height="20" rx="2"/>
+<text class="k a n" style="--d:8" x="520.0" y="212.0" text-anchor="end">85%</text>
+</svg>
+<!-- /fig:madison-rentals-provenance --><figcaption><span class="en">Where seven fields came from across all <span class="count" data-to="605">605</span> properties. Solid is a source, dashed is none. Furnished is unknown for 85% of them, and the map says so.</span><span class="zh" lang="zh-CN">七个字段的来源分布，覆盖全部 <span class="count" data-to="605">605</span> 处房源。实线是有来源，虚线是没有。有 85% 的房源不知道有没有家具，地图如实标出。</span></figcaption></figure>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>Isthmus Rentals</b> &middot; What the data says</p>
+            <p class="pg-h" data-k style="--k:0"><b>Isthmus Rentals</b> &middot; <span class="en">What the data says</span><span class="zh" lang="zh-CN">数据说了什么</span></p>
             <ul>
-              <li data-k style="--k:1">Closer costs more, and not just because of bedrooms: median rent per person is $1,200 within 0.4 mi of Bascom Hall and $978 at 1&ndash;1.25 mi.</li>
-              <li data-k style="--k:2">Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.29 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001).</li>
+              <li data-k style="--k:1"><span class="en">Closer costs more, and not just because of bedrooms: median rent per person is $1,200 within 0.4 mi of Bascom Hall and $978 at 1&ndash;1.25 mi.</span><span class="zh" lang="zh-CN">离校园越近越贵，而且不只是卧室数的缘故：Bascom Hall 0.4 英里内的人均租金中位数是 $1,200，在 1 到 1.25 英里处是 $978。</span></li>
+              <li data-k style="--k:2"><span class="en">Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.29 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001).</span><span class="zh" lang="zh-CN">每处房源只算一个点，取它的中位数报价；合租间不计入。把每个租金除以同卧室数的中位数之后，秩相关为 &minus;0.29（置换检验 p &lt; 0.001）。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:3"><!-- fig:madison-rentals-distance -->
-<svg viewBox="0 0 520 236" role="img" aria-label="Scatter of rent per person against distance from campus for 403 properties, with the median of each distance band rising toward campus">
+<svg class="en" viewBox="0 0 520 236" role="img" aria-label="Scatter of rent per person against distance from campus for 403 properties, with the median of each distance band rising toward campus">
 <path class="e dash n" style="--d:0" d="M46 145.0 L512 145.0"/>
 <text class="s n" style="--d:0" x="38.0" y="149.0" text-anchor="end">$1,000</text>
 <path class="e dash n" style="--d:0" d="M46 100.0 L512 100.0"/>
@@ -723,31 +802,60 @@ h2{--w:780}
 <text class="k a halo n" style="--d:10" x="308.1" y="167.0" text-anchor="middle">$978</text>
 <text class="s n" style="--d:10" x="512.0" y="18.0" text-anchor="end">rank correlation −0.29, n = 403</text>
 </svg>
-<!-- /fig:madison-rentals-distance --><figcaption>Rent per person for 403 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 116, 105, 67, 38, 22, 26).</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 236" role="img" aria-label="403 处房源的人均租金与到校园距离的散点图，各距离段的中位数越靠近校园越高">
+<path class="e dash n" style="--d:0" d="M46 145.0 L512 145.0"/>
+<text class="s n" style="--d:0" x="38.0" y="149.0" text-anchor="end">$1,000</text>
+<path class="e dash n" style="--d:0" d="M46 100.0 L512 100.0"/>
+<text class="s n" style="--d:0" x="38.0" y="104.0" text-anchor="end">$1,500</text>
+<path class="e dash n" style="--d:0" d="M46 55.0 L512 55.0"/>
+<text class="s n" style="--d:0" x="38.0" y="59.0" text-anchor="end">$2,000</text>
+<path class="e draw" style="--d:0" d="M46.0 190.0 L512.0 190.0" pathLength="1"/>
+<text class="s n" style="--d:0" x="46.0" y="208.0" text-anchor="middle">0</text>
+<text class="s n" style="--d:0" x="162.5" y="208.0" text-anchor="middle">0.5</text>
+<text class="s n" style="--d:0" x="279.0" y="208.0" text-anchor="middle">1</text>
+<text class="s n" style="--d:0" x="395.5" y="208.0" text-anchor="middle">1.5</text>
+<text class="s n" style="--d:0" x="512.0" y="208.0" text-anchor="middle">2</text>
+<text class="s n" style="--d:0" x="279.0" y="228.0" text-anchor="middle">距 Bascom Hall 的英里数</text>
+<path class="pts n" style="--d:1" d="M87.9 100.7h0M108.9 149.7h0M118.2 138.3h0M129.9 136.0h0M132.2 116.2h0M134.5 127.0h0M134.5 90.5h0M136.9 138.1h0M136.9 136.7h0M136.9 109.6h0M139.2 148.6h0M139.2 118.5h0M141.5 171.3h0M143.9 152.1h0M143.9 124.8h0M143.9 120.5h0M143.9 111.5h0M146.2 151.8h0M146.2 136.5h0M146.2 120.5h0M146.2 109.5h0M148.5 136.0h0M148.5 116.7h0M150.9 140.3h0M150.9 111.7h0M153.2 144.1h0M153.2 104.5h0M155.5 144.1h0M155.5 140.4h0M155.5 136.2h0M157.8 172.4h0M157.8 120.3h0M160.2 131.9h0M162.5 141.8h0M162.5 128.8h0M164.8 166.2h0M167.2 165.9h0M167.2 132.8h0M167.2 106.4h0M171.8 133.8h0M174.2 174.7h0M176.5 141.8h0M176.5 92.6h0M178.8 136.0h0M181.1 151.0h0M183.5 162.5h0M183.5 138.3h0M183.5 131.6h0M183.5 103.4h0M185.8 135.8h0M185.8 112.6h0M188.1 119.8h0M190.5 151.1h0M190.5 131.5h0M192.8 158.5h0M192.8 129.3h0M195.1 140.6h0M197.5 157.7h0M197.5 55.4h0M199.8 133.1h0M202.1 151.1h0M202.1 143.7h0M202.1 94.2h0M204.4 133.3h0M206.8 145.1h0M209.1 143.3h0M209.1 88.8h0M211.4 86.6h0M213.8 142.8h0M216.1 136.2h0M218.4 172.7h0M218.4 136.0h0M220.8 153.9h0M220.8 112.4h0M223.1 151.1h0M223.1 124.8h0M225.4 140.5h0M225.4 100.2h0M227.7 145.0h0M227.7 145.0h0M230.1 154.1h0M230.1 145.0h0M230.1 131.9h0M230.1 102.0h0M234.7 145.0h0M234.7 101.8h0M237.1 151.0h0M237.1 133.8h0M239.4 171.3h0M239.4 129.9h0M241.7 138.2h0M244.0 158.6h0M244.0 147.9h0M246.4 134.0h0M248.7 160.5h0M251.0 65.1h0M260.4 124.8h0M262.7 111.2h0M265.0 170.8h0M265.0 101.3h0M269.7 154.2h0M272.0 175.1h0M272.0 141.4h0M274.3 158.5h0M274.3 94.2h0M276.7 145.2h0M279.0 158.1h0M279.0 131.7h0M281.3 146.3h0M286.0 161.9h0M288.3 178.3h0M293.0 74.3h0M300.0 129.7h0M311.6 157.4h0M320.9 170.9h0M323.3 109.5h0M325.6 73.5h0M330.3 170.7h0M334.9 124.8h0M339.6 75.2h0M346.6 143.1h0M351.2 54.3h0M358.2 97.3h0M379.2 172.1h0M381.5 143.4h0M409.5 91.5h0M421.1 154.0h0M442.1 173.1h0M451.4 171.3h0M467.7 101.3h0M493.4 158.5h0M495.7 147.2h0M500.3 151.8h0M507.3 149.5h0M509.7 123.8h0"/>
+<path class="pts n" style="--d:2" d="M92.6 100.0h0M113.6 131.6h0M127.5 131.9h0M132.2 124.3h0M134.5 154.7h0M134.5 120.2h0M136.9 154.0h0M136.9 138.1h0M136.9 127.0h0M136.9 105.9h0M139.2 128.3h0M139.2 106.8h0M141.5 127.0h0M143.9 151.8h0M143.9 121.2h0M143.9 111.7h0M143.9 109.5h0M146.2 151.1h0M146.2 134.2h0M146.2 109.5h0M148.5 155.6h0M148.5 127.0h0M148.5 104.3h0M150.9 127.0h0M153.2 161.9h0M153.2 144.1h0M155.5 156.3h0M155.5 144.1h0M155.5 139.4h0M155.5 136.2h0M157.8 129.8h0M160.2 147.2h0M160.2 115.8h0M162.5 134.7h0M162.5 91.5h0M164.8 150.2h0M167.2 142.1h0M167.2 118.5h0M169.5 145.7h0M171.8 133.1h0M176.5 153.3h0M176.5 125.7h0M178.8 149.5h0M178.8 104.6h0M181.1 128.1h0M183.5 155.5h0M183.5 131.9h0M183.5 124.1h0M185.8 162.5h0M185.8 131.6h0M188.1 167.6h0M188.1 106.8h0M190.5 143.9h0M190.5 124.3h0M192.8 155.8h0M195.1 151.8h0M195.1 132.8h0M197.5 145.4h0M199.8 145.9h0M199.8 99.5h0M202.1 147.2h0M202.1 142.8h0M202.1 34.8h0M206.8 153.5h0M206.8 139.6h0M209.1 120.5h0M211.4 157.0h0M213.8 145.2h0M213.8 136.4h0M216.1 130.4h0M218.4 154.2h0M218.4 134.9h0M220.8 139.7h0M223.1 172.9h0M223.1 145.0h0M225.4 146.3h0M225.4 123.4h0M227.7 155.8h0M227.7 145.0h0M227.7 137.7h0M230.1 148.4h0M230.1 144.8h0M230.1 119.6h0M232.4 136.2h0M234.7 109.0h0M237.1 161.9h0M237.1 149.2h0M237.1 108.5h0M239.4 149.6h0M239.4 122.7h0M241.7 131.9h0M244.0 157.8h0M244.0 143.9h0M246.4 118.0h0M251.0 104.7h0M253.4 133.3h0M260.4 122.5h0M265.0 171.3h0M265.0 166.2h0M269.7 164.1h0M269.7 100.0h0M272.0 163.2h0M272.0 138.7h0M274.3 157.2h0M276.7 182.2h0M276.7 107.6h0M279.0 153.6h0M279.0 128.3h0M281.3 123.9h0M286.0 150.8h0M288.3 168.2h0M295.3 16.3h0M302.3 115.8h0M313.9 156.3h0M323.3 154.2h0M325.6 157.0h0M325.6 28.0h0M330.3 157.2h0M337.2 165.2h0M341.9 155.6h0M348.9 124.8h0M355.9 172.4h0M376.9 147.5h0M379.2 155.3h0M395.5 140.5h0M414.1 66.2h0M425.8 80.7h0M442.1 72.1h0M456.1 91.0h0M474.7 158.7h0M495.7 161.9h0M500.3 151.8h0M505.0 151.8h0M507.3 145.0h0"/>
+<path class="pts n" style="--d:3" d="M99.6 95.5h0M115.9 102.7h0M129.9 165.2h0M132.2 116.7h0M134.5 154.2h0M134.5 116.7h0M136.9 138.1h0M136.9 138.1h0M136.9 122.0h0M139.2 158.7h0M139.2 122.0h0M139.2 79.3h0M141.5 118.5h0M143.9 125.8h0M143.9 120.5h0M143.9 111.7h0M143.9 109.5h0M146.2 138.0h0M146.2 133.8h0M146.2 109.5h0M148.5 136.7h0M148.5 120.5h0M150.9 151.2h0M150.9 122.5h0M153.2 145.1h0M153.2 115.8h0M155.5 156.3h0M155.5 142.3h0M155.5 139.2h0M155.5 121.4h0M157.8 122.7h0M160.2 140.9h0M162.5 158.7h0M162.5 131.6h0M164.8 174.2h0M164.8 116.9h0M167.2 140.5h0M167.2 114.9h0M171.8 145.0h0M171.8 129.2h0M176.5 147.3h0M176.5 120.2h0M178.8 145.0h0M181.1 164.5h0M181.1 86.0h0M183.5 145.4h0M183.5 131.6h0M183.5 112.6h0M185.8 155.8h0M185.8 123.8h0M188.1 126.2h0M190.5 159.5h0M190.5 143.9h0M192.8 164.1h0M192.8 145.1h0M195.1 144.1h0M197.5 163.0h0M197.5 132.9h0M199.8 145.9h0M202.1 156.7h0M202.1 146.4h0M202.1 127.0h0M204.4 136.4h0M206.8 149.1h0M209.1 149.7h0M209.1 116.7h0M211.4 146.9h0M213.8 145.1h0M216.1 136.4h0M216.1 122.5h0M218.4 151.5h0M220.8 153.9h0M220.8 138.8h0M223.1 172.1h0M223.1 127.2h0M225.4 145.0h0M225.4 115.8h0M227.7 150.6h0M227.7 145.0h0M227.7 114.6h0M230.1 145.5h0M230.1 138.2h0M230.1 115.8h0M234.7 168.9h0M234.7 106.8h0M237.1 161.7h0M237.1 146.3h0M239.4 171.3h0M239.4 131.5h0M241.7 150.2h0M244.0 159.5h0M244.0 157.1h0M246.4 170.5h0M246.4 115.8h0M251.0 78.8h0M260.4 152.9h0M262.7 125.0h0M265.0 170.9h0M265.0 156.2h0M269.7 157.8h0M269.7 50.9h0M272.0 154.2h0M272.0 115.5h0M274.3 142.3h0M276.7 150.8h0M279.0 168.5h0M279.0 144.2h0M281.3 149.5h0M283.7 145.1h0M286.0 47.3h0M293.0 172.0h0M300.0 184.5h0M307.0 180.7h0M318.6 57.5h0M323.3 140.7h0M325.6 147.7h0M327.9 113.9h0M330.3 142.8h0M339.6 103.6h0M341.9 126.1h0M351.2 168.6h0M355.9 118.0h0M376.9 147.3h0M381.5 172.1h0M402.5 136.0h0M418.8 172.2h0M430.4 140.7h0M449.1 151.8h0M465.4 95.5h0M474.7 29.3h0M495.7 151.8h0M500.3 151.8h0M507.3 151.8h0M509.7 143.9h0"/>
+<path class="e acc draw" style="--d:5" d="M92.6 127.0 L162.5 133.5 L209.1 143.7 L255.7 145.2 L308.1 147.0 L378.0 141.8 L465.4 151.8" pathLength="1"/>
+<circle class="dot hi n" style="--d:9" cx="92.6" cy="127.0" r="3.8"/>
+<circle class="dot hi n" style="--d:9" cx="162.5" cy="133.5" r="3.8"/>
+<circle class="dot hi n" style="--d:9" cx="209.1" cy="143.7" r="3.8"/>
+<circle class="dot hi n" style="--d:9" cx="255.7" cy="145.2" r="3.8"/>
+<circle class="dot hi n" style="--d:9" cx="308.1" cy="147.0" r="3.8"/>
+<circle class="dot hi n" style="--d:9" cx="378.0" cy="141.8" r="3.8"/>
+<circle class="dot hi n" style="--d:9" cx="465.4" cy="151.8" r="3.8"/>
+<text class="k a halo n" style="--d:10" x="100.6" y="118.0" text-anchor="start">$1,200</text>
+<text class="k a halo n" style="--d:10" x="308.1" y="167.0" text-anchor="middle">$978</text>
+<text class="s n" style="--d:10" x="512.0" y="18.0" text-anchor="end">秩相关 −0.29，n = 403</text>
+</svg>
+<!-- /fig:madison-rentals-distance --><figcaption><span class="en">Rent per person for 403 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 116, 105, 67, 38, 22, 26).</span><span class="zh" lang="zh-CN">403 处房源的人均租金，仅含 2026&ndash;27 或 2027&ndash;28 学年、1&ndash;5 间卧室且有标价的报价。蓝线是各距离段的中位数（n = 29、116、105、67、38、22、26）。</span></figcaption></figure>
           </div></div>
         </li>
         <li class="cap l" id="madison-food-map" data-src="assets/madison-food-map.jpg" data-c="D99A00" data-f="FFE29A" style="--i:2">
           <figure class="cap-shot"><img src="assets/madison-food-map.jpg" width="1400" height="875" alt="Madison Eats: a grid of photo cards for restaurants, each with an overall score, its rank within its cuisine and a few highlights" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">03 / 06 &middot; Web app, data</p>
+            <p class="cap-n" data-k style="--k:0">03 / 06 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
             <h3 aria-label="Madison Eats"><span aria-hidden="true"><span class="ch" style="--c:0">M</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">d</span><span class="ch" style="--c:3">i</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">n</span><span class="ch" style="--c:7">&nbsp;</span><span class="ch" style="--c:8">E</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">t</span><span class="ch" style="--c:11">s</span></span></h3>
-            <p class="hook" data-k style="--k:2"><span class="count" data-to="2292">2,292</span> places to eat in Dane County, scored from six rating sources, with the delivery apps that carry each one.</p>
-            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/madison-food-map/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/madison-food-map" target="_blank" rel="noopener">Source</a></p>
-            <p class="built" data-k style="--k:3">Python collectors, vanilla JS, Leaflet, Cloudflare Workers</p>
+            <p class="hook" data-k style="--k:2"><span class="en"><span class="count" data-to="2292">2,292</span> places to eat in Dane County, scored from six rating sources, with the delivery apps that carry each one.</span><span class="zh" lang="zh-CN"><span class="count" data-to="2292">2,292</span> 家戴恩县的餐饮店，按六个评分来源打分，并标出各家上了哪些外卖平台。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/madison-food-map/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/madison-food-map" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">Python collectors, vanilla JS, Leaflet, Cloudflare Workers</span><span class="zh" lang="zh-CN">Python 采集脚本、原生 JS、Leaflet、Cloudflare Workers</span></p>
             <ul>
-              <li data-k style="--k:4">Photo cards, a map and a delivery-app tab, searchable in English or Chinese, with filters for cuisine, occasion and open now. Each place shows highlights such as its rank within its cuisine.</li>
-              <li data-k style="--k:5"><span class="count" data-to="1160">1,160</span> places can be ordered on at least one app: DoorDash 859, Uber Eats 817, Grubhub 539, EatStreet 274, Toast 182.</li>
+              <li data-k style="--k:4"><span class="en">Photo cards, a map and a delivery-app tab, searchable in English or Chinese, with filters for cuisine, occasion and open now. Each place shows highlights such as its rank within its cuisine.</span><span class="zh" lang="zh-CN">照片卡片、地图和外卖平台页，支持中英文搜索，可按菜系、场合和营业中筛选。每家店会显示几条亮点，比如它在本菜系中的排名。</span></li>
+              <li data-k style="--k:5"><span class="en"><span class="count" data-to="1160">1,160</span> places can be ordered on at least one app: DoorDash 859, Uber Eats 817, Grubhub 539, EatStreet 274, Toast 182.</span><span class="zh" lang="zh-CN"><span class="count" data-to="1160">1,160</span> 家至少能在一个平台下单：DoorDash 859、Uber Eats 817、Grubhub 539、EatStreet 274、Toast 182。</span></li>
             </ul>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>Madison Eats</b> &middot; How it works</p>
+            <p class="pg-h" data-k style="--k:0"><b>Madison Eats</b> &middot; <span class="en">How it works</span><span class="zh" lang="zh-CN">运作方式</span></p>
             <ul>
-              <li data-k style="--k:1">County food licences and OpenStreetMap give the base list. Collectors for six rating sources, county inspections and r/madisonwi are linked to it by name and address.</li>
-              <li data-k style="--k:2">Sources grade on different curves (Toast averages 4.8 stars, EatStreet 4.0), so each rating becomes a percentile among Madison places on the same app, and places with few ratings are pulled toward the middle.</li>
-              <li data-k style="--k:3">The public page carries no data. A Cloudflare Worker returns one page or one place at a time, behind a human check, daily quotas and a request log.</li>
+              <li data-k style="--k:1"><span class="en">County food licences and OpenStreetMap give the base list. Collectors for six rating sources, county inspections and r/madisonwi are linked to it by name and address.</span><span class="zh" lang="zh-CN">县里的食品经营许可和 OpenStreetMap 构成基础清单。六个评分来源、县卫生检查和 r/madisonwi 的采集结果，按名称和地址关联到清单上。</span></li>
+              <li data-k style="--k:2"><span class="en">Sources grade on different curves (Toast averages 4.8 stars, EatStreet 4.0), so each rating becomes a percentile among Madison places on the same app, and places with few ratings are pulled toward the middle.</span><span class="zh" lang="zh-CN">各来源的打分尺度不同（Toast 平均 4.8 星，EatStreet 4.0），所以每个评分会换算成它在同一平台上麦迪逊店铺中的百分位，评分很少的店会被拉向中间。</span></li>
+              <li data-k style="--k:3"><span class="en">The public page carries no data. A Cloudflare Worker returns one page or one place at a time, behind a human check, daily quotas and a request log.</span><span class="zh" lang="zh-CN">公开页面里没有数据。Cloudflare Worker 一次只返回一页或一家店，并设有人机验证、每日配额和请求日志。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:4"><!-- fig:madison-food-map-pipeline -->
-<svg viewBox="0 0 520 216" role="img" aria-label="Licences, OpenStreetMap, six rating sources, inspections and Reddit are linked into one list, scored, and served one page at a time by a guarded Worker">
+<svg class="en" viewBox="0 0 520 216" role="img" aria-label="Licences, OpenStreetMap, six rating sources, inspections and Reddit are linked into one list, scored, and served one page at a time by a guarded Worker">
 <g class="n" style="--d:0"><rect x="0" y="4" width="170" height="50" rx="6"/><text x="13" y="26" class="k">Base list</text><text x="13" y="43" class="s">licences + OSM</text></g>
 <g class="n" style="--d:1"><rect x="0" y="70" width="170" height="50" rx="6"/><text x="13" y="92" class="k">Rating sources</text><text x="13" y="109" class="s">6 sources, stars + counts</text></g>
 <g class="n" style="--d:2"><rect x="0" y="136" width="170" height="50" rx="6"/><text x="13" y="158" class="k">Other signals</text><text x="13" y="175" class="s">inspections, Reddit</text></g>
@@ -765,16 +873,34 @@ h2{--w:780}
 <text class="s n" style="--d:2" x="0.0" y="208.0" text-anchor="start">Python, on my machine</text>
 <text class="s n" style="--d:8" x="520.0" y="208.0" text-anchor="end">Cloudflare</text>
 </svg>
-<!-- /fig:madison-food-map-pipeline --><figcaption>From collectors to the page. Collection and scoring live in a private repository; the public one holds the page only.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 216" role="img" aria-label="营业执照、OpenStreetMap、六个评分来源、卫生检查和 Reddit 被关联成一份清单，打分后由受保护的 Worker 一次一页地提供">
+<g class="n" style="--d:0"><rect x="0" y="4" width="170" height="50" rx="6"/><text x="13" y="26" class="k">基础清单</text><text x="13" y="43" class="s">执照＋OSM</text></g>
+<g class="n" style="--d:1"><rect x="0" y="70" width="170" height="50" rx="6"/><text x="13" y="92" class="k">评分来源</text><text x="13" y="109" class="s">6 个来源：星级与评分数</text></g>
+<g class="n" style="--d:2"><rect x="0" y="136" width="170" height="50" rx="6"/><text x="13" y="158" class="k">其他信号</text><text x="13" y="175" class="s">卫生检查、Reddit</text></g>
+<g class="n" style="--d:3"><rect x="200" y="70" width="120" height="50" rx="6"/><text x="213" y="92" class="k">关联</text><text x="213" y="109" class="s">匹配店铺</text></g>
+<g class="n acc" style="--d:5"><rect x="350" y="70" width="170" height="50" rx="6"/><text x="363" y="92" class="k">打分</text><text x="363" y="109" class="s">按各应用算百分位</text></g>
+<g class="n" style="--d:8"><rect x="350" y="150" width="170" height="50" rx="6"/><text x="363" y="172" class="k">受保护的 Worker</text><text x="363" y="189" class="s">一次一页</text></g>
+<path class="e draw" style="--d:2" d="M170.0 29.0 L185.0 29.0 L185.0 95.0 L200.0 95.0" pathLength="1"/>
+<path class="e draw" style="--d:2" d="M170.0 95.0 L200.0 95.0" pathLength="1"/>
+<path class="tip n" style="--d:6" d="M200.0 95.0 L193.7 98.0 L193.7 92.0Z"/>
+<path class="e draw" style="--d:2" d="M170.0 161.0 L185.0 161.0 L185.0 95.0" pathLength="1"/>
+<path class="e acc draw" style="--d:4" d="M320.0 95.0 L350.0 95.0" pathLength="1"/>
+<path class="tip n acc" style="--d:8" d="M350.0 95.0 L343.7 98.0 L343.7 92.0Z"/>
+<path class="e draw" style="--d:7" d="M435.0 120.0 L435.0 150.0" pathLength="1"/>
+<path class="tip n" style="--d:11" d="M435.0 150.0 L432.0 143.7 L438.0 143.7Z"/>
+<text class="s n" style="--d:2" x="0.0" y="208.0" text-anchor="start">Python，在我的电脑上运行</text>
+<text class="s n" style="--d:8" x="520.0" y="208.0" text-anchor="end">Cloudflare</text>
+</svg>
+<!-- /fig:madison-food-map-pipeline --><figcaption><span class="en">From collectors to the page. Collection and scoring live in a private repository; the public one holds the page only.</span><span class="zh" lang="zh-CN">从采集到页面。采集和打分在私有仓库里，公开仓库只放页面。</span></figcaption></figure>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>Madison Eats</b> &middot; What the data says</p>
+            <p class="pg-h" data-k style="--k:0"><b>Madison Eats</b> &middot; <span class="en">What the data says</span><span class="zh" lang="zh-CN">数据说了什么</span></p>
             <ul>
-              <li data-k style="--k:1">The sources agree only loosely. Rank correlations between pairs of sources run from 0.26 to 0.61 for the same places, and Uber Eats and Toast are uncorrelated. The score gives a source more weight when it agrees with the others.</li>
-              <li data-k style="--k:2">Checked against a signal left out of the score, a random award winner outranks a random non-winner 66% of the time with the award bonus removed (168 winners).</li>
+              <li data-k style="--k:1"><span class="en">The sources agree only loosely. Rank correlations between pairs of sources run from 0.26 to 0.61 for the same places, and Uber Eats and Toast are uncorrelated. The score gives a source more weight when it agrees with the others.</span><span class="zh" lang="zh-CN">各来源之间只是大致一致。同一批店铺在每两个来源之间的秩相关从 0.26 到 0.61，Uber Eats 和 Toast 之间几乎不相关。打分时，和其他来源越一致的来源权重越高。</span></li>
+              <li data-k style="--k:2"><span class="en">Checked against a signal left out of the score, a random award winner outranks a random non-winner 66% of the time with the award bonus removed (168 winners).</span><span class="zh" lang="zh-CN">用一个未参与打分的信号来检验：去掉奖项加分后，随机挑一家获奖店和一家未获奖店，获奖店排名更靠前的概率是 66%（168 家获奖店）。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:3"><!-- fig:madison-food-map-agreement -->
-<svg viewBox="0 0 520 234" role="img" aria-label="Rank correlation of star ratings between pairs of rating sources for the same places, from 0.26 to 0.61 apart from one pair near zero">
+<svg class="en" viewBox="0 0 520 234" role="img" aria-label="Rank correlation of star ratings between pairs of rating sources for the same places, from 0.26 to 0.61 apart from one pair near zero">
 <text class="s n" style="--d:0" x="138.0" y="12.0" text-anchor="middle">Google</text>
 <text class="s n" style="--d:0" x="222.0" y="12.0" text-anchor="middle">DoorDash</text>
 <text class="s n" style="--d:0" x="306.0" y="12.0" text-anchor="middle">Uber Eats</text>
@@ -832,31 +958,89 @@ h2{--w:780}
 <rect class="n seg s3" style="--d:7" x="258.0" y="214.0" width="20.0" height="6" rx="2"/>
 <text class="s n" style="--d:7" x="284.0" y="221.0" text-anchor="start">fewer than 50</text>
 </svg>
-<!-- /fig:madison-food-map-agreement --><figcaption>Rank correlation of star ratings between pairs of sources, over the 2,292 places shown. n is the number of places rated on both.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 234" role="img" aria-label="同一批餐馆在每两个评分来源之间的星级秩相关，从 0.26 到 0.61，只有一对接近零">
+<text class="s n" style="--d:0" x="138.0" y="12.0" text-anchor="middle">Google</text>
+<text class="s n" style="--d:0" x="222.0" y="12.0" text-anchor="middle">DoorDash</text>
+<text class="s n" style="--d:0" x="306.0" y="12.0" text-anchor="middle">Uber Eats</text>
+<text class="s n" style="--d:0" x="390.0" y="12.0" text-anchor="middle">Grubhub</text>
+<text class="s n" style="--d:0" x="474.0" y="12.0" text-anchor="middle">EatStreet</text>
+<text class="k n" style="--d:0" x="90.0" y="44.0" text-anchor="end">DoorDash</text>
+<text class="k n" style="--d:1" x="102.0" y="38.0" text-anchor="start">0.59</text>
+<text class="s n" style="--d:1" x="174.0" y="38.0" text-anchor="end">n=693</text>
+<rect class="n seg s1" style="--d:2" x="102.0" y="45.0" width="60.7" height="6" rx="2"/>
+<text class="k n" style="--d:1" x="90.0" y="80.0" text-anchor="end">Uber Eats</text>
+<text class="k n" style="--d:2" x="102.0" y="74.0" text-anchor="start">0.42</text>
+<text class="s n" style="--d:2" x="174.0" y="74.0" text-anchor="end">n=652</text>
+<rect class="n seg s1" style="--d:3" x="102.0" y="81.0" width="43.2" height="6" rx="2"/>
+<text class="k n" style="--d:2" x="186.0" y="74.0" text-anchor="start">0.59</text>
+<text class="s n" style="--d:2" x="258.0" y="74.0" text-anchor="end">n=601</text>
+<rect class="n seg s1" style="--d:3" x="186.0" y="81.0" width="60.7" height="6" rx="2"/>
+<text class="k n" style="--d:2" x="90.0" y="116.0" text-anchor="end">Grubhub</text>
+<text class="k n" style="--d:3" x="102.0" y="110.0" text-anchor="start">0.43</text>
+<text class="s n" style="--d:3" x="174.0" y="110.0" text-anchor="end">n=469</text>
+<rect class="n seg s1" style="--d:4" x="102.0" y="117.0" width="44.2" height="6" rx="2"/>
+<text class="k n" style="--d:3" x="186.0" y="110.0" text-anchor="start">0.50</text>
+<text class="s n" style="--d:3" x="258.0" y="110.0" text-anchor="end">n=468</text>
+<rect class="n seg s1" style="--d:4" x="186.0" y="117.0" width="51.4" height="6" rx="2"/>
+<text class="k n" style="--d:3" x="270.0" y="110.0" text-anchor="start">0.44</text>
+<text class="s n" style="--d:3" x="342.0" y="110.0" text-anchor="end">n=449</text>
+<rect class="n seg s1" style="--d:4" x="270.0" y="117.0" width="45.3" height="6" rx="2"/>
+<text class="k n" style="--d:3" x="90.0" y="152.0" text-anchor="end">EatStreet</text>
+<text class="k n" style="--d:4" x="102.0" y="146.0" text-anchor="start">0.61</text>
+<text class="s n" style="--d:4" x="174.0" y="146.0" text-anchor="end">n=188</text>
+<rect class="n seg s1" style="--d:5" x="102.0" y="153.0" width="62.7" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="186.0" y="146.0" text-anchor="start">0.56</text>
+<text class="s n" style="--d:4" x="258.0" y="146.0" text-anchor="end">n=150</text>
+<rect class="n seg s1" style="--d:5" x="186.0" y="153.0" width="57.6" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="270.0" y="146.0" text-anchor="start">0.47</text>
+<text class="s n" style="--d:4" x="342.0" y="146.0" text-anchor="end">n=147</text>
+<rect class="n seg s1" style="--d:5" x="270.0" y="153.0" width="48.3" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="354.0" y="146.0" text-anchor="start">0.33</text>
+<text class="s n" style="--d:4" x="426.0" y="146.0" text-anchor="end">n=126</text>
+<rect class="n seg s1" style="--d:5" x="354.0" y="153.0" width="33.9" height="6" rx="2"/>
+<text class="k n" style="--d:4" x="90.0" y="188.0" text-anchor="end">Toast</text>
+<text class="k n" style="--d:5" x="102.0" y="182.0" text-anchor="start">0.40</text>
+<text class="s n" style="--d:5" x="174.0" y="182.0" text-anchor="end">n=84</text>
+<rect class="n seg s1" style="--d:6" x="102.0" y="189.0" width="41.1" height="6" rx="2"/>
+<text class="k n" style="--d:5" x="186.0" y="182.0" text-anchor="start">0.49</text>
+<text class="s n" style="--d:5" x="258.0" y="182.0" text-anchor="end">n=44</text>
+<rect class="n seg s3" style="--d:6" x="186.0" y="189.0" width="50.4" height="6" rx="2"/>
+<text class="k n" style="--d:5" x="270.0" y="182.0" text-anchor="start">−0.04</text>
+<text class="s n" style="--d:5" x="342.0" y="182.0" text-anchor="end">n=44</text>
+<text class="k n" style="--d:5" x="354.0" y="182.0" text-anchor="start">0.26</text>
+<text class="s n" style="--d:5" x="426.0" y="182.0" text-anchor="end">n=31</text>
+<rect class="n seg s3" style="--d:6" x="354.0" y="189.0" width="26.7" height="6" rx="2"/>
+<text class="s n" style="--d:5" x="438.0" y="188.0" text-anchor="start">n < 20</text>
+<rect class="n seg s1" style="--d:7" x="98.0" y="214.0" width="20.0" height="6" rx="2"/>
+<text class="s n" style="--d:7" x="124.0" y="221.0" text-anchor="start">50 家及以上</text>
+<rect class="n seg s3" style="--d:7" x="258.0" y="214.0" width="20.0" height="6" rx="2"/>
+<text class="s n" style="--d:7" x="284.0" y="221.0" text-anchor="start">少于 50 家</text>
+</svg>
+<!-- /fig:madison-food-map-agreement --><figcaption><span class="en">Rank correlation of star ratings between pairs of sources, over the 2,292 places shown. n is the number of places rated on both.</span><span class="zh" lang="zh-CN">同一批 2,292 家显示的店铺，每两个来源之间星级的秩相关。n 是两边都有评分的店铺数。</span></figcaption></figure>
           </div></div>
         </li>
         <li class="cap r" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" data-c="D7263D" data-f="FFB070" style="--i:3">
           <figure class="cap-shot"><img src="assets/uw-course-lookup.jpg" width="1400" height="897" alt="Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">04 / 06 &middot; Web app + API</p>
+            <p class="cap-n" data-k style="--k:0">04 / 06 &middot; <span class="en">Web app + API</span><span class="zh" lang="zh-CN">网页应用 + API</span></p>
             <h3 aria-label="uw-course-lookup"><span aria-hidden="true"><span class="ch" style="--c:0">u</span><span class="ch" style="--c:1">w</span><span class="ch" style="--c:2">-</span><span class="ch" style="--c:3">c</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">u</span><span class="ch" style="--c:6">r</span><span class="ch" style="--c:7">s</span><span class="ch" style="--c:8">e</span><span class="ch" style="--c:9">-</span><span class="ch" style="--c:10">l</span><span class="ch" style="--c:11">o</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">k</span><span class="ch" style="--c:14">u</span><span class="ch" style="--c:15">p</span></span></h3>
-            <p class="hook" data-k style="--k:2">Grade history, instructor GPAs and seats for all <span class="count" data-to="4438">4,438</span> Fall 2026 UW–Madison courses, plus a timetable planner that knows your degree.</p>
-            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener">Source</a></p>
-            <p class="built" data-k style="--k:3">Vanilla JS, Cloudflare Workers and Workers AI, SQLite, GitHub Actions CI</p>
+            <p class="hook" data-k style="--k:2"><span class="en">Grade history, instructor GPAs and seats for all <span class="count" data-to="4438">4,438</span> Fall 2026 UW–Madison courses, plus a timetable planner that knows your degree.</span><span class="zh" lang="zh-CN"><span class="count" data-to="4438">4,438</span> 门 Fall 2026 UW–Madison 课程的成绩历史、教师 GPA 和座位，还有一个了解你学位要求的课表规划器。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/uw-course-lookup/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">Vanilla JS, Cloudflare Workers and Workers AI, SQLite, GitHub Actions CI</span><span class="zh" lang="zh-CN">原生 JS、Cloudflare Workers 与 Workers AI、SQLite、GitHub Actions CI</span></p>
             <ul>
-              <li data-k style="--k:4">A sticky A&ndash;F band morphs into whichever course you hover, with ticks marking the campus-wide split, so every row reads against the baseline.</li>
-              <li data-k style="--k:5">Lenses such as <em>Instructor matters</em>, a dot plot of every instructor&rsquo;s GPA, saved plans, side-by-side compare, and an assistant that can search courses and build a timetable.</li>
+              <li data-k style="--k:4"><span class="en">A sticky A&ndash;F band morphs into whichever course you hover, with ticks marking the campus-wide split, so every row reads against the baseline.</span><span class="zh" lang="zh-CN">顶部的 A&ndash;F 条会变形成你悬停的那门课的分布，刻度线标出全校的整体分布，每一行都能和基准比较。</span></li>
+              <li data-k style="--k:5"><span class="en">Lenses such as <em>Instructor matters</em>, a dot plot of every instructor&rsquo;s GPA, saved plans, side-by-side compare, and an assistant that can search courses and build a timetable.</span><span class="zh" lang="zh-CN">有 <em>教师影响大</em> 这样的筛选视角、每位教师的 GPA 点图、保存的计划、并排对比，以及能搜课、能排课表的助手。</span></li>
             </ul>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; The planner</p>
+            <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; <span class="en">The planner</span><span class="zh" lang="zh-CN">课表规划器</span></p>
             <ul>
-              <li data-k style="--k:1">Pick one of 212 degree programs and drop in your transcript or DARS. The file is read in the browser, not uploaded, and the planner shows what is done, in progress and left.</li>
-              <li data-k style="--k:2">It searches for conflict-free timetables over each course&rsquo;s real enrollment packages (a lecture plus its discussion), honoring early starts, days off and seat availability, and returns six options with an .ics export.</li>
-              <li data-k style="--k:3">If the request is impossible it says why, for example two required courses that always overlap.</li>
+              <li data-k style="--k:1"><span class="en">Pick one of 212 degree programs and drop in your transcript or DARS. The file is read in the browser, not uploaded, and the planner shows what is done, in progress and left.</span><span class="zh" lang="zh-CN">选一个学位专业（共 212 个），导入成绩单或 DARS。文件只在浏览器里读取，不会上传，规划器会显示哪些已完成、哪些在修、哪些还差。</span></li>
+              <li data-k style="--k:2"><span class="en">It searches for conflict-free timetables over each course&rsquo;s real enrollment packages (a lecture plus its discussion), honoring early starts, days off and seat availability, and returns six options with an .ics export.</span><span class="zh" lang="zh-CN">它在每门课真实的选课组合（一节讲课加配套的讨论课）上搜索没有冲突的课表，遵守不早起、空出整天、座位是否有空等偏好，给出六个方案，并能导出 .ics。</span></li>
+              <li data-k style="--k:3"><span class="en">If the request is impossible it says why, for example two required courses that always overlap.</span><span class="zh" lang="zh-CN">如果要求无法满足，它会说明原因，比如两门必修课的时间总是重叠。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:4"><!-- fig:uw-course-planner -->
-<svg viewBox="0 0 520 176" role="img" aria-label="A transcript and a degree program give the unmet requirements; a depth-first solver picks conflict-free sections and returns six timetables">
+<svg class="en" viewBox="0 0 520 176" role="img" aria-label="A transcript and a degree program give the unmet requirements; a depth-first solver picks conflict-free sections and returns six timetables">
 <g class="n" style="--d:0"><rect x="0" y="4" width="156" height="50" rx="6"/><text x="13" y="26" class="k">Transcript or DARS</text><text x="13" y="43" class="s">read in the browser</text></g>
 <g class="n" style="--d:1"><rect x="182" y="4" width="156" height="50" rx="6"/><text x="195" y="26" class="k">Degree rules</text><text x="195" y="43" class="s">212 programs</text></g>
 <g class="n" style="--d:2"><rect x="364" y="4" width="156" height="50" rx="6"/><text x="377" y="26" class="k">Still needed</text><text x="377" y="43" class="s">requirement blocks</text></g>
@@ -874,17 +1058,35 @@ h2{--w:780}
 <path class="e acc draw" style="--d:6" d="M338.0 137.0 L364.0 137.0" pathLength="1"/>
 <path class="tip n acc" style="--d:10" d="M364.0 137.0 L357.7 140.0 L357.7 134.0Z"/>
 </svg>
-<!-- /fig:uw-course-planner --><figcaption>The solver is a plain module with no DOM or network access, so the page, a Web Worker and the Node tests run the same code. It returns the best result it found, not a proof of optimality.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 176" role="img" aria-label="成绩单和学位要求得出还差什么，深度优先求解器挑选互不冲突的班级，给出六个课表">
+<g class="n" style="--d:0"><rect x="0" y="4" width="156" height="50" rx="6"/><text x="13" y="26" class="k">成绩单或 DARS</text><text x="13" y="43" class="s">在浏览器中读取</text></g>
+<g class="n" style="--d:1"><rect x="182" y="4" width="156" height="50" rx="6"/><text x="195" y="26" class="k">学位要求</text><text x="195" y="43" class="s">212 个专业</text></g>
+<g class="n" style="--d:2"><rect x="364" y="4" width="156" height="50" rx="6"/><text x="377" y="26" class="k">还差什么</text><text x="377" y="43" class="s">要求模块</text></g>
+<g class="n" style="--d:3"><rect x="0" y="112" width="156" height="50" rx="6"/><text x="13" y="134" class="k">课程组合</text><text x="13" y="151" class="s">讲课＋讨论课</text></g>
+<g class="n acc" style="--d:5"><rect x="182" y="112" width="156" height="50" rx="6"/><text x="195" y="134" class="k">求解器</text><text x="195" y="151" class="s">深度优先搜索</text></g>
+<g class="n" style="--d:7"><rect x="364" y="112" width="156" height="50" rx="6"/><text x="377" y="134" class="k">六个课表</text><text x="377" y="151" class="s">已排除冲突</text></g>
+<path class="e draw" style="--d:0" d="M156.0 29.0 L182.0 29.0" pathLength="1"/>
+<path class="tip n" style="--d:4" d="M182.0 29.0 L175.7 32.0 L175.7 26.0Z"/>
+<path class="e draw" style="--d:1" d="M338.0 29.0 L364.0 29.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M364.0 29.0 L357.7 32.0 L357.7 26.0Z"/>
+<path class="e draw" style="--d:3" d="M442.0 54.0 L442.0 83.0 L260.0 83.0 L260.0 112.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M260.0 112.0 L257.0 105.7 L263.0 105.7Z"/>
+<path class="e draw" style="--d:4" d="M156.0 137.0 L182.0 137.0" pathLength="1"/>
+<path class="tip n" style="--d:8" d="M182.0 137.0 L175.7 140.0 L175.7 134.0Z"/>
+<path class="e acc draw" style="--d:6" d="M338.0 137.0 L364.0 137.0" pathLength="1"/>
+<path class="tip n acc" style="--d:10" d="M364.0 137.0 L357.7 140.0 L357.7 134.0Z"/>
+</svg>
+<!-- /fig:uw-course-planner --><figcaption><span class="en">The solver is a plain module with no DOM or network access, so the page, a Web Worker and the Node tests run the same code. It returns the best result it found, not a proof of optimality.</span><span class="zh" lang="zh-CN">求解器是一个纯模块，不碰 DOM 和网络，所以页面、Web Worker 和 Node 测试跑的是同一份代码。它给出的是找到的最好结果，而不是最优性证明。</span></figcaption></figure>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; How it works</p>
+            <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; <span class="en">How it works</span><span class="zh" lang="zh-CN">运作方式</span></p>
             <ul>
-              <li data-k style="--k:1">The page holds no course data. A Cloudflare Worker serves one page of results at a time to a browser that has passed an invisible human check.</li>
-              <li data-k style="--k:2">Each visitor and each network has a daily allowance counted in course records. Requests are rate-limited and logged, never the assistant conversation, and CI fails if a private file is committed.</li>
-              <li data-k style="--k:3">No endpoint returns the dataset in bulk. That raises the cost of copying everything; it cannot prevent it.</li>
+              <li data-k style="--k:1"><span class="en">The page holds no course data. A Cloudflare Worker serves one page of results at a time to a browser that has passed an invisible human check.</span><span class="zh" lang="zh-CN">页面本身不含课程数据。Cloudflare Worker 一次只给通过了隐形人机验证的浏览器返回一页结果。</span></li>
+              <li data-k style="--k:2"><span class="en">Each visitor and each network has a daily allowance counted in course records. Requests are rate-limited and logged, never the assistant conversation, and CI fails if a private file is committed.</span><span class="zh" lang="zh-CN">每位访客和每个网络每天有一份按课程条数计算的额度。请求会被限流和记录（从不记录助手对话），而且只要有私有文件被提交，CI 就会失败。</span></li>
+              <li data-k style="--k:3"><span class="en">No endpoint returns the dataset in bulk. That raises the cost of copying everything; it cannot prevent it.</span><span class="zh" lang="zh-CN">没有任何接口能一次返回整套数据。这会抬高整体拷贝的成本，但并不能杜绝。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:4"><!-- fig:uw-course-architecture -->
-<svg viewBox="0 0 520 218" role="img" aria-label="Public sources feed a local SQLite build, which is deployed to a guarded Cloudflare Worker that the GitHub Pages page queries">
+<svg class="en" viewBox="0 0 520 218" role="img" aria-label="Public sources feed a local SQLite build, which is deployed to a guarded Cloudflare Worker that the GitHub Pages page queries">
 <g class="n" style="--d:0"><rect x="0" y="4" width="230" height="50" rx="6"/><text x="13" y="26" class="k">Public sources</text><text x="13" y="43" class="s">MadGrades, Enroll, Reddit, chat</text></g>
 <g class="n" style="--d:2"><rect x="0" y="76" width="230" height="50" rx="6"/><text x="13" y="98" class="k">build_db.py</text><text x="13" y="115" class="s">SQLite, never committed</text></g>
 <g class="n acc" style="--d:5"><rect x="290" y="76" width="230" height="50" rx="6"/><text x="303" y="98" class="k">Cloudflare Worker</text><text x="303" y="115" class="s">session, quota, rate limit</text></g>
@@ -898,16 +1100,30 @@ h2{--w:780}
 <path class="tip n" style="--d:10" d="M405.0 126.0 L408.0 132.3 L402.0 132.3Z"/>
 <text class="s n" style="--d:6" x="397.0" y="148.0" text-anchor="end">signed session on every call</text>
 </svg>
-<!-- /fig:uw-course-architecture --><figcaption>Build and serve. The data files are gitignored; the page, the Worker and the pipeline are public.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 218" role="img" aria-label="公开数据源进入本地的 SQLite 构建，部署到受保护的 Cloudflare Worker，由 GitHub Pages 页面查询">
+<g class="n" style="--d:0"><rect x="0" y="4" width="230" height="50" rx="6"/><text x="13" y="26" class="k">公开数据源</text><text x="13" y="43" class="s">MadGrades、Enroll、Reddit、聊天</text></g>
+<g class="n" style="--d:2"><rect x="0" y="76" width="230" height="50" rx="6"/><text x="13" y="98" class="k">build_db.py</text><text x="13" y="115" class="s">SQLite，从不提交</text></g>
+<g class="n acc" style="--d:5"><rect x="290" y="76" width="230" height="50" rx="6"/><text x="303" y="98" class="k">Cloudflare Worker</text><text x="303" y="115" class="s">会话、配额、限流</text></g>
+<g class="n" style="--d:7"><rect x="290" y="160" width="230" height="50" rx="6"/><text x="303" y="182" class="k">GitHub Pages 页面</text><text x="303" y="199" class="s">先过人机验证，再取 60 行</text></g>
+<path class="e draw" style="--d:1" d="M115.0 54.0 L115.0 76.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M115.0 76.0 L112.0 69.7 L118.0 69.7Z"/>
+<path class="e acc draw" style="--d:3" d="M230.0 101.0 L290.0 101.0" pathLength="1"/>
+<path class="tip n acc" style="--d:7" d="M290.0 101.0 L283.7 104.0 L283.7 98.0Z"/>
+<text class="s n" style="--d:4" x="260.0" y="92.0" text-anchor="middle">部署</text>
+<path class="e draw" style="--d:6" d="M405.0 160.0 L405.0 126.0" pathLength="1"/>
+<path class="tip n" style="--d:10" d="M405.0 126.0 L408.0 132.3 L402.0 132.3Z"/>
+<text class="s n" style="--d:6" x="397.0" y="148.0" text-anchor="end">每次调用带签名会话</text>
+</svg>
+<!-- /fig:uw-course-architecture --><figcaption><span class="en">Build and serve. The data files are gitignored; the page, the Worker and the pipeline are public.</span><span class="zh" lang="zh-CN">构建与服务。数据文件被 gitignore；页面、Worker 和数据流水线是公开的。</span></figcaption></figure>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; What the data says</p>
+            <p class="pg-h" data-k style="--k:0"><b>uw-course-lookup</b> &middot; <span class="en">What the data says</span><span class="zh" lang="zh-CN">数据说了什么</span></p>
             <ul>
-              <li data-k style="--k:1">Instructor beats course. In MATH 320 the most and least generous instructors, each with 200+ graded students, sit 1.67 GPA points apart on the same syllabus.</li>
-              <li data-k style="--k:2">How often a course comes up in chat says nothing about its grade (&rho; = &minus;0.07, n = 215). The tone of its Reddit threads does (&rho; = +0.43, n = 220).</li>
+              <li data-k style="--k:1"><span class="en">Instructor beats course. In MATH 320 the most and least generous instructors, each with 200+ graded students, sit 1.67 GPA points apart on the same syllabus.</span><span class="zh" lang="zh-CN">教师比课程更重要。在 MATH 320 里，最宽松和最严格的教师（各有 200 多名有成绩的学生）在同一份大纲下 GPA 相差 1.67 分。</span></li>
+              <li data-k style="--k:2"><span class="en">How often a course comes up in chat says nothing about its grade (&rho; = &minus;0.07, n = 215). The tone of its Reddit threads does (&rho; = +0.43, n = 220).</span><span class="zh" lang="zh-CN">一门课在群聊里被提到的次数和它的成绩无关（&rho; = &minus;0.07，n = 215），而它在 Reddit 帖子里的口碑有关（&rho; = +0.43，n = 220）。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:3"><!-- fig:uw-course-spread -->
-<svg viewBox="0 0 520 222" role="img" aria-label="For eight courses, the span from the lowest to the highest instructor GPA in the same course">
+<svg class="en" viewBox="0 0 520 222" role="img" aria-label="For eight courses, the span from the lowest to the highest instructor GPA in the same course">
 <path class="e dash n" style="--d:0" d="M142.9 22 L142.9 192"/>
 <text class="s n" style="--d:0" x="142.9" y="16.0" text-anchor="middle">2.0</text>
 <path class="e dash n" style="--d:0" d="M220.2 22 L220.2 192"/>
@@ -964,30 +1180,87 @@ h2{--w:780}
 <circle class="dot hi n" style="--d:8" cx="270.0" cy="216.0" r="4.2"/>
 <text class="s n" style="--d:8" x="282.0" y="221.0" text-anchor="start">highest instructor</text>
 </svg>
-<!-- /fig:uw-course-spread --><figcaption>The eight largest gaps between the lowest and highest instructor GPA in one course, among 290 tracked courses. Each instructor has at least 30 graded students.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 222" role="img" aria-label="八门课程中，同一门课里最低与最高教师 GPA 之间的跨度">
+<path class="e dash n" style="--d:0" d="M142.9 22 L142.9 192"/>
+<text class="s n" style="--d:0" x="142.9" y="16.0" text-anchor="middle">2.0</text>
+<path class="e dash n" style="--d:0" d="M220.2 22 L220.2 192"/>
+<text class="s n" style="--d:0" x="220.2" y="16.0" text-anchor="middle">2.5</text>
+<path class="e dash n" style="--d:0" d="M297.5 22 L297.5 192"/>
+<text class="s n" style="--d:0" x="297.5" y="16.0" text-anchor="middle">3.0</text>
+<path class="e dash n" style="--d:0" d="M374.7 22 L374.7 192"/>
+<text class="s n" style="--d:0" x="374.7" y="16.0" text-anchor="middle">3.5</text>
+<path class="e dash n" style="--d:0" d="M452.0 22 L452.0 192"/>
+<text class="s n" style="--d:0" x="452.0" y="16.0" text-anchor="middle">4.0</text>
+<text class="s n" style="--d:0" x="520.0" y="16.0" text-anchor="end">差距</text>
+<text class="k n" style="--d:0" x="100.0" y="41.0" text-anchor="end">MATH 320</text>
+<path class="e acc draw" style="--d:0" d="M127.3 36.0 L385.4 36.0" pathLength="1"/>
+<circle class="dot n" style="--d:3" cx="127.3" cy="36.0" r="4.2"/>
+<circle class="dot hi n" style="--d:3" cx="385.4" cy="36.0" r="4.2"/>
+<text class="k n" style="--d:4" x="520.0" y="41.0" text-anchor="end">1.67</text>
+<text class="k n" style="--d:1" x="100.0" y="62.0" text-anchor="end">MATH 340</text>
+<path class="e acc draw" style="--d:1" d="M188.8 57.0 L442.4 57.0" pathLength="1"/>
+<circle class="dot n" style="--d:4" cx="188.8" cy="57.0" r="4.2"/>
+<circle class="dot hi n" style="--d:4" cx="442.4" cy="57.0" r="4.2"/>
+<text class="k n" style="--d:5" x="520.0" y="62.0" text-anchor="end">1.64</text>
+<text class="k n" style="--d:2" x="100.0" y="83.0" text-anchor="end">MATH 234</text>
+<path class="e acc draw" style="--d:2" d="M190.0 78.0 L415.1 78.0" pathLength="1"/>
+<circle class="dot n" style="--d:5" cx="190.0" cy="78.0" r="4.2"/>
+<circle class="dot hi n" style="--d:5" cx="415.1" cy="78.0" r="4.2"/>
+<text class="k n" style="--d:6" x="520.0" y="83.0" text-anchor="end">1.46</text>
+<text class="k n" style="--d:3" x="100.0" y="104.0" text-anchor="end">MATH 467</text>
+<path class="e acc draw" style="--d:3" d="M217.7 99.0 L436.5 99.0" pathLength="1"/>
+<circle class="dot n" style="--d:6" cx="217.7" cy="99.0" r="4.2"/>
+<circle class="dot hi n" style="--d:6" cx="436.5" cy="99.0" r="4.2"/>
+<text class="k n" style="--d:7" x="520.0" y="104.0" text-anchor="end">1.42</text>
+<text class="k n" style="--d:4" x="100.0" y="125.0" text-anchor="end">PSYCH 202</text>
+<path class="e acc draw" style="--d:4" d="M213.5 120.0 L428.2 120.0" pathLength="1"/>
+<circle class="dot n" style="--d:7" cx="213.5" cy="120.0" r="4.2"/>
+<circle class="dot hi n" style="--d:7" cx="428.2" cy="120.0" r="4.2"/>
+<text class="k n" style="--d:8" x="520.0" y="125.0" text-anchor="end">1.39</text>
+<text class="k n" style="--d:5" x="100.0" y="146.0" text-anchor="end">MATH 541</text>
+<path class="e acc draw" style="--d:5" d="M165.9 141.0 L370.1 141.0" pathLength="1"/>
+<circle class="dot n" style="--d:8" cx="165.9" cy="141.0" r="4.2"/>
+<circle class="dot hi n" style="--d:8" cx="370.1" cy="141.0" r="4.2"/>
+<text class="k n" style="--d:9" x="520.0" y="146.0" text-anchor="end">1.32</text>
+<text class="k n" style="--d:6" x="100.0" y="167.0" text-anchor="end">ASTRON 103</text>
+<path class="e acc draw" style="--d:6" d="M212.6 162.0 L415.1 162.0" pathLength="1"/>
+<circle class="dot n" style="--d:9" cx="212.6" cy="162.0" r="4.2"/>
+<circle class="dot hi n" style="--d:9" cx="415.1" cy="162.0" r="4.2"/>
+<text class="k n" style="--d:10" x="520.0" y="167.0" text-anchor="end">1.31</text>
+<text class="k n" style="--d:7" x="100.0" y="188.0" text-anchor="end">PSYCH 210</text>
+<path class="e acc draw" style="--d:7" d="M188.7 183.0 L382.5 183.0" pathLength="1"/>
+<circle class="dot n" style="--d:10" cx="188.7" cy="183.0" r="4.2"/>
+<circle class="dot hi n" style="--d:10" cx="382.5" cy="183.0" r="4.2"/>
+<text class="k n" style="--d:11" x="520.0" y="188.0" text-anchor="end">1.25</text>
+<circle class="dot n" style="--d:8" cx="112.0" cy="216.0" r="4.2"/>
+<text class="s n" style="--d:8" x="124.0" y="221.0" text-anchor="start">最低的教师</text>
+<circle class="dot hi n" style="--d:8" cx="270.0" cy="216.0" r="4.2"/>
+<text class="s n" style="--d:8" x="282.0" y="221.0" text-anchor="start">最高的教师</text>
+</svg>
+<!-- /fig:uw-course-spread --><figcaption><span class="en">The eight largest gaps between the lowest and highest instructor GPA in one course, among 290 tracked courses. Each instructor has at least 30 graded students.</span><span class="zh" lang="zh-CN">在 290 门被跟踪的课程中，同一门课里最低与最高教师 GPA 相差最大的八门。每位教师至少有 30 名有成绩的学生。</span></figcaption></figure>
           </div></div>
         </li>
         <li class="cap l" id="photo-organizer" data-src="assets/photo-organizer.jpg" data-c="3A8F7E" data-f="E9D2A6" style="--i:4">
           <figure class="cap-shot"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">05 / 06 &middot; Python, CLIP</p>
+            <p class="cap-n" data-k style="--k:0">05 / 06 &middot; <span class="en">Python, CLIP</span><span class="zh" lang="zh-CN">Python、CLIP</span></p>
             <h3 aria-label="photo-organizer"><span aria-hidden="true"><span class="ch" style="--c:0">p</span><span class="ch" style="--c:1">h</span><span class="ch" style="--c:2">o</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">o</span><span class="ch" style="--c:7">r</span><span class="ch" style="--c:8">g</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">i</span><span class="ch" style="--c:12">z</span><span class="ch" style="--c:13">e</span><span class="ch" style="--c:14">r</span></span></h3>
-            <p class="hook" data-k style="--k:2">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</p>
-            <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener">Source</a></p>
-            <p class="built" data-k style="--k:3">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class="count" data-to="7346">7,346</span> files, 0 errors.</p>
+            <p class="hook" data-k style="--k:2"><span class="en">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</span><span class="zh" lang="zh-CN">在本地 GPU 上，把 <span class="count" data-to="310">310</span>&nbsp;GB 的旅行照片库分成人像、风景和按旅行划分的聚类，全程不上传任何东西。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">CLIP ViT-B/32, HDBSCAN, PyTorch with CUDA, FastAPI. <span class="count" data-to="7346">7,346</span> files, 0 errors.</span><span class="zh" lang="zh-CN">CLIP ViT-B/32、HDBSCAN、使用 CUDA 的 PyTorch、FastAPI。<span class="count" data-to="7346">7,346</span> 个文件，0 个错误。</span></p>
             <ul>
-              <li data-k style="--k:4">Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</li>
-              <li data-k style="--k:5">RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</li>
+              <li data-k style="--k:4"><span class="en">Zero-shot classifies people vs. scenery, then clusters scenery by embedding into trip-scale groups per region.</span><span class="zh" lang="zh-CN">用零样本分类区分人像和风景，再按嵌入向量把风景聚成每个地区的旅行级分组。</span></li>
+              <li data-k style="--k:5"><span class="en">RAW and XMP sidecars follow their JPEG through every move; the source tree is copy-only and never mutated.</span><span class="zh" lang="zh-CN">RAW 文件和 XMP 附属文件会跟着对应的 JPEG 一起移动；源目录只做复制，从不改动。</span></li>
             </ul>
           </div></div>
           <div class="pg"><div class="pg-in">
-            <p class="pg-h" data-k style="--k:0"><b>photo-organizer</b> &middot; How it works</p>
+            <p class="pg-h" data-k style="--k:0"><b>photo-organizer</b> &middot; <span class="en">How it works</span><span class="zh" lang="zh-CN">运作方式</span></p>
             <ul>
-              <li data-k style="--k:1">Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</li>
-              <li data-k style="--k:2">Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN.</li>
+              <li data-k style="--k:1"><span class="en">Embedding cache keyed by path + size + mtime, so a rerun over 7k files costs minutes instead of hours.</span><span class="zh" lang="zh-CN">嵌入缓存以路径、大小和修改时间为键，所以对 7 千个文件重跑只要几分钟，而不是几小时。</span></li>
+              <li data-k style="--k:2"><span class="en">Local FastAPI web UI for browsing, renaming, and re-filing, reachable from a phone over LAN.</span><span class="zh" lang="zh-CN">本地 FastAPI 网页界面，可以浏览、改名和重新归档，还能通过局域网在手机上访问。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:3"><!-- fig:photo-organizer -->
-<svg viewBox="0 0 520 214" role="img" aria-label="Photos are embedded with CLIP, split into people and scenery, and scenery is clustered">
+<svg class="en" viewBox="0 0 520 214" role="img" aria-label="Photos are embedded with CLIP, split into people and scenery, and scenery is clustered">
 <g class="n" style="--d:0"><rect x="0" y="4" width="206" height="34" rx="6"/><text x="13" y="26" class="k">7,346 files</text></g>
 <g class="n" style="--d:2"><rect x="0" y="70" width="206" height="50" rx="6"/><text x="13" y="92" class="k">CLIP ViT-B/32</text><text x="13" y="109" class="s">cached by path, size, mtime</text></g>
 <g class="n" style="--d:4"><rect x="0" y="152" width="206" height="50" rx="6"/><text x="13" y="174" class="k">people or scenery</text><text x="13" y="191" class="s">zero-shot text prompts</text></g>
@@ -1044,23 +1317,80 @@ h2{--w:780}
 <text class="s n" style="--d:9" x="430.0" y="14.0" text-anchor="middle">trip clusters</text>
 <text class="s n" style="--d:9" x="372.0" y="196.0" text-anchor="middle">misc</text>
 </svg>
-<!-- /fig:photo-organizer --><figcaption>Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 214" role="img" aria-label="用 CLIP 为照片生成嵌入，分成人像和风景，再对风景聚类">
+<g class="n" style="--d:0"><rect x="0" y="4" width="206" height="34" rx="6"/><text x="13" y="26" class="k">7,346 个文件</text></g>
+<g class="n" style="--d:2"><rect x="0" y="70" width="206" height="50" rx="6"/><text x="13" y="92" class="k">CLIP ViT-B/32</text><text x="13" y="109" class="s">按路径、大小、修改时间缓存</text></g>
+<g class="n" style="--d:4"><rect x="0" y="152" width="206" height="50" rx="6"/><text x="13" y="174" class="k">人像或风景</text><text x="13" y="191" class="s">零样本文本提示</text></g>
+<path class="e draw" style="--d:1" d="M40.0 38.0 L40.0 70.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M40.0 70.0 L37.0 63.7 L43.0 63.7Z"/>
+<path class="e draw" style="--d:3" d="M40.0 120.0 L40.0 152.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M40.0 152.0 L37.0 145.7 L43.0 145.7Z"/>
+<path class="e draw" style="--d:5" d="M206.0 177.0 L262.0 177.0 L262.0 110.0 L286.0 110.0" pathLength="1"/>
+<path class="tip n" style="--d:9" d="M286.0 110.0 L279.7 113.0 L279.7 107.0Z"/>
+<text class="s n" style="--d:0" x="274.0" y="204.0" text-anchor="middle">仅风景</text>
+<ellipse class="e dash acc n" style="--d:8" cx="338" cy="58" rx="34" ry="26"/>
+<circle class="dot n" style="--d:6" cx="334.8" cy="62.0" r="3"/>
+<circle class="dot n" style="--d:7" cx="335.3" cy="55.6" r="3"/>
+<circle class="dot n" style="--d:8" cx="326.3" cy="56.3" r="3"/>
+<circle class="dot n" style="--d:9" cx="351.7" cy="61.3" r="3"/>
+<circle class="dot n" style="--d:10" cx="351.0" cy="60.0" r="3"/>
+<circle class="dot n" style="--d:6" cx="342.7" cy="59.4" r="3"/>
+<circle class="dot n" style="--d:7" cx="320.5" cy="63.7" r="3"/>
+<circle class="dot n" style="--d:8" cx="344.4" cy="62.0" r="3"/>
+<circle class="dot n" style="--d:9" cx="323.2" cy="48.3" r="3"/>
+<ellipse class="e dash acc n" style="--d:8" cx="430" cy="44" rx="38" ry="24"/>
+<circle class="dot n" style="--d:10" cx="416.8" cy="40.8" r="3"/>
+<circle class="dot n" style="--d:6" cx="434.1" cy="43.7" r="3"/>
+<circle class="dot n" style="--d:7" cx="437.8" cy="39.6" r="3"/>
+<circle class="dot n" style="--d:8" cx="434.4" cy="46.6" r="3"/>
+<circle class="dot n" style="--d:9" cx="421.7" cy="53.9" r="3"/>
+<circle class="dot n" style="--d:10" cx="437.9" cy="51.9" r="3"/>
+<circle class="dot n" style="--d:6" cx="420.8" cy="38.9" r="3"/>
+<circle class="dot n" style="--d:7" cx="425.3" cy="43.3" r="3"/>
+<circle class="dot n" style="--d:8" cx="439.4" cy="45.7" r="3"/>
+<ellipse class="e dash acc n" style="--d:8" cx="402" cy="132" rx="36" ry="28"/>
+<circle class="dot n" style="--d:9" cx="395.9" cy="123.3" r="3"/>
+<circle class="dot n" style="--d:10" cx="395.2" cy="142.7" r="3"/>
+<circle class="dot n" style="--d:6" cx="390.9" cy="134.3" r="3"/>
+<circle class="dot n" style="--d:7" cx="407.3" cy="119.6" r="3"/>
+<circle class="dot n" style="--d:8" cx="402.6" cy="143.5" r="3"/>
+<circle class="dot n" style="--d:9" cx="380.1" cy="129.7" r="3"/>
+<circle class="dot n" style="--d:10" cx="400.5" cy="124.5" r="3"/>
+<circle class="dot n" style="--d:6" cx="408.6" cy="131.4" r="3"/>
+<circle class="dot n" style="--d:7" cx="384.3" cy="138.7" r="3"/>
+<ellipse class="e dash acc n" style="--d:8" cx="482" cy="150" rx="30" ry="23"/>
+<circle class="dot n" style="--d:8" cx="488.8" cy="155.8" r="3"/>
+<circle class="dot n" style="--d:9" cx="495.7" cy="152.1" r="3"/>
+<circle class="dot n" style="--d:10" cx="483.2" cy="142.2" r="3"/>
+<circle class="dot n" style="--d:6" cx="488.4" cy="146.1" r="3"/>
+<circle class="dot n" style="--d:7" cx="477.6" cy="142.4" r="3"/>
+<circle class="dot n" style="--d:8" cx="472.1" cy="146.7" r="3"/>
+<circle class="dot n" style="--d:9" cx="491.3" cy="141.0" r="3"/>
+<circle class="dot n" style="--d:10" cx="468.1" cy="151.4" r="3"/>
+<circle class="dot n" style="--d:6" cx="495.5" cy="153.3" r="3"/>
+<circle class="dot faint n" style="--d:9" cx="310" cy="118" r="3"/>
+<circle class="dot faint n" style="--d:9" cx="370" cy="176" r="3"/>
+<circle class="dot faint n" style="--d:9" cx="500" cy="88" r="3"/>
+<text class="s n" style="--d:9" x="430.0" y="14.0" text-anchor="middle">旅行聚类</text>
+<text class="s n" style="--d:9" x="372.0" y="196.0" text-anchor="middle">其他</text>
+</svg>
+<!-- /fig:photo-organizer --><figcaption><span class="en">Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</span><span class="zh" lang="zh-CN">示意图。只有风景会被聚类；HDBSCAN 无法归入任何旅行的照片会放进 <code>misc</code> 文件夹。</span></figcaption></figure>
           </div></div>
         </li>
         <li class="cap r" id="datamap" data-src="assets/datamap.jpg" data-c="2F6FE0" data-f="A9C8FF" style="--i:5">
           <figure class="cap-shot"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">06 / 06 &middot; Web app</p>
+            <p class="cap-n" data-k style="--k:0">06 / 06 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
             <h3 aria-label="DataMap"><span aria-hidden="true"><span class="ch" style="--c:0">D</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">t</span><span class="ch" style="--c:3">a</span><span class="ch" style="--c:4">M</span><span class="ch" style="--c:5">a</span><span class="ch" style="--c:6">p</span></span></h3>
-            <p class="hook" data-k style="--k:2">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</p>
-            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener">Live site</a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener">Source</a></p>
-            <p class="built" data-k style="--k:3">OKLCH ramps, quantile breaks, no dependencies, Playwright tests</p>
+            <p class="hook" data-k style="--k:2"><span class="en">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</span><span class="zh" lang="zh-CN">粘贴一列数字，就得到一张分级统计地图，它的色阶经得起代码评审的追问。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">OKLCH ramps, quantile breaks, runs offline, Playwright tests</span><span class="zh" lang="zh-CN">OKLCH 色阶、分位数分级、可离线运行、Playwright 测试</span></p>
             <ul>
-              <li data-k style="--k:4">Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</li>
-              <li data-k style="--k:5">Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</li>
+              <li data-k style="--k:4"><span class="en">Diverging scales default to symmetric quantile breaks; equal-interval was tried first and collapsed real county data into a single neutral class.</span><span class="zh" lang="zh-CN">发散色阶默认使用对称分位数分级；一开始用的等距分级，会把真实的县级数据压成同一个中性色类。</span></li>
+              <li data-k style="--k:5"><span class="en">Ships with a rebuild pipeline that re-fetches World Bank, Census, and ISO-3166 sources and regenerates every dataset.</span><span class="zh" lang="zh-CN">自带重建流水线，重新抓取世界银行、人口普查局和 ISO-3166 的数据，并重新生成所有数据集。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:6"><!-- fig:datamap -->
-<svg viewBox="0 0 520 168" role="img" aria-label="Blue, teal and orange seven-class ramps that share one lightness track">
+<svg class="en" viewBox="0 0 520 168" role="img" aria-label="Blue, teal and orange seven-class ramps that share one lightness track">
 <text class="k n" style="--d:0" x="0.0" y="27.0" text-anchor="start">blue</text>
 <rect class="n" style="--d:0" x="70" y="6" width="60" height="32" rx="3" fill="#c9defa"/>
 <rect class="n" style="--d:1" x="134" y="6" width="60" height="32" rx="3" fill="#9ec3f4"/>
@@ -1095,7 +1425,42 @@ h2{--w:780}
 <text class="s n" style="--d:6" x="484.0" y="150.0" text-anchor="middle">0.37</text>
 <path class="e draw" style="--d:3" d="M70.0 132.0 L514.0 132.0" pathLength="1"/>
 </svg>
-<!-- /fig:datamap --><figcaption>Seven-class ramps exactly as DataMap&rsquo;s <code>color.js</code> builds them. Every hue reuses one lightness track, so each column shares an L value.</figcaption></figure>
+<svg class="zh" viewBox="0 0 520 168" role="img" aria-label="蓝、青、橙三组七级色阶，共用同一条明度轨道">
+<text class="k n" style="--d:0" x="0.0" y="27.0" text-anchor="start">蓝</text>
+<rect class="n" style="--d:0" x="70" y="6" width="60" height="32" rx="3" fill="#c9defa"/>
+<rect class="n" style="--d:1" x="134" y="6" width="60" height="32" rx="3" fill="#9ec3f4"/>
+<rect class="n" style="--d:2" x="198" y="6" width="60" height="32" rx="3" fill="#71a7ed"/>
+<rect class="n" style="--d:3" x="262" y="6" width="60" height="32" rx="3" fill="#408ae6"/>
+<rect class="n" style="--d:4" x="326" y="6" width="60" height="32" rx="3" fill="#266fc6"/>
+<rect class="n" style="--d:5" x="390" y="6" width="60" height="32" rx="3" fill="#17559f"/>
+<rect class="n" style="--d:6" x="454" y="6" width="60" height="32" rx="3" fill="#0b3e78"/>
+<text class="k n" style="--d:0" x="0.0" y="67.0" text-anchor="start">青</text>
+<rect class="n" style="--d:0" x="70" y="46" width="60" height="32" rx="3" fill="#c3e6d3"/>
+<rect class="n" style="--d:1" x="134" y="46" width="60" height="32" rx="3" fill="#90d1b0"/>
+<rect class="n" style="--d:2" x="198" y="46" width="60" height="32" rx="3" fill="#55bb8e"/>
+<rect class="n" style="--d:3" x="262" y="46" width="60" height="32" rx="3" fill="#00a26f"/>
+<rect class="n" style="--d:4" x="326" y="46" width="60" height="32" rx="3" fill="#00845a"/>
+<rect class="n" style="--d:5" x="390" y="46" width="60" height="32" rx="3" fill="#006745"/>
+<rect class="n" style="--d:6" x="454" y="46" width="60" height="32" rx="3" fill="#004b31"/>
+<text class="k n" style="--d:0" x="0.0" y="107.0" text-anchor="start">橙</text>
+<rect class="n" style="--d:0" x="70" y="86" width="60" height="32" rx="3" fill="#f7d3c6"/>
+<rect class="n" style="--d:1" x="134" y="86" width="60" height="32" rx="3" fill="#eeaf98"/>
+<rect class="n" style="--d:2" x="198" y="86" width="60" height="32" rx="3" fill="#e28a6a"/>
+<rect class="n" style="--d:3" x="262" y="86" width="60" height="32" rx="3" fill="#d56236"/>
+<rect class="n" style="--d:4" x="326" y="86" width="60" height="32" rx="3" fill="#b64819"/>
+<rect class="n" style="--d:5" x="390" y="86" width="60" height="32" rx="3" fill="#91340a"/>
+<rect class="n" style="--d:6" x="454" y="86" width="60" height="32" rx="3" fill="#6d2301"/>
+<text class="k n" style="--d:0" x="0.0" y="150.0" text-anchor="start">L</text>
+<text class="s n" style="--d:0" x="100.0" y="150.0" text-anchor="middle">0.89</text>
+<text class="s n" style="--d:1" x="164.0" y="150.0" text-anchor="middle">0.81</text>
+<text class="s n" style="--d:2" x="228.0" y="150.0" text-anchor="middle">0.72</text>
+<text class="s n" style="--d:3" x="292.0" y="150.0" text-anchor="middle">0.63</text>
+<text class="s n" style="--d:4" x="356.0" y="150.0" text-anchor="middle">0.54</text>
+<text class="s n" style="--d:5" x="420.0" y="150.0" text-anchor="middle">0.45</text>
+<text class="s n" style="--d:6" x="484.0" y="150.0" text-anchor="middle">0.37</text>
+<path class="e draw" style="--d:3" d="M70.0 132.0 L514.0 132.0" pathLength="1"/>
+</svg>
+<!-- /fig:datamap --><figcaption><span class="en">Seven-class ramps exactly as DataMap&rsquo;s <code>color.js</code> builds them. Every hue reuses one lightness track, so each column shares an L value.</span><span class="zh" lang="zh-CN">七级色阶，与 DataMap 的 <code>color.js</code> 生成的完全一致。每种色相都沿用同一条明度轨道，所以同一列的 L 值相同。</span></figcaption></figure>
           </div></div>
         </li>
         <!-- /work:caps -->
@@ -1105,59 +1470,59 @@ h2{--w:780}
     </div>
     <!-- work:minor -->
     <div class="wrap minor">
-      <div class="shead"><h3 id="minor-h"><span data-split="char">Smaller projects</span></h3></div>
+      <div class="shead"><h3 id="minor-h"><span class="en" data-split="char">Smaller projects</span><span class="zh" lang="zh-CN" data-split="char">其他小项目</span></h3></div>
       <ul class="mini">
         <li>
           <div class="mini-shot"><img src="assets/model-chess.jpg" width="1400" height="875" alt="Model Chess in items mode: a board of AI-model pieces mid-game, a strength ladder from ELIZA to Claude, and the move list" loading="lazy" decoding="async"></div>
           <div class="mini-tx">
-            <p class="mini-kd">Web game</p>
+            <p class="mini-kd"><span class="en">Web game</span><span class="zh" lang="zh-CN">网页游戏</span></p>
             <h4>Model Chess</h4>
-            <p class="mini-ds">Chess where every piece is an AI model. Items mode, a workbench, and a rules engine checked against perft counts.</p>
-            <p class="mini-st">Private repository</p>
-            <p class="mini-cr">Piece silhouettes: cburnett (Colin M.L. Burnett), via lichess.</p>
+            <p class="mini-ds"><span class="en">Chess where every piece is an AI model. Items mode, a workbench, and a rules engine checked against perft counts.</span><span class="zh" lang="zh-CN">每个棋子都是一个 AI 模型的国际象棋。有道具模式、工作台，规则引擎通过了标准 perft 计数验证。</span></p>
+            <p class="mini-st"><span class="en">Private repository</span><span class="zh" lang="zh-CN">私有仓库</span></p>
+            <p class="mini-cr"><span class="en">Piece silhouettes: cburnett (Colin M.L. Burnett), via lichess.</span><span class="zh" lang="zh-CN">棋子轮廓：cburnett（Colin M.L. Burnett），来自 lichess。</span></p>
           </div>
         </li>
         <li class="noshot">
           <div class="mini-tx">
-            <p class="mini-kd">Game, TypeScript</p>
+            <p class="mini-kd"><span class="en">Game, TypeScript</span><span class="zh" lang="zh-CN">游戏 · TypeScript</span></p>
             <h4>Dafeiyu</h4>
-            <p class="mini-ds">A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.</p>
-            <p class="mini-st">Private repository</p>
-            <p class="mini-cr">Fan-made and non-commercial; not affiliated with DeepSeek.</p>
+            <p class="mini-ds"><span class="en">A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.</span><span class="zh" lang="zh-CN">一款养成游戏和一款类《吸血鬼幸存者》的肉鸽，建立在纯规则引擎和机器人模拟器之上。239 个测试，界面为中文。</span></p>
+            <p class="mini-st"><span class="en">Private repository</span><span class="zh" lang="zh-CN">私有仓库</span></p>
+            <p class="mini-cr"><span class="en">Fan-made and non-commercial; not affiliated with DeepSeek.</span><span class="zh" lang="zh-CN">同人作品，非商业；与 DeepSeek 无关。</span></p>
           </div>
         </li>
         <li>
           <a class="mini-shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="" loading="lazy" decoding="async"></a>
           <div class="mini-tx">
-            <p class="mini-kd">Chrome extension</p>
+            <p class="mini-kd"><span class="en">Chrome extension</span><span class="zh" lang="zh-CN">Chrome 扩展</span></p>
             <h4>geo-spoof</h4>
-            <p class="mini-ds">Answers the Geolocation API with a point you pick</p>
-            <p class="links"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener">Source</a></p>
+            <p class="mini-ds"><span class="en">Answers the Geolocation API with a point you pick</span><span class="zh" lang="zh-CN">用你在地图上选的点来回答 Geolocation API</span></p>
+            <p class="links"><a href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
           </div>
         </li>
         <li>
           <a class="mini-shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="" loading="lazy" decoding="async"></a>
           <div class="mini-tx">
-            <p class="mini-kd">Chrome extension</p>
+            <p class="mini-kd"><span class="en">Chrome extension</span><span class="zh" lang="zh-CN">Chrome 扩展</span></p>
             <h4>tophat-watch</h4>
-            <p class="mini-ds">Alerts you when a Top Hat question opens</p>
-            <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener">Source</a></p>
+            <p class="mini-ds"><span class="en">Alerts you when a Top Hat question opens</span><span class="zh" lang="zh-CN">Top Hat 一开题就提醒你</span></p>
+            <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
           </div>
         </li>
         <li class="noshot">
           <div class="mini-tx">
-            <p class="mini-kd">Cloudflare Worker module</p>
+            <p class="mini-kd"><span class="en">Cloudflare Worker module</span><span class="zh" lang="zh-CN">Cloudflare Worker 模块</span></p>
             <h4>webgrs-guard</h4>
-            <p class="mini-ds">Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a D1 request log.</p>
-            <p class="mini-st">Private repository</p>
+            <p class="mini-ds"><span class="en">Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a D1 request log.</span><span class="zh" lang="zh-CN">我的数据站共用的请求防护：Turnstile 会话、每日配额、限流、D1 请求日志。</span></p>
+            <p class="mini-st"><span class="en">Private repository</span><span class="zh" lang="zh-CN">私有仓库</span></p>
           </div>
         </li>
         <li class="noshot">
           <div class="mini-tx">
-            <p class="mini-kd">Video pipeline</p>
+            <p class="mini-kd"><span class="en">Video pipeline</span><span class="zh" lang="zh-CN">视频流水线</span></p>
             <h4>video-studio</h4>
-            <p class="mini-ds">Storyboard JSON to a finished showcase video: scripted capture, local narration, Remotion.</p>
-            <p class="mini-st">Local project, not published</p>
+            <p class="mini-ds"><span class="en">Storyboard JSON to a finished showcase video: scripted capture, local narration, Remotion.</span><span class="zh" lang="zh-CN">从分镜 JSON 到成品展示视频：脚本化录屏、本地配音、Remotion 合成。</span></p>
+            <p class="mini-st"><span class="en">Local project, not published</span><span class="zh" lang="zh-CN">本地项目，未发布</span></p>
           </div>
         </li>
       </ul>
@@ -1167,26 +1532,26 @@ h2{--w:780}
 
   <section class="block" id="decisions" aria-labelledby="dec-h">
     <div class="wrap">
-      <div class="shead"><h2 id="dec-h"><span data-split="char">Decisions I'd defend</span></h2></div>
+      <div class="shead"><h2 id="dec-h"><span class="en" data-split="char">Decisions I'd defend</span><span class="zh" lang="zh-CN" data-split="char">我会坚持的决定</span></h2></div>
       <div class="decs">
         <div class="dec" style="--i:0">
-          <h3><span data-split="word">Show the gap, don't fake the data.</span></h3>
-          <p>Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</p>
+          <h3><span class="en" data-split="word">Show the gap, don't fake the data.</span><span class="zh" lang="zh-CN" data-split="char">如实展示缺口，不要伪造数据。</span></h3>
+          <p><span class="en">Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</span><span class="zh" lang="zh-CN">康涅狄格州在 2022 年用规划区取代了原来的八个县，两套边界并不互相对应。DataMap 把旧的县显示为 <em>无数据</em>，而不是编一张看起来正确、实际上错误的对照表。</span></p>
         </div>
         <div class="dec" style="--i:1">
-          <h3><span data-split="word">Aggregates leave the machine; records don't.</span></h3>
-          <p>The course tool is built on a private chat archive. Only anonymized counts are published; the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</p>
+          <h3><span class="en" data-split="word">Aggregates leave the machine; records don't.</span><span class="zh" lang="zh-CN" data-split="char">离开这台电脑的是汇总，不是原始记录。</span></h3>
+          <p><span class="en">The course tool is built on a private chat archive. Only anonymized counts are published; the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</span><span class="zh" lang="zh-CN">课程工具建立在一份私人聊天记录之上。公开的只有匿名化的计数，记录本身被 gitignore，只留在一块硬盘上。数据有用，并不意味着可以随便发布。</span></p>
         </div>
         <div class="dec" style="--i:2">
-          <h3><span data-split="word">Public repos are original work only.</span></h3>
-          <p>Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</p>
+          <h3><span class="en" data-split="word">Public repos are original work only.</span><span class="zh" lang="zh-CN" data-split="char">公开仓库只放原创作品。</span></h3>
+          <p><span class="en">Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</span><span class="zh" lang="zh-CN">计分的课程作业不上 GitHub，没有例外。公开的都是我自己设计的东西，每一行我都能讲清楚。</span></p>
         </div>
       </div>
     </div>
   </section>
 
   <section class="block" id="now" aria-labelledby="now-h">
-    <p class="sr"><!-- work:sr -->Tools used in these projects: MapLibre GL, Canvas 2D, MediaRecorder, WebGL, Leaflet, Cloudflare Workers, Cloudflare Turnstile, Chrome MV3, Playwright, D3, TopoJSON, OKLCH, SVG, Stable Diffusion XL, Remotion, Whisper, SQLite, Workers AI, GitHub Actions, pdf.js, Cloudflare D1, PyTorch, open_clip, HDBSCAN, FastAPI, TypeScript, React, Vite, Electron, OffscreenCanvas. Data sources: Esri World Imagery, Madison Metro GTFS, OpenStreetMap, Nominatim, Public Health Madison & Dane County, ntfy, World Bank, US Census, ISO 3166, MadGrades API, Course Search & Enroll API, Reddit via Firecrawl, USGS 3DEP.<!-- /work:sr --></p>
+    <p class="sr"><!-- work:sr --><span class="en">Tools used in these projects: MapLibre GL, Canvas 2D, MediaRecorder, WebGL, Leaflet, Cloudflare Workers, Cloudflare Turnstile, Chrome MV3, Playwright, D3, TopoJSON, OKLCH, SVG, Stable Diffusion XL, Remotion, Whisper, SQLite, Workers AI, GitHub Actions, pdf.js, Cloudflare D1, PyTorch, open_clip, HDBSCAN, FastAPI, TypeScript, React, Vite, Electron, OffscreenCanvas. Data sources: Esri World Imagery, Madison Metro GTFS, OpenStreetMap, Nominatim, Public Health Madison & Dane County, ntfy, World Bank, US Census, ISO 3166, MadGrades API, Course Search & Enroll API, Reddit via Firecrawl, USGS 3DEP.</span><span class="zh" lang="zh-CN">这些项目用到的工具：MapLibre GL、Canvas 2D、MediaRecorder、WebGL、Leaflet、Cloudflare Workers、Cloudflare Turnstile、Chrome MV3、Playwright、D3、TopoJSON、OKLCH、SVG、Stable Diffusion XL、Remotion、Whisper、SQLite、Workers AI、GitHub Actions、pdf.js、Cloudflare D1、PyTorch、open_clip、HDBSCAN、FastAPI、TypeScript、React、Vite、Electron、OffscreenCanvas。数据来源：Esri World Imagery、Madison Metro GTFS、OpenStreetMap、Nominatim、Public Health Madison & Dane County、ntfy、World Bank、US Census、ISO 3166、MadGrades API、Course Search & Enroll API、Reddit via Firecrawl、USGS 3DEP。</span><!-- /work:sr --></p>
     <!-- work:stack -->
     <script type="application/json" id="stack-data">
 {
@@ -1210,20 +1575,20 @@ h2{--w:780}
     <div class="wrap two">
       <canvas class="orb" id="orb" aria-hidden="true"></canvas>
       <div>
-        <h2 id="stack-h"><span data-split="char">Stack</span></h2>
+        <h2 id="stack-h"><span class="en" data-split="char">Stack</span><span class="zh" lang="zh-CN" data-split="char">技术栈</span></h2>
         <dl class="kv">
-          <dt>Languages</dt><dd>Python, JavaScript, TypeScript, Java, SQL / SQLite, Bash</dd>
-          <dt>ML</dt><dd>PyTorch, open_clip, HDBSCAN, NumPy, Stable Diffusion XL, Whisper</dd>
+          <dt><span class="en">Languages</span><span class="zh" lang="zh-CN">语言</span></dt><dd>Python, JavaScript, TypeScript, Java, SQL / SQLite, Bash</dd>
+          <dt><span class="en">ML</span><span class="zh" lang="zh-CN">机器学习</span></dt><dd>PyTorch, open_clip, HDBSCAN, NumPy, Stable Diffusion XL, Whisper</dd>
           <dt>Web</dt><dd>Cloudflare Workers (D1, Turnstile), FastAPI, vanilla JS, HTML/CSS</dd>
-          <dt>Tooling</dt><dd>Git, Playwright, Remotion, Linux over SSH, CUDA</dd>
+          <dt><span class="en">Tooling</span><span class="zh" lang="zh-CN">工具</span></dt><dd><span class="en">Git, Playwright, Remotion, Linux over SSH, CUDA</span><span class="zh" lang="zh-CN">Git、Playwright、Remotion、通过 SSH 使用 Linux、CUDA</span></dd>
         </dl>
       </div>
       <div>
-        <h2 id="now-h"><span data-split="char">Now</span><span class="when">October 2026</span></h2>
+        <h2 id="now-h"><span class="en" data-split="char">Now</span><span class="zh" lang="zh-CN" data-split="char">近况</span><span class="when"><span class="en">October 2026</span><span class="zh" lang="zh-CN">2026 年 10 月</span></span></h2>
         <dl class="kv">
-          <dt>Drilling</dt><dd>About 150 pattern-based algorithm problems, grouped by technique rather than count.</dd>
-          <dt>Learning</dt><dd>Applied ML in depth: embeddings, retrieval, and the infrastructure around them.</dd>
-          <dt>Coursework</dt><dd>CS 577 Introduction to Algorithms, CS 354 Machine Organization and Programming.</dd>
+          <dt><span class="en">Drilling</span><span class="zh" lang="zh-CN">刷题</span></dt><dd><span class="en">About 150 pattern-based algorithm problems, grouped by technique rather than count.</span><span class="zh" lang="zh-CN">约 150 道按套路分类的算法题，按技巧分组，而不是只看数量。</span></dd>
+          <dt><span class="en">Learning</span><span class="zh" lang="zh-CN">学习</span></dt><dd><span class="en">Applied ML in depth: embeddings, retrieval, and the infrastructure around them.</span><span class="zh" lang="zh-CN">深入学习应用机器学习：嵌入向量、检索，以及它们周边的基础设施。</span></dd>
+          <dt><span class="en">Coursework</span><span class="zh" lang="zh-CN">课程</span></dt><dd><span class="en">CS 577 Introduction to Algorithms, CS 354 Machine Organization and Programming.</span><span class="zh" lang="zh-CN">CS 577 算法导论，CS 354 机器组织与编程。</span></dd>
         </dl>
       </div>
     </div>
@@ -1232,14 +1597,14 @@ h2{--w:780}
   <section class="block contact" id="contact" aria-labelledby="contact-h">
     <canvas id="dust" aria-hidden="true"></canvas>
     <div class="wrap">
-      <h2 id="contact-h"><span data-split="char">Contact</span></h2>
+      <h2 id="contact-h"><span class="en" data-split="char">Contact</span><span class="zh" lang="zh-CN" data-split="char">联系</span></h2>
       <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-split="drop">hgu72@wisc.edu</span></button>
       <p class="sr" id="mail-status" role="status"></p>
-      <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag=".05">Open in mail app</a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag=".05">GitHub</a><a href="#contact" data-feedback data-mag=".05">Send feedback</a></div>
+      <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag=".05"><span class="en">Open in mail app</span><span class="zh" lang="zh-CN">用邮件应用打开</span></a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag=".05">GitHub</a><a href="#contact" data-feedback data-mag=".05"><span class="en">Send feedback</span><span class="zh" lang="zh-CN">发送反馈</span></a></div>
       <canvas class="sine" id="sine" aria-hidden="true"></canvas>
       <footer>
-        <span>Terrain: USGS 3DEP via Terrain Tiles on AWS.</span>
-        <a class="src" href="https://github.com/WEBGRS/webgrs.github.io" target="_blank" rel="noopener">View source</a>
+        <span><span class="en">Terrain: USGS 3DEP via Terrain Tiles on AWS.</span><span class="zh" lang="zh-CN">地形数据：USGS 3DEP，来自 AWS 上的 Terrain Tiles。</span></span>
+        <a class="src" href="https://github.com/WEBGRS/webgrs.github.io" target="_blank" rel="noopener"><span class="en">View source</span><span class="zh" lang="zh-CN">查看源码</span></a>
       </footer>
     </div>
   </section>
@@ -1259,6 +1624,10 @@ const introDone = new Promise(r => { introResolve = r; }).then(() => { introFini
 const fontReady = Promise.race([document.fonts.load('800 100px Archivo'), new Promise(r => setTimeout(r, 800))]);
 introDone.then(() => requestAnimationFrame(() => { root.classList.add('go'); goAt = performance.now(); }));
 
+// Language: both versions are in the page, <html lang> shows one. 'zh-CN' is Chinese, anything else English.
+const isZh = () => root.lang.startsWith('zh');
+const tr = (en, zh) => isZh() ? zh : en;
+
 // Theme toggle
 const themeBtn = document.getElementById('theme');
 try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch {}
@@ -1266,13 +1635,37 @@ const isDark = () => root.dataset.theme === 'dark';
 const syncTheme = () => {
   root.dataset.dark = isDark() ? '1' : '0';
   document.querySelector('meta[name="color-scheme"]').content = isDark() ? 'dark' : 'light';
-  themeBtn.setAttribute('aria-label', isDark() ? 'Switch to light theme' : 'Switch to dark theme');
+  themeBtn.setAttribute('aria-label', isDark() ? tr('Switch to light theme', '切换到浅色主题') : tr('Switch to dark theme', '切换到深色主题'));
 };
 syncTheme();
 themeBtn.onclick = () => {
   root.dataset.theme = isDark() ? 'light' : 'dark';
   try { localStorage.setItem('theme', root.dataset.theme); } catch {}
   syncTheme(); terrain.repaint(); dispatchEvent(new Event('themechange'));
+};
+
+// Language toggle: remembered, and ?lang=zh|en in the link wins
+const langBtn = document.getElementById('lang');
+const TITLE = { en: 'H. Gu, CS at UW–Madison', zh: 'H. Gu，威斯康星大学麦迪逊分校计算机科学' };
+const DESC = {
+  en: 'CS undergraduate at UW–Madison building web tools that turn messy public data into maps, schedules, and scores. Open to Summer 2027 SWE / ML internships.',
+  zh: '威斯康星大学麦迪逊分校计算机科学本科生，做把杂乱的公开数据变成地图、课表和评分的网页工具。正在寻找 2027 年夏季的软件工程 / 机器学习实习。',
+};
+const syncLang = () => {
+  const l = isZh() ? 'zh' : 'en';
+  document.title = TITLE[l];
+  document.querySelector('meta[name="description"]').content = DESC[l];
+  langBtn.setAttribute('aria-label', tr('切换到中文', 'Switch to English'));
+  syncTheme();
+};
+syncLang();
+try { const q = /[?&]lang=(zh|en)/.exec(location.search); if (q) localStorage.setItem('lang', q[1]); } catch {}
+langBtn.onclick = () => {
+  root.lang = isZh() ? 'en' : 'zh-CN';
+  try { localStorage.setItem('lang', isZh() ? 'zh' : 'en'); } catch {}
+  syncLang();
+  // Text lengths changed: the work pages refit and the hero text boxes are measured again
+  dispatchEvent(new Event('resize')); dispatchEvent(new Event('langchange'));
 };
 
 // Text decode: glyphs resolve left to right behind a block cursor.
@@ -1342,7 +1735,7 @@ const decsIO = new IntersectionObserver((es) => es.forEach(e => {
   e.target.querySelectorAll('[data-split]').forEach((el, k) => { el.style.setProperty('--d', (.3 + k * .14) + 's'); el.classList.add('in'); settle(el); });
 }), { threshold: .3 });
 document.querySelectorAll('.decs').forEach(d => decsIO.observe(d));
-introDone.then(() => { const l = document.querySelector('.hero .lede [data-split]'); if (l) { l.style.setProperty('--d', '.55s'); l.classList.add('in'); settle(l); } });
+introDone.then(() => document.querySelectorAll('.hero .lede [data-split]').forEach(l => { l.style.setProperty('--d', '.55s'); l.classList.add('in'); settle(l); }));
 
 // Project names: a weight wave runs through the letters on hover
 if ((fine || root.classList.contains('full')) && !basic()) {
@@ -1412,7 +1805,7 @@ mail.onclick = async (ev) => {
   const addr = mail.dataset.mail;
   try { await navigator.clipboard.writeText(addr); } catch { location.href = 'mailto:' + addr; return; }
   const replay = (t) => { split(mailTxt, t); mailTxt.classList.remove('in', 'done'); void mailTxt.offsetWidth; mailTxt.classList.add('in'); settle(mailTxt); };
-  replay('Copied'); mail.classList.add('copied'); status.textContent = 'Email address copied';
+  replay(tr('Copied', '已复制')); mail.classList.add('copied'); status.textContent = tr('Email address copied', '邮箱地址已复制');
   clearTimeout(mail.t); mail.t = setTimeout(() => { replay(addr); mail.classList.remove('copied'); status.textContent = ''; }, 1600);
 };
 
@@ -2071,7 +2464,7 @@ const terrain = (() => {
   const read = (i, j, name) => {
     const e = at(i, j), [lat, lon] = toLatLon(i, j);
     roA._tok = roB._tok = null; roA.classList.add('on'); roB.classList.add('on');
-    roA.textContent = name || (e < SHORE + .6 ? 'Lake surface' : `Elevation ${Math.round(e)} m`);
+    roA.textContent = name || (e < SHORE + .6 ? tr('Lake surface', '湖面') : tr(`Elevation ${Math.round(e)} m`, `海拔 ${Math.round(e)} 米`));
     roB.textContent = `${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° W`;
   };
   const home = () => { const [fi, fj] = toGrid(FOCUS.lat, FOCUS.lon); read(fi, fj, FOCUS.name); };
@@ -2994,6 +3387,6 @@ void main(){
   if (!full) document.querySelectorAll('.cap').forEach(c => shots.observe(c));
 })();
 </script>
-<script src="assets/feedback.js" data-site="portfolio" data-lang="en" defer></script>
+<script src="assets/feedback.js" data-site="portfolio" data-lang="auto" defer></script>
 </body>
 </html>
