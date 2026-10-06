@@ -67,6 +67,7 @@ A button in the header (`中文` / `EN`) switches the whole page between the two
 - A project's text lives in two files: `docs/work/<slug>.json` and `docs/work/<slug>.zh.json`. `build.py` refuses to build if the Chinese file is missing a field the page prints.
 - Figures are drawn once per language; their strings are looked up in `docs/work/_figs.zh.json`, and a missing entry fails the build.
 - The hand-written text in `index.html` (hero, headings, Decisions, Stack, Now, Contact) is written as an `.en` / `.zh` pair in place. Chinese lines that animate use `data-split="char"`, because Chinese has no spaces to split words on.
+- The Chinese contact section adds a WeChat QR code (`assets/wechat-qr.png`); the English page has no counterpart and never loads the image.
 - `python docs/check_deck.py --lang zh` pages through the deck in Chinese.
 
 ## Performance and accessibility

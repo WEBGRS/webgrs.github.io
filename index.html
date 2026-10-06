@@ -328,6 +328,9 @@ dl.kv dd{margin:0; color:var(--muted)}
 .after a::after{content:"\2192"; transition:transform .45s var(--out)}
 .after a:hover, .after a:focus-visible{background:var(--accent); color:var(--paper); box-shadow:inset 0 0 0 1.5px var(--accent)}
 .after a:hover::after{transform:translateX(.3em)}
+/* WeChat QR, Chinese page only */
+.wx{display:flex; align-items:center; gap:18px; margin:32px 0 0; font-weight:600}
+.wx img{display:block; width:160px; height:160px; border-radius:12px; box-shadow:0 0 0 1px var(--rule)}
 footer{margin-top:clamp(88px,10vw,140px); padding:22px 0 30px; border-top:1px solid var(--rule); display:flex; flex-wrap:wrap; gap:8px 28px; color:var(--muted); font-size:.88rem}
 footer .src{margin-left:auto}
 
@@ -1601,6 +1604,7 @@ h2{--w:780}
       <button class="big" id="mail" type="button" data-mail="hgu72@wisc.edu"><span data-split="drop">hgu72@wisc.edu</span></button>
       <p class="sr" id="mail-status" role="status"></p>
       <div class="after"><a href="mailto:hgu72@wisc.edu" data-mag=".05"><span class="en">Open in mail app</span><span class="zh" lang="zh-CN">用邮件应用打开</span></a><a href="https://github.com/WEBGRS" target="_blank" rel="noopener" data-mag=".05">GitHub</a><a href="#contact" data-feedback data-mag=".05"><span class="en">Send feedback</span><span class="zh" lang="zh-CN">发送反馈</span></a></div>
+      <figure class="wx zh" lang="zh-CN"><img src="assets/wechat-qr.png" width="160" height="160" alt="微信二维码" loading="lazy" decoding="async"><figcaption>微信扫码加我</figcaption></figure>
       <canvas class="sine" id="sine" aria-hidden="true"></canvas>
       <footer>
         <span><span class="en">Terrain: USGS 3DEP via Terrain Tiles on AWS.</span><span class="zh" lang="zh-CN">地形数据：USGS 3DEP，来自 AWS 上的 Terrain Tiles。</span></span>
@@ -3369,7 +3373,7 @@ void main(){
   mq.addEventListener('change', () => root.classList.toggle('mm', mq.matches));
   const bar = document.createElement('i'); bar.className = 'prog'; bar.setAttribute('aria-hidden', 'true'); document.body.append(bar);
   const full = film_live();
-  const sel = ['.index li', '.mini li', ...(full ? [] : ['.cap [data-k]', '.cap h3']), '.dec', 'dl.kv dt', 'dl.kv dd', '#contact .wrap > p:not(.sr)', '#contact .after'];
+  const sel = ['.index li', '.mini li', ...(full ? [] : ['.cap [data-k]', '.cap h3']), '.dec', 'dl.kv dt', 'dl.kv dd', '#contact .wrap > p:not(.sr)', '#contact .after', '#contact .wx'];
   const els = [...document.querySelectorAll(sel.join(','))].filter(el => !el.closest('.hero'));
   els.forEach(el => el.classList.add(el.matches('.cap h3') ? 'mvh' : 'mv'));
   const io = new IntersectionObserver((es) => {
