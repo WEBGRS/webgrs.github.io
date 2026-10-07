@@ -1,6 +1,8 @@
 # Build the Selected work section from docs/work/*.json and write it into index.html and README.md.
 #   python docs/build.py            write the regions
 #   python docs/build.py --check    exit 1 if a file is out of date (nothing is written)
+# "tool": N on a project puts it in the Toolbox under the hero (N = position); it needs a Live site link, a GitHub
+# Source link and a screenshot.
 # Each region sits between <!-- work:NAME --> and <!-- /work:NAME -->; everything else is hand-written.
 # Every project has an English file (<slug>.json) and a Chinese one (<slug>.zh.json). The page carries both; CSS shows
 # the one that matches <html lang>. Figures are drawn once per language (strings in work/_figs.zh.json).
@@ -41,6 +43,12 @@ def load():
         for _, href in d["links"]:
             if not href.startswith("https://"):
                 die(f"{f.name}: link {href!r} must be https")
+        if d.get("tool"):
+            ln = dict(d["links"])
+            if "Live site" not in ln or not ln.get("Source", "").startswith("https://github.com/"):
+                die(f"{f.name}: a tool needs a 'Live site' link and a GitHub 'Source' link")
+            if "shot" not in d:
+                die(f"{f.name}: a tool needs a 'shot'")
         if d["tier"] == "major" and not d["links"]:
             die(f"{f.name}: a major project needs at least one link")
         # A project nobody can open (private repository, local only) says so instead of linking
@@ -140,6 +148,35 @@ def index_entries(specs):
     for i, d in enumerate(feat):
         out.append(f'        <li><a href="#{d["slug"]}" data-i="{i}"><span class="nm">{esc(d["name"])}</span>'
                    f'<span class="ds">{L(d["summary"], d["zh"]["summary"])}</span><span class="kd">{L(esc(d["kind"]), esc(d["zh"]["kind"]))}</span></a></li>')
+    return "\n".join(out)
+
+
+STAR_SVG = ('<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false"><path d="M8 1.2l2.1 4.5 4.9.6-3.6 3.4.9 4.9L8 12.2 3.7 14.6l.9-4.9L1 6.3l4.9-.6z" '
+            'fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>')
+
+
+def tool_cards(specs):
+    """Toolbox: one card per live web tool, a thumbnail, one line, and two links (open it, star its repository)."""
+    tools = sorted((d for d in specs if d.get("tool")), key=lambda d: d["tool"])
+    out = []
+    for d in tools:
+        ln = dict(d["links"])
+        live, src = ln["Live site"], ln["Source"]
+        sh, name = d["shot"], esc(d["name"])
+        img = f'<img src="{attr(sh["src"])}" width="{sh["w"]}" height="{sh["h"]}" alt="" loading="lazy" decoding="async">'
+        out.append("        <li>")
+        out.append(f'          <a class="tbx-shot" href="{attr(live)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{img}</a>')
+        out.append('          <div class="tbx-tx">')
+        out.append(f"            <h3>{name}</h3>")
+        out.append(f'            <p class="tbx-ds">{L(d["summary"], d["zh"]["summary"])}</p>')
+        out.append('            <p class="tbx-go">')
+        out.append(f'              <a class="open" href="{attr(live)}" target="_blank" rel="noopener">'
+                   f'<span class="en">Open<span class="sr"> {name}</span></span><span class="zh" lang="zh-CN">打开<span class="sr"> {name}</span></span></a>')
+        out.append(f'              <a class="star" href="{attr(src)}" target="_blank" rel="noopener">{STAR_SVG}'
+                   f'<span class="en">Star<span class="sr"> {name} on GitHub</span></span><span class="zh" lang="zh-CN">点星<span class="sr"> {name}（GitHub）</span></span></a>')
+        out.append("            </p>")
+        out.append("          </div>")
+        out.append("        </li>")
     return "\n".join(out)
 
 
@@ -305,6 +342,7 @@ def main():
     s = splice(s, "index", index_entries(specs))
     s = splice(s, "caps", caps(specs))
     s = splice(s, "minor", minor_block(specs))
+    s = splice(s, "tools", tool_cards(specs))
     s = splice(s, "stack", stack_data(specs))
     s = splice(s, "sr", sr_sentence(specs), inline=True)
     r = readme.read_text(encoding="utf-8")

@@ -3,6 +3,7 @@
   "name": "route-animator",
   "order": 10,
   "tier": "major",
+  "tool": 2,
   "kind": "Web app",
   "summary": "Flies a route over a satellite globe and records the video in the browser",
   "color": [

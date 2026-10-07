@@ -7,6 +7,10 @@
    data-float-below  below this width (px) hide that button and show a round floating one instead (crowded phone headers)
    data-float-bottom distance of the floating button from the bottom (px, default 16)
    data-lang     auto (follows <html lang>) | en | zh | bi
+   data-star     GitHub repo ("WEBGRS/datamap" or a URL): shows a fixed two-part pill, "Star on GitHub | Feedback", instead
+                 of the mounted button; data-float-bottom sets its height, data-float-bottom-narrow does so under data-narrow-max (default 520) px,
+                 data-dock-side="left" moves it. The page can set --wgfb-lift (px, raises it), --wgfb-display (none hides it)
+                 and --wgfb-dock-z (stacking) on :root or <body> to stay clear of its own bars and drawers
    Any element with [data-feedback] also opens the form. With neither, a small floating button is shown.
    Nothing is loaded until the form opens; the Turnstile human check runs only then. */
 (function () {
@@ -29,9 +33,13 @@
     quota: ['Too many messages today. Try again tomorrow.', '今天发得太多了，明天再试。'],
     fail: ["Couldn't send. Check the connection and try again.", '没发出去，检查网络后再试一次。'],
     close: ['Close', '关闭'],
+    star: ['Star on GitHub', '在 GitHub 点星'],
+    starShort: ['Star', '点星'],
+    starTitle: ['Star this project on GitHub (opens in a new tab)', '在 GitHub 上给这个项目点星（新标签页打开）'],
   };
   // Shorter strings where both languages are shown side by side
-  var BI = { msg: '哪里有问题或可以更好？ What could be better?', contact: '邮箱或微信（选填） Email (optional)' };
+  var BI = { msg: '哪里有问题或可以更好？ What could be better?', contact: '邮箱或微信（选填） Email (optional)', star: 'Star 点星', starShort: 'Star', trigger: '反馈 Feedback' };
+  var STAR = '<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false"><path d="M8 1.2l2.1 4.5 4.9.6-3.6 3.4.9 4.9L8 12.2 3.7 14.6l.9-4.9L1 6.3l4.9-.6z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>';
   var ICON = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M2.5 3.25h11v7.5H8l-3.25 2.5v-2.5H2.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
 
   function lang() {
@@ -129,6 +137,17 @@
     '.fab{position:fixed;right:16px;bottom:16px;z-index:2147482999;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;',
     'font:600 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;background:var(--ink);color:var(--bg);border:0;box-shadow:0 4px 16px rgba(0,0,0,.2)}',
     '.fab.round{width:44px;height:44px;padding:0;justify-content:center}.fab.round svg{width:18px;height:18px}',
+    '.dock{position:fixed;right:16px;bottom:16px;z-index:var(--wgfb-dock-z,2147482999);display:var(--wgfb-display,inline-flex);align-items:stretch;border-radius:999px;overflow:hidden;',
+    'background:var(--bg);color:var(--ink);border:1.5px solid var(--ink);box-shadow:0 8px 26px rgba(0,0,0,.26),0 1px 3px rgba(0,0,0,.14);',
+    'font:600 14px/1 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:normal;text-transform:none}',
+    '.dock a,.dock button{display:inline-flex;align-items:center;gap:7px;margin:0;padding:12px 16px;border:0;font:inherit;color:inherit;background:transparent;cursor:pointer;text-decoration:none;white-space:nowrap}',
+    '.dock .star{color:var(--ink)}.dock .star svg{color:#f2a900}',
+    '.dock .fb{background:var(--ink);color:var(--bg)}',
+    '.dock .star:hover{background:var(--wash)}.dock .fb:hover{opacity:.86}',
+    '.dock a:focus-visible,.dock button:focus-visible{outline:2px solid #f2a900;outline-offset:-4px}',
+    '.dock .short{display:none}',
+    '@media (max-width:520px){.dock{right:10px}.dock a,.dock button{padding:11px 13px}.dock .long{display:none}.dock .short{display:inline}}',
+    '@media print{.dock,.fab{display:none}}',
     '@media (prefers-reduced-motion:reduce){.panel{transition:none}}',
   ].join('');
 
@@ -306,6 +325,8 @@
     var triggers = [];
     var below = +ds.floatBelow;
     var mount = ds.mount && document.querySelector(ds.mount);
+    var dock = null;
+    if (ds.star) { mount = null; below = 0; }
     if (mount) {
       var b = makeButton();
       if (below) b.classList.add('wgfb-mounted');
@@ -320,7 +341,27 @@
       e.preventDefault();
       if (isOpen && opener === el) close(); else open(el);
     });
-    if ((!mount && !document.querySelector('[data-feedback]')) || (mount && below)) {
+    if (ds.star) {
+      // Fixed pill: gold star link on the left, filled Feedback button on the right
+      build();
+      var url = /^https?:/.test(ds.star) ? ds.star : 'https://github.com/' + ds.star.replace(/^\/+/, '');
+      dock = document.createElement('div');
+      dock.className = 'dock';
+      var lift = function (px) { return 'calc(' + px + 'px + var(--wgfb-lift,0px) + env(safe-area-inset-bottom))'; };
+      dock.style.bottom = lift(+ds.floatBottom || 16);
+      if (+ds.floatBottomNarrow) {
+        var nb = document.createElement('style');
+        nb.textContent = '@media (max-width:' + (+ds.narrowMax || 520) + 'px){.dock{bottom:' + lift(+ds.floatBottomNarrow) + '!important}}';
+        root.appendChild(nb);
+      }
+      if (ds.dockSide === 'left') { dock.style.left = '16px'; dock.style.right = 'auto'; }
+      dock.innerHTML = '<a class="star" target="_blank" rel="noopener">' + STAR + '<span class="long"></span><span class="short"></span></a>' +
+        '<button type="button" class="fb" aria-haspopup="dialog" aria-expanded="false">' + ICON + '<span class="fbl"></span></button>';
+      dock.querySelector('.star').href = url;
+      var fbBtn = dock.querySelector('.fb');
+      fbBtn.addEventListener('click', function () { if (isOpen && opener === fbBtn) close(); else open(fbBtn); });
+      root.appendChild(dock);
+    } else if ((!mount && !document.querySelector('[data-feedback]')) || (mount && below)) {
       // Floating button inside the shadow root: always, or only on narrow screens when the header has no room
       build();
       fab = document.createElement('button');
@@ -339,6 +380,17 @@
     }
     function relabel() {
       triggers.forEach(label);
+      if (dock) {
+        var sa = dock.querySelector('.star');
+        dock.querySelector('.long').textContent = t('star');
+        dock.querySelector('.short').textContent = t('starShort');
+        sa.title = t('starTitle');
+        sa.setAttribute('aria-label', t('star') + ' - ' + t('starTitle'));
+        dock.querySelector('.fbl').textContent = t('trigger');
+        dock.querySelector('.fb').title = t('title');
+        dock.classList.remove('light', 'dark');
+        dock.classList.add(dark() ? 'dark' : 'light');
+      }
       texts();
       if (fab) { fab.classList.remove('light', 'dark'); fab.classList.add(dark() ? 'dark' : 'light'); }
     }

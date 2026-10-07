@@ -3,6 +3,7 @@
   "name": "uw-course-lookup",
   "order": 20,
   "tier": "major",
+  "tool": 3,
   "kind": "Web app + API",
   "summary": "Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course",
   "color": ["D7263D", "FFB070"],

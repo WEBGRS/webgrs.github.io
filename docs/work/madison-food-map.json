@@ -3,6 +3,7 @@
   "name": "Madison Eats",
   "order": 17,
   "tier": "major",
+  "tool": 5,
   "kind": "Web app, data",
   "summary": "Every place to eat in Dane County on one map, scored from six rating sources",
   "color": ["D99A00", "FFE29A"],

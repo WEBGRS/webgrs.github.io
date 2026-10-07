@@ -3,6 +3,7 @@
   "name": "DataMap",
   "order": 40,
   "tier": "major",
+  "tool": 1,
   "kind": "Web app",
   "summary": "Paste a column of numbers, get a choropleth",
   "color": [
