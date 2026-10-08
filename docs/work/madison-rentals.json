@@ -3,7 +3,7 @@
   "name": "Isthmus Rentals",
   "order": 15,
   "tier": "major",
-  "tool": 4,
+  "tool": 2,
   "kind": "Web app, data",
   "summary": "Every rental near campus on one map, each value labeled with where it came from",
   "color": ["7A4FD0", "D9C6FF"],
