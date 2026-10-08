@@ -125,7 +125,7 @@ Every project is one file, `docs/work/<slug>.json`; nothing else in `index.html`
 2. For a major project, give each page its notes and, optionally, a `fig` name and caption. A figure is a function in `docs/figures.py` registered in `FIGS`; if it draws real data, an `extract_*.py` script writes the numbers it needs into `docs/data/`.
 3. `python docs/build.py`, then `python docs/check_deck.py` and look at the new pages in both themes.
 
-A project nobody can open (a private repository, a local tool) is a minor card with `"status"` in place of `links`, for example `"Private repository"`; a private repository is never linked. A card can also carry a `"credit"` line, shown small under it.
+A project nobody can open (a private repository, a local tool) is a minor card with no `links`; a private repository is never linked. A card can also carry a `"credit"` line, shown small under it.
 
 The orb behind a project takes its colour from the `color` pair in the JSON, so neighbouring projects should differ in hue; `build.py` warns when two are too close. The stage, the orb poses and the constellation all follow the number of projects, so none of them needs touching.
 

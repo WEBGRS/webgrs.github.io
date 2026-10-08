@@ -51,9 +51,6 @@ def load():
                 die(f"{f.name}: a tool needs a 'shot'")
         if d["tier"] == "major" and not d["links"]:
             die(f"{f.name}: a major project needs at least one link")
-        # A project nobody can open (private repository, local only) says so instead of linking
-        if d["tier"] == "minor" and not d["links"] and not d.get("status"):
-            die(f"{f.name}: a minor project without links needs a 'status' such as \"Private repository\"")
         if d["tier"] == "minor" and "shot" in d:
             for key in ("src",):
                 if not (ROOT / d["shot"][key]).is_file():
@@ -117,8 +114,6 @@ def check_zh(d):
     """The Chinese companion must cover every field the page prints."""
     z, name = d["zh"], d["_file"]
     need = ["kind", "summary"] + (["hook"] if d["tier"] == "major" else [])
-    if d.get("status"):
-        need.append("status")
     if d.get("credit"):
         need.append("credit")
     for k in need:
@@ -205,8 +200,6 @@ def minor_block(specs):
         out.append(f'            <p class="mini-ds">{L(d["summary"], d["zh"]["summary"])}</p>')
         if d["links"]:
             out.append(f'            <p class="links">{link_row(d["links"])}</p>')
-        else:
-            out.append(f'            <p class="mini-st">{L(esc(d["status"]), esc(d["zh"]["status"]))}</p>')
         if d.get("credit"):
             out.append(f'            <p class="mini-cr">{L(d["credit"], d["zh"]["credit"])}</p>')
         out.append("          </div>")

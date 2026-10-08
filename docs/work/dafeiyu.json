@@ -5,7 +5,6 @@
   "tier": "minor",
   "kind": "Game, TypeScript",
   "summary": "A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.",
-  "status": "Private repository",
   "credit": "Fan-made and non-commercial; not affiliated with DeepSeek.",
   "stack": [
     "TypeScript",

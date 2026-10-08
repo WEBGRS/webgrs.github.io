@@ -11,7 +11,6 @@
     "h": 875,
     "alt": "Model Chess in items mode: a board of AI-model pieces mid-game, a strength ladder from ELIZA to Claude, and the move list"
   },
-  "status": "Private repository",
   "credit": "Piece silhouettes: cburnett (Colin M.L. Burnett), via lichess.",
   "stack": [
     "SVG",

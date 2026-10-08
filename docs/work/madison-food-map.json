@@ -29,7 +29,7 @@
         "The public page carries no data. A Cloudflare Worker returns one page or one place at a time, behind a human check, daily quotas and a request log."
       ],
       "fig": "madison-food-map-pipeline",
-      "caption": "From collectors to the page. Collection and scoring live in a private repository; the public one holds the page only."
+      "caption": "From collectors to the page."
     },
     {
       "title": "What the data says",
