@@ -98,8 +98,7 @@ html[lang^="zh"]{--font:"Archivo","PingFang SC","Hiragino Sans GB","Microsoft Ya
 h1{margin:0; font-size:clamp(5rem,17vw,15.5rem); line-height:.8; font-weight:800; font-stretch:125%; letter-spacing:-.045em; margin-left:-.04em}
 .mask{display:block; overflow:hidden; padding:.02em 0 .06em}
 .mask>span{display:block}
-.lede{margin:28px 0 0; max-width:25ch; font-size:clamp(1.35rem,2.4vw,1.9rem); line-height:1.22; font-weight:560; letter-spacing:-.012em}
-.who{margin:18px 0 0; color:var(--muted); font-size:1.02rem}
+.who{margin:28px 0 0; color:var(--muted); font-size:1.02rem}
 .avail{display:flex; align-items:flex-start; gap:12px; margin:10px 0 0; font-weight:560}
 .avail::before{content:""; flex:none; margin-top:.58em; width:8px; height:8px; border-radius:50%; background:var(--signal); box-shadow:0 0 0 4px color-mix(in srgb, var(--signal) 22%, transparent)}
 .toolgo{margin:26px 0 0}
@@ -491,14 +490,13 @@ h2{--w:780}
 }
 @media (prefers-reduced-motion:no-preference){
   .js .hero h1 .l{animation:rise 1.2s var(--out) both paused; animation-delay:calc(.15s + var(--i) * 75ms)}
-  .js .hero .lede .blk{animation:wipe 1.05s var(--io) .6s both paused}
   .js .hero .who, .js .hero .avail, .js .hero .toolgo{animation:flash .9s ease-out both paused; animation-delay:calc(1.05s + var(--i) * 160ms)}
   .js .hero .avail::before{animation:led 1.2s steps(1) 1.5s both paused}
   .js .legend{animation:show .5s ease-out 1.1s both paused}
   .js .legend .bar-s{animation:grow .9s var(--io) 1.2s both paused}
   .js .legend .note{animation:flash .9s ease-out 1.35s both paused}
   .js .bar{animation:show .8s ease-out 1.05s both paused}
-  .go .hero h1 .l, .go .hero .lede .blk, .go .hero .who, .go .hero .avail, .go .hero .toolgo, .go .hero .avail::before,
+  .go .hero h1 .l, .go .hero .who, .go .hero .avail, .go .hero .toolgo, .go .hero .avail::before,
   .go .legend, .go .legend .bar-s, .go .legend .note, .go .bar{animation-play-state:running}
   .js [data-dec]:not(.on){color:transparent}
   .js .shead p{opacity:0}
@@ -601,7 +599,6 @@ h2{--w:780}
     <div class="map" id="map" role="img" aria-label="Contour map of Madison, Wisconsin, with Lake Mendota and Lake Monona"><canvas id="terrain" aria-hidden="true"></canvas></div>
     <div class="wrap">
       <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0">H</span><span class="l" style="--i:1">.</span> <span class="l" style="--i:2">G</span><span class="l" style="--i:3">u</span></span></h1>
-      <p class="lede"><span class="en" data-split="word">I build web tools that turn messy public data into maps, schedules, and scores.</span><span class="zh" lang="zh-CN" data-split="char">我做网页工具，把杂乱的公开数据变成地图、课表和评分。</span></p>
       <p class="who" style="--i:0"><span class="en">Computer Science at UW–Madison, class of 2029.</span><span class="zh" lang="zh-CN">威斯康星大学麦迪逊分校（UW–Madison）计算机科学专业，2029 届。</span></p>
       <p class="avail" style="--i:1"><span class="en">Open to Summer 2027 SWE and ML internships</span><span class="zh" lang="zh-CN">正在寻找 2027 年夏季的软件工程和机器学习实习</span></p>
       <p class="toolgo" style="--i:2"><a href="#tools"><span class="en">Open the toolbox</span><span class="zh" lang="zh-CN">打开工具箱</span></a></p>
@@ -1846,7 +1843,6 @@ const decsIO = new IntersectionObserver((es) => es.forEach(e => {
   e.target.querySelectorAll('[data-split]').forEach((el, k) => { el.style.setProperty('--d', (.3 + k * .14) + 's'); el.classList.add('in'); settle(el); });
 }), { threshold: .3 });
 document.querySelectorAll('.decs').forEach(d => decsIO.observe(d));
-introDone.then(() => document.querySelectorAll('.hero .lede [data-split]').forEach(l => { l.style.setProperty('--d', '.55s'); l.classList.add('in'); settle(l); }));
 
 // Project names: a weight wave runs through the letters on hover
 if ((fine || root.classList.contains('full')) && !basic()) {
@@ -2378,7 +2374,7 @@ const terrain = (() => {
     const c = mapEl.getBoundingClientRect();
     // Measure the name at its final width, not mid-animation
     root.classList.add('measuring');
-    boxes = [...hero.querySelectorAll('.mask, .lede, .who, .avail, .toolgo, .legend')].map(el => {
+    boxes = [...hero.querySelectorAll('.mask, .who, .avail, .toolgo, .legend')].map(el => {
       const rg = document.createRange(); rg.selectNodeContents(el);
       const t = rg.getBoundingClientRect(), b = el.getBoundingClientRect();
       return { l: t.left - c.left - 16, r: t.right - c.left + 16, t: b.top - c.top - 12, b: b.bottom - c.top + 12 };
