@@ -1,6 +1,6 @@
 {
   "slug": "madison-rentals",
-  "name": "Isthmus Rentals",
+  "name": "Madison Rentals",
   "order": 15,
   "tier": "major",
   "tool": 2,
@@ -12,7 +12,7 @@
     "alt": "Map of rentals near the UW–Madison campus, with filters and a price-colored pin for each property"
   },
   "hook": "<span class=\"count\" data-to=\"605\">605</span> rentals near campus on one map, every value labeled by where it came from, every gap turned into a question.",
-  "links": [["Live site", "https://webgrs.github.io/madison-rentals/"], ["Source", "https://github.com/WEBGRS/madison-rentals"]],
+  "links": [["Live site", "https://housing.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/madison-rentals"]],
   "built": "Leaflet, vanilla JS, Python collectors, Madison Metro GTFS",
   "pages": [
     {

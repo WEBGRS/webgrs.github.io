@@ -12,7 +12,7 @@
     "alt": "Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course"
   },
   "hook": "Grade history, instructor GPAs and seats for all <span class=\"count\" data-to=\"4438\">4,438</span> Fall 2026 UW–Madison courses, plus a timetable planner that knows your degree.",
-  "links": [["Live site", "https://webgrs.github.io/uw-course-lookup/"], ["Source", "https://github.com/WEBGRS/uw-course-lookup"]],
+  "links": [["Live site", "https://courses.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/uw-course-lookup"]],
   "built": "Vanilla JS, Cloudflare Workers and Workers AI, SQLite, GitHub Actions CI",
   "pages": [
     {

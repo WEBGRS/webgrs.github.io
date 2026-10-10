@@ -12,7 +12,7 @@
     "alt": "Madison Eats: a grid of photo cards for restaurants, each with an overall score, its rank within its cuisine and a few highlights"
   },
   "hook": "<span class=\"count\" data-to=\"2292\">2,292</span> places to eat in Dane County, scored from six rating sources, with the delivery apps that carry each one.",
-  "links": [["Live site", "https://webgrs.github.io/madison-food-map/"], ["Source", "https://github.com/WEBGRS/madison-food-map"]],
+  "links": [["Live site", "https://food.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/madison-food-map"]],
   "built": "Python collectors, vanilla JS, Leaflet, Cloudflare Workers",
   "pages": [
     {
