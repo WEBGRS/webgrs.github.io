@@ -1,0 +1,18 @@
+{
+  "slug": "uw-digest",
+  "name": "UW Digest",
+  "order": 65,
+  "tier": "minor",
+  "kind": "Web app + email",
+  "summary": "Daily UW–Madison news from 14 feeds, ranked for students and summarized in English and Chinese by Claude, with email subscriptions.",
+  "links": [["Live site", "https://news.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/uw-digest"]],
+  "stack": [
+    "Claude Code",
+    "Cloudflare Workers",
+    "Cloudflare D1",
+    "Resend"
+  ],
+  "data_sources": [],
+  "repo": "https://github.com/WEBGRS/uw-digest",
+  "blurb": "daily UW–Madison news, ranked for students and summarized in English and Chinese"
+}

@@ -1,0 +1,308 @@
+{
+ "checked": "2026-10-08",
+ "places": 131,
+ "answers": 39,
+ "quotes": 4449,
+ "claims": {
+  "fact": 1363,
+  "service": 1267,
+  "cost": 639,
+  "hours": 433,
+  "eligibility": 278,
+  "address": 244,
+  "phone": 180,
+  "status": 45
+ },
+ "pages": 694,
+ "categories": {
+  "grocery": 21,
+  "shop": 20,
+  "campus": 16,
+  "health": 16,
+  "fun": 15,
+  "money": 12,
+  "transport": 9,
+  "study": 8,
+  "fitness": 7,
+  "help": 7
+ },
+ "signals": {
+  "sources": {
+   "15 chat groups": {
+    "messages": 63639,
+    "questions": 5072
+   },
+   "r/UWMadison": {
+    "messages": 7699,
+    "questions": 2796
+   },
+   "r/madisonwi": {
+    "messages": 29076,
+    "questions": 10118
+   }
+  },
+  "topics": [
+   {
+    "topic": "restaurants / food",
+    "chat": 43,
+    "uw": 58,
+    "wi": 668,
+    "total": 769,
+    "tool": "eats",
+    "new": false
+   },
+   {
+    "topic": "housing / sublease",
+    "chat": 102,
+    "uw": 206,
+    "wi": 299,
+    "total": 607,
+    "tool": "rentals",
+    "new": false
+   },
+   {
+    "topic": "parking / car",
+    "chat": 0,
+    "uw": 61,
+    "wi": 454,
+    "total": 515,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "courses / enrollment",
+    "chat": 86,
+    "uw": 277,
+    "wi": 111,
+    "total": 474,
+    "tool": "courses",
+    "new": false
+   },
+   {
+    "topic": "things to do",
+    "chat": 49,
+    "uw": 63,
+    "wi": 317,
+    "total": 429,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "airport / Chicago / travel",
+    "chat": 63,
+    "uw": 16,
+    "wi": 99,
+    "total": 178,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "campus job",
+    "chat": 9,
+    "uw": 46,
+    "wi": 102,
+    "total": 157,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "gym / sports",
+    "chat": 35,
+    "uw": 25,
+    "wi": 94,
+    "total": 154,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "food pantry / cost of living",
+    "chat": 0,
+    "uw": 13,
+    "wi": 133,
+    "total": 146,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "furniture / moving",
+    "chat": 37,
+    "uw": 14,
+    "wi": 93,
+    "total": 144,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "safety / scams / police",
+    "chat": 13,
+    "uw": 16,
+    "wi": 110,
+    "total": 139,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "bike / scooter",
+    "chat": 23,
+    "uw": 18,
+    "wi": 97,
+    "total": 138,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "doctor / clinic",
+    "chat": 26,
+    "uw": 15,
+    "wi": 91,
+    "total": 132,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "bus / Metro",
+    "chat": 25,
+    "uw": 24,
+    "wi": 79,
+    "total": 128,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "phone plan / SIM",
+    "chat": 40,
+    "uw": 5,
+    "wi": 65,
+    "total": 110,
+    "tool": null,
+    "new": true
+   },
+   {
+    "topic": "mail / packages",
+    "chat": 43,
+    "uw": 31,
+    "wi": 34,
+    "total": 108,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "lost and found",
+    "chat": 0,
+    "uw": 12,
+    "wi": 96,
+    "total": 108,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "haircut",
+    "chat": 11,
+    "uw": 5,
+    "wi": 77,
+    "total": 93,
+    "tool": null,
+    "new": true
+   },
+   {
+    "topic": "health insurance (SHIP)",
+    "chat": 22,
+    "uw": 11,
+    "wi": 49,
+    "total": 82,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "bank account / cards",
+    "chat": 64,
+    "uw": 2,
+    "wi": 15,
+    "total": 81,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "Wiscard / NetID / IT",
+    "chat": 52,
+    "uw": 15,
+    "wi": 3,
+    "total": 70,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "mental health",
+    "chat": 5,
+    "uw": 0,
+    "wi": 63,
+    "total": 68,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "dentist / eyes",
+    "chat": 14,
+    "uw": 3,
+    "wi": 50,
+    "total": 67,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "tuition payment / money transfer",
+    "chat": 57,
+    "uw": 0,
+    "wi": 0,
+    "total": 57,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "printing",
+    "chat": 23,
+    "uw": 6,
+    "wi": 22,
+    "total": 51,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "internet / utilities",
+    "chat": 14,
+    "uw": 7,
+    "wi": 27,
+    "total": 48,
+    "tool": null,
+    "new": true
+   },
+   {
+    "topic": "driving / DMV / ID",
+    "chat": 22,
+    "uw": 0,
+    "wi": 9,
+    "total": 31,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "taxes",
+    "chat": 3,
+    "uw": 4,
+    "wi": 24,
+    "total": 31,
+    "tool": null,
+    "new": false
+   },
+   {
+    "topic": "laundry / dry cleaning",
+    "chat": 11,
+    "uw": 3,
+    "wi": 13,
+    "total": 27,
+    "tool": null,
+    "new": true
+   }
+  ]
+ }
+}

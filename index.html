@@ -165,6 +165,8 @@ section.tools{padding-top:clamp(56px,8vw,104px)}
 .tbx-go .star svg{color:#C98A00; flex:none}
 :root[data-theme="dark"] .tbx-go .star svg{color:#F2B632}
 .tbx-go .star:hover{background:color-mix(in srgb, var(--ink) 8%, transparent); box-shadow:inset 0 0 0 1.5px var(--ink)}
+@media (min-width:1240px){ .tbx{grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr)} }
+@media (min-width:900px) and (max-width:1239px){ .tbx{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))} }
 @media (max-width:560px){
   .tbx{grid-template-columns:minmax(0,1fr)}
   .tbx li{display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr)}
@@ -209,6 +211,7 @@ section.tools{padding-top:clamp(56px,8vw,104px)}
 .cap-n{margin:0; color:var(--accent); font-size:.86rem; font-weight:560; letter-spacing:.06em; font-variant-numeric:tabular-nums}
 .cap h3{margin:8px 0 0; font-size:clamp(1.9rem,3.2vw,2.8rem); line-height:1.05; font-weight:760; font-stretch:112%; letter-spacing:-.03em}
 .cap h3 .ch{display:inline-block}
+.cap h3 .wd{display:inline-block; white-space:nowrap}
 .hook{margin:14px 0 0; font-size:1.15rem; line-height:1.45; max-width:38ch}
 .links{display:flex; gap:18px; margin:12px 0 0; font-weight:560}
 .built{margin:10px 0 0; font-size:.93rem; font-weight:500}
@@ -648,6 +651,17 @@ h2{--w:780}
           </div>
         </li>
         <li>
+          <a class="tbx-shot" href="https://guide.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/madison-campus-guide.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async"></a>
+          <div class="tbx-tx">
+            <h3>Madison Essentials</h3>
+            <p class="tbx-ds"><span class="en">The everyday places around campus, explained in English and Chinese, every fact quoted from its source</span><span class="zh" lang="zh-CN">校园周边的日常去处，中英双语讲清楚，每条事实都引自原始来源</span></p>
+            <p class="tbx-go">
+              <a class="open" href="https://guide.madisonstudents.com/" target="_blank" rel="noopener"><span class="en">Open<span class="sr"> Madison Essentials</span></span><span class="zh" lang="zh-CN">打开<span class="sr"> Madison Essentials</span></span></a>
+              <a class="star" href="https://github.com/WEBGRS/madison-campus-guide" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false"><path d="M8 1.2l2.1 4.5 4.9.6-3.6 3.4.9 4.9L8 12.2 3.7 14.6l.9-4.9L1 6.3l4.9-.6z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg><span class="en">Star<span class="sr"> Madison Essentials on GitHub</span></span><span class="zh" lang="zh-CN">点星<span class="sr"> Madison Essentials（GitHub）</span></span></a>
+            </p>
+          </div>
+        </li>
+        <li>
           <a class="tbx-shot" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/datamap.jpg" width="1340" height="838" alt="" loading="lazy" decoding="async"></a>
           <div class="tbx-tx">
             <h3>DataMap</h3>
@@ -671,9 +685,11 @@ h2{--w:780}
         <li><a href="#route-animator" data-i="0"><span class="nm">route-animator</span><span class="ds"><span class="en">Flies a route over a satellite globe and records the video in the browser</span><span class="zh" lang="zh-CN">在卫星地球上飞出一条路线，并直接在浏览器里录成视频</span></span><span class="kd"><span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></span></a></li>
         <li><a href="#madison-rentals" data-i="1"><span class="nm">Madison Rentals</span><span class="ds"><span class="en">Every rental near campus on one map, each value labeled with where it came from</span><span class="zh" lang="zh-CN">校园周边的租房信息都在一张地图上，每个数值都标明来源</span></span><span class="kd"><span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></span></a></li>
         <li><a href="#madison-food-map" data-i="2"><span class="nm">Madison Eats</span><span class="ds"><span class="en">Every place to eat in Dane County on one map, scored from six rating sources</span><span class="zh" lang="zh-CN">戴恩县所有能吃饭的地方放在一张地图上，按六个评分来源打分</span></span><span class="kd"><span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></span></a></li>
-        <li><a href="#uw-course-lookup" data-i="3"><span class="nm">uw-course-lookup</span><span class="ds"><span class="en">Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course</span><span class="zh" lang="zh-CN">Fall 2026 全部 UW–Madison 课程的成绩、座位，外加了解你学位要求的课表规划器</span></span><span class="kd"><span class="en">Web app + API</span><span class="zh" lang="zh-CN">网页应用 + API</span></span></a></li>
-        <li><a href="#photo-organizer" data-i="4"><span class="nm">photo-organizer</span><span class="ds"><span class="en">Sorts a 310&nbsp;GB photo library on a local GPU</span><span class="zh" lang="zh-CN">在本地 GPU 上整理 310&nbsp;GB 的照片库</span></span><span class="kd"><span class="en">Python, CLIP</span><span class="zh" lang="zh-CN">Python、CLIP</span></span></a></li>
-        <li><a href="#datamap" data-i="5"><span class="nm">DataMap</span><span class="ds"><span class="en">Paste a column of numbers, get a choropleth</span><span class="zh" lang="zh-CN">粘贴一列数字，得到一张分级统计地图</span></span><span class="kd"><span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></span></a></li>
+        <li><a href="#madison-campus-guide" data-i="3"><span class="nm">Madison Essentials</span><span class="ds"><span class="en">The everyday places around campus, explained in English and Chinese, every fact quoted from its source</span><span class="zh" lang="zh-CN">校园周边的日常去处，中英双语讲清楚，每条事实都引自原始来源</span></span><span class="kd"><span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></span></a></li>
+        <li><a href="#uw-course-lookup" data-i="4"><span class="nm">uw-course-lookup</span><span class="ds"><span class="en">Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course</span><span class="zh" lang="zh-CN">Fall 2026 全部 UW–Madison 课程的成绩、座位，外加了解你学位要求的课表规划器</span></span><span class="kd"><span class="en">Web app + API</span><span class="zh" lang="zh-CN">网页应用 + API</span></span></a></li>
+        <li><a href="#cutroom" data-i="5"><span class="nm">Cutroom</span><span class="ds"><span class="en">A video editor where you and an AI assistant edit the same storyboard file</span><span class="zh" lang="zh-CN">你和 AI 助手编辑同一个分镜文件的视频剪辑器</span></span><span class="kd"><span class="en">Desktop app</span><span class="zh" lang="zh-CN">桌面应用</span></span></a></li>
+        <li><a href="#photo-organizer" data-i="6"><span class="nm">photo-organizer</span><span class="ds"><span class="en">Sorts a 310&nbsp;GB photo library on a local GPU</span><span class="zh" lang="zh-CN">在本地 GPU 上整理 310&nbsp;GB 的照片库</span></span><span class="kd"><span class="en">Python, CLIP</span><span class="zh" lang="zh-CN">Python、CLIP</span></span></a></li>
+        <li><a href="#datamap" data-i="7"><span class="nm">DataMap</span><span class="ds"><span class="en">Paste a column of numbers, get a choropleth</span><span class="zh" lang="zh-CN">粘贴一列数字，得到一张分级统计地图</span></span><span class="kd"><span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></span></a></li>
         <!-- /work:index -->
       </ul>
     </div>
@@ -686,7 +702,7 @@ h2{--w:780}
         <li class="cap l" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg" data-c="1996AE" data-f="9BE7F2" style="--i:0">
           <figure class="cap-shot"><img src="assets/route-animator.jpg" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">01 / 06 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
+            <p class="cap-n" data-k style="--k:0">01 / 08 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
             <h3 aria-label="route-animator"><span aria-hidden="true"><span class="ch" style="--c:0">r</span><span class="ch" style="--c:1">o</span><span class="ch" style="--c:2">u</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">e</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">a</span><span class="ch" style="--c:7">n</span><span class="ch" style="--c:8">i</span><span class="ch" style="--c:9">m</span><span class="ch" style="--c:10">a</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">r</span></span></h3>
             <p class="hook" data-k style="--k:2"><span class="en">The paid route-video makers want an account, a watermark and an export limit. This one is a single HTML file.</span><span class="zh" lang="zh-CN">收费的路线视频工具要注册账号、加水印、限制导出。这个工具只是一个 HTML 文件。</span></p>
             <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/route-animator/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/route-animator" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
@@ -741,8 +757,8 @@ h2{--w:780}
         <li class="cap r" id="madison-rentals" data-src="assets/madison-rentals.jpg" data-c="7A4FD0" data-f="D9C6FF" style="--i:1">
           <figure class="cap-shot"><img src="assets/madison-rentals.jpg" width="1400" height="875" alt="Map of rentals near the UW–Madison campus, with filters and a price-colored pin for each property" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">02 / 06 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
-            <h3 aria-label="Madison Rentals"><span aria-hidden="true"><span class="ch" style="--c:0">M</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">d</span><span class="ch" style="--c:3">i</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">n</span><span class="ch" style="--c:7">&nbsp;</span><span class="ch" style="--c:8">R</span><span class="ch" style="--c:9">e</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">a</span><span class="ch" style="--c:13">l</span><span class="ch" style="--c:14">s</span></span></h3>
+            <p class="cap-n" data-k style="--k:0">02 / 08 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
+            <h3 aria-label="Madison Rentals"><span aria-hidden="true"><span class="wd"><span class="ch" style="--c:0">M</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">d</span><span class="ch" style="--c:3">i</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">n</span></span> <span class="wd"><span class="ch" style="--c:8">R</span><span class="ch" style="--c:9">e</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">t</span><span class="ch" style="--c:12">a</span><span class="ch" style="--c:13">l</span><span class="ch" style="--c:14">s</span></span></span></h3>
             <p class="hook" data-k style="--k:2"><span class="en"><span class="count" data-to="600">600</span> rentals near campus on one map, every value labeled by where it came from.</span><span class="zh" lang="zh-CN"><span class="count" data-to="600">600</span> 处校园周边的租房放在一张地图上，每个数值都标明来源。</span></p>
             <p class="links" data-k style="--k:3"><a href="https://housing.madisonstudents.com/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/madison-rentals" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
             <p class="built" data-k style="--k:3"><span class="en">Leaflet, vanilla JS, Python collectors, Madison Metro GTFS</span><span class="zh" lang="zh-CN">Leaflet、原生 JS、Python 采集脚本、Madison Metro GTFS</span></p>
@@ -932,8 +948,8 @@ h2{--w:780}
         <li class="cap l" id="madison-food-map" data-src="assets/madison-food-map.jpg" data-c="D99A00" data-f="FFE29A" style="--i:2">
           <figure class="cap-shot"><img src="assets/madison-food-map.jpg" width="1400" height="875" alt="Madison Eats: a grid of photo cards for restaurants, each with an overall score, its rank within its cuisine and a few highlights" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">03 / 06 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
-            <h3 aria-label="Madison Eats"><span aria-hidden="true"><span class="ch" style="--c:0">M</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">d</span><span class="ch" style="--c:3">i</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">n</span><span class="ch" style="--c:7">&nbsp;</span><span class="ch" style="--c:8">E</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">t</span><span class="ch" style="--c:11">s</span></span></h3>
+            <p class="cap-n" data-k style="--k:0">03 / 08 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
+            <h3 aria-label="Madison Eats"><span aria-hidden="true"><span class="wd"><span class="ch" style="--c:0">M</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">d</span><span class="ch" style="--c:3">i</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">n</span></span> <span class="wd"><span class="ch" style="--c:8">E</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">t</span><span class="ch" style="--c:11">s</span></span></span></h3>
             <p class="hook" data-k style="--k:2"><span class="en"><span class="count" data-to="2292">2,292</span> places to eat in Dane County, scored from six rating sources, with the delivery apps that carry each one.</span><span class="zh" lang="zh-CN"><span class="count" data-to="2292">2,292</span> 家戴恩县的餐饮店，按六个评分来源打分，并标出各家上了哪些外卖平台。</span></p>
             <p class="links" data-k style="--k:3"><a href="https://food.madisonstudents.com/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/madison-food-map" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
             <p class="built" data-k style="--k:3"><span class="en">Python collectors, vanilla JS, Leaflet, Cloudflare Workers</span><span class="zh" lang="zh-CN">Python 采集脚本、原生 JS、Leaflet、Cloudflare Workers</span></p>
@@ -1114,10 +1130,209 @@ h2{--w:780}
 <!-- /fig:madison-food-map-agreement --><figcaption><span class="en">Rank correlation of star ratings between pairs of sources, over the 2,292 places shown. n is the number of places rated on both.</span><span class="zh" lang="zh-CN">同一批 2,292 家显示的店铺，每两个来源之间星级的秩相关。n 是两边都有评分的店铺数。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap r" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" data-c="D7263D" data-f="FFB070" style="--i:3">
+        <li class="cap r" id="madison-campus-guide" data-src="assets/madison-campus-guide.jpg" data-c="1F9D55" data-f="B5EBC8" style="--i:3">
+          <figure class="cap-shot"><img src="assets/madison-campus-guide.jpg" width="1400" height="875" alt="Madison Essentials: groceries listed with walking time and open status, beside a map of campus with a colored pin for each place" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">04 / 08 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
+            <h3 aria-label="Madison Essentials"><span aria-hidden="true"><span class="wd"><span class="ch" style="--c:0">M</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">d</span><span class="ch" style="--c:3">i</span><span class="ch" style="--c:4">s</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">n</span></span> <span class="wd"><span class="ch" style="--c:8">E</span><span class="ch" style="--c:9">s</span><span class="ch" style="--c:10">s</span><span class="ch" style="--c:11">e</span><span class="ch" style="--c:12">n</span><span class="ch" style="--c:13">t</span><span class="ch" style="--c:14">i</span><span class="ch" style="--c:15">a</span><span class="ch" style="--c:16">l</span><span class="ch" style="--c:17">s</span></span></span></h3>
+            <p class="hook" data-k style="--k:2"><span class="en"><span class="count" data-to="131">131</span> everyday places around campus, each explained in English and Chinese, with every fact quoted from its source.</span><span class="zh" lang="zh-CN">校园周边 <span class="count" data-to="131">131</span> 个日常去处，每个都有中英文详解，每条事实都附原文出处。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://guide.madisonstudents.com/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/madison-campus-guide" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">Vanilla JS, Leaflet, Python checks, Cloudflare Workers</span><span class="zh" lang="zh-CN">原生 JS、Leaflet、Python 校验脚本、Cloudflare Workers</span></p>
+            <ul>
+              <li data-k style="--k:4"><span class="en">Groceries, clinics, campus offices, gyms, libraries, banks, IDs and help. Each place has a page: what it is, how to use it, what it costs and who may use it, tips for international students, hours with open-now in Madison time, and the nearest bus stops.</span><span class="zh" lang="zh-CN">超市、诊所、学校办事处、健身房、图书馆、银行、证件和求助。每个地方一页：是什么、怎么用、多少钱、谁能用、给国际生的提示，营业时间按麦迪逊时间显示是否开门，还有最近的公交站。</span></li>
+              <li data-k style="--k:5"><span class="en">39 written answers cover what new students ask most, from getting here from O&rsquo;Hare to a bank account without an SSN, and an Ask tab answers the rest from the guide.</span><span class="zh" lang="zh-CN">39 篇问答覆盖新生最常问的事，从 O&rsquo;Hare 机场怎么过来到没有 SSN 怎么开银行账户；其他问题可以在「Ask」里直接问，答案只从指南里找。</span></li>
+            </ul>
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>Madison Essentials</b> &middot; <span class="en">How it works</span><span class="zh" lang="zh-CN">运作方式</span></p>
+            <ul>
+              <li data-k style="--k:1"><span class="en">Every address, phone number, opening time, price and eligibility rule carries a verbatim quote from the page it came from: <span class="count" data-to="4449">4,449</span> quotes from 694 pages.</span><span class="zh" lang="zh-CN">每个地址、电话、营业时间、价格和资格条件，都附有来源页面的原文引用：共 <span class="count" data-to="4449">4,449</span> 条，来自 694 个页面。</span></li>
+              <li data-k style="--k:2"><span class="en">A checker finds each quote again in a saved copy of its page and confirms that phone numbers, street numbers and opening times appear there. OpenStreetMap coordinates are cross-checked with the US Census geocoder.</span><span class="zh" lang="zh-CN">校验脚本会在每个页面的存档里重新找到每一条引用，并确认电话、门牌号和营业时间都出现在原文里。OpenStreetMap 的坐标再用美国人口普查局的地理编码交叉核对。</span></li>
+              <li data-k style="--k:3"><span class="en">Ask picks the matching entries and a model answers from those alone. The Worker shows an answer only if it cites them or gives a fixed pointer such as 911, behind a human check and 10 questions a day.</span><span class="zh" lang="zh-CN">Ask 先挑出相关条目，再让模型只根据这些条目作答。只有引用了条目、或给出 911 这类固定指引的回答才会显示，前面还有人机验证和每天 10 个问题的上限。</span></li>
+            </ul>
+            <figure class="fig" data-k style="--k:4"><!-- fig:madison-campus-guide-evidence -->
+<svg class="en" viewBox="0 0 520 216" role="img" aria-label="Source pages back entries with quotes; every quote is found again in a saved copy; coordinates and bus stops join them in the site data, which feeds the page and the Ask tab">
+<g class="n" style="--d:0"><rect x="0" y="4" width="160" height="50" rx="6"/><text x="13" y="26" class="k">Source pages</text><text x="13" y="43" class="s">694, saved copies</text></g>
+<g class="n" style="--d:1"><rect x="180" y="4" width="160" height="50" rx="6"/><text x="193" y="26" class="k">Entries</text><text x="193" y="43" class="s">131 places, 39 answers</text></g>
+<g class="n acc" style="--d:3"><rect x="360" y="4" width="160" height="50" rx="6"/><text x="373" y="26" class="k">Quote check</text><text x="373" y="43" class="s">all 4,449 found again</text></g>
+<g class="n" style="--d:2"><rect x="0" y="96" width="160" height="50" rx="6"/><text x="13" y="118" class="k">Coordinates</text><text x="13" y="135" class="s">OSM, checked vs Census</text></g>
+<g class="n" style="--d:2"><rect x="0" y="166" width="160" height="50" rx="6"/><text x="13" y="188" class="k">Bus stops</text><text x="13" y="205" class="s">Madison Metro GTFS</text></g>
+<g class="n" style="--d:5"><rect x="180" y="131" width="160" height="50" rx="6"/><text x="193" y="153" class="k">Site data</text><text x="193" y="170" class="s">places, answers, stops</text></g>
+<g class="n" style="--d:7"><rect x="360" y="96" width="160" height="50" rx="6"/><text x="373" y="118" class="k">Guide page</text><text x="373" y="135" class="s">list, map, full guide</text></g>
+<g class="n acc" style="--d:8"><rect x="360" y="166" width="160" height="50" rx="6"/><text x="373" y="188" class="k">Ask</text><text x="373" y="205" class="s">answers must cite</text></g>
+<path class="e draw" style="--d:0" d="M160.0 29.0 L180.0 29.0" pathLength="1"/>
+<path class="tip n" style="--d:4" d="M180.0 29.0 L173.7 32.0 L173.7 26.0Z"/>
+<path class="e acc draw" style="--d:2" d="M340.0 29.0 L360.0 29.0" pathLength="1"/>
+<path class="tip n acc" style="--d:6" d="M360.0 29.0 L353.7 32.0 L353.7 26.0Z"/>
+<path class="e acc draw" style="--d:4" d="M440.0 54.0 L440.0 76.0 L260.0 76.0 L260.0 131.0" pathLength="1"/>
+<path class="tip n acc" style="--d:8" d="M260.0 131.0 L257.0 124.7 L263.0 124.7Z"/>
+<path class="e draw" style="--d:3" d="M160.0 121.0 L170.0 121.0 L170.0 148.0 L180.0 148.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M180.0 148.0 L173.7 151.0 L173.7 145.0Z"/>
+<path class="e draw" style="--d:3" d="M160.0 191.0 L170.0 191.0 L170.0 164.0 L180.0 164.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M180.0 164.0 L173.7 167.0 L173.7 161.0Z"/>
+<path class="e draw" style="--d:6" d="M340.0 148.0 L350.0 148.0 L350.0 121.0 L360.0 121.0" pathLength="1"/>
+<path class="tip n" style="--d:10" d="M360.0 121.0 L353.7 124.0 L353.7 118.0Z"/>
+<path class="e draw" style="--d:7" d="M340.0 164.0 L350.0 164.0 L350.0 191.0 L360.0 191.0" pathLength="1"/>
+<path class="tip n" style="--d:11" d="M360.0 191.0 L353.7 194.0 L353.7 188.0Z"/>
+</svg>
+<svg class="zh" viewBox="0 0 520 216" role="img" aria-label="来源页面为条目提供原文引用；每条引用都在存档里重新找到；坐标和公交站一起并入站点数据，供页面和 Ask 使用">
+<g class="n" style="--d:0"><rect x="0" y="4" width="160" height="50" rx="6"/><text x="13" y="26" class="k">来源页面</text><text x="13" y="43" class="s">694 个，均已存档</text></g>
+<g class="n" style="--d:1"><rect x="180" y="4" width="160" height="50" rx="6"/><text x="193" y="26" class="k">条目</text><text x="193" y="43" class="s">131 个地点，39 篇问答</text></g>
+<g class="n acc" style="--d:3"><rect x="360" y="4" width="160" height="50" rx="6"/><text x="373" y="26" class="k">引用校验</text><text x="373" y="43" class="s">4,449 条全部重新找到</text></g>
+<g class="n" style="--d:2"><rect x="0" y="96" width="160" height="50" rx="6"/><text x="13" y="118" class="k">坐标</text><text x="13" y="135" class="s">OSM，对照普查局核对</text></g>
+<g class="n" style="--d:2"><rect x="0" y="166" width="160" height="50" rx="6"/><text x="13" y="188" class="k">公交站</text><text x="13" y="205" class="s">Madison Metro GTFS</text></g>
+<g class="n" style="--d:5"><rect x="180" y="131" width="160" height="50" rx="6"/><text x="193" y="153" class="k">站点数据</text><text x="193" y="170" class="s">地点、问答、站点</text></g>
+<g class="n" style="--d:7"><rect x="360" y="96" width="160" height="50" rx="6"/><text x="373" y="118" class="k">指南页面</text><text x="373" y="135" class="s">列表、地图、完整指南</text></g>
+<g class="n acc" style="--d:8"><rect x="360" y="166" width="160" height="50" rx="6"/><text x="373" y="188" class="k">Ask 问答</text><text x="373" y="205" class="s">回答必须引用</text></g>
+<path class="e draw" style="--d:0" d="M160.0 29.0 L180.0 29.0" pathLength="1"/>
+<path class="tip n" style="--d:4" d="M180.0 29.0 L173.7 32.0 L173.7 26.0Z"/>
+<path class="e acc draw" style="--d:2" d="M340.0 29.0 L360.0 29.0" pathLength="1"/>
+<path class="tip n acc" style="--d:6" d="M360.0 29.0 L353.7 32.0 L353.7 26.0Z"/>
+<path class="e acc draw" style="--d:4" d="M440.0 54.0 L440.0 76.0 L260.0 76.0 L260.0 131.0" pathLength="1"/>
+<path class="tip n acc" style="--d:8" d="M260.0 131.0 L257.0 124.7 L263.0 124.7Z"/>
+<path class="e draw" style="--d:3" d="M160.0 121.0 L170.0 121.0 L170.0 148.0 L180.0 148.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M180.0 148.0 L173.7 151.0 L173.7 145.0Z"/>
+<path class="e draw" style="--d:3" d="M160.0 191.0 L170.0 191.0 L170.0 164.0 L180.0 164.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M180.0 164.0 L173.7 167.0 L173.7 161.0Z"/>
+<path class="e draw" style="--d:6" d="M340.0 148.0 L350.0 148.0 L350.0 121.0 L360.0 121.0" pathLength="1"/>
+<path class="tip n" style="--d:10" d="M360.0 121.0 L353.7 124.0 L353.7 118.0Z"/>
+<path class="e draw" style="--d:7" d="M340.0 164.0 L350.0 164.0 L350.0 191.0 L360.0 191.0" pathLength="1"/>
+<path class="tip n" style="--d:11" d="M360.0 191.0 L353.7 194.0 L353.7 188.0Z"/>
+</svg>
+<!-- /fig:madison-campus-guide-evidence --><figcaption><span class="en">From source pages to the guide and the Ask tab. Each place shows the date its sources were last read.</span><span class="zh" lang="zh-CN">从来源页面到指南和 Ask。每个地方都标着来源最后一次核对的日期。</span></figcaption></figure>
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>Madison Essentials</b> &middot; <span class="en">What the data says</span><span class="zh" lang="zh-CN">数据说了什么</span></p>
+            <ul>
+              <li data-k style="--k:1"><span class="en">The places and questions were picked by counting who asks about what: <span class="count" data-to="17986">17,986</span> question-like messages and posts in 15 chat groups, r/UWMadison and r/madisonwi since June 2025. Only topic counts were kept, never the messages.</span><span class="zh" lang="zh-CN">收哪些地方、写哪些问答，是数出来的：2025 年 6 月以来 15 个群聊、r/UWMadison 和 r/madisonwi 里 <span class="count" data-to="17986">17,986</span> 条像提问的消息和帖子。只保留话题计数，不保留任何消息。</span></li>
+              <li data-k style="--k:2"><span class="en">Three of the four most-asked topics, food, housing and courses, already had their own tools. The guide takes parking and everything below it; phone plans, haircuts, laundry and utilities got entries because of the count.</span><span class="zh" lang="zh-CN">被问得最多的四个话题里，吃饭、租房、选课三个已经各有工具。指南负责停车及以下的话题；手机套餐、理发、洗衣、水电网这四类，是因为计数才加进来的。</span></li>
+            </ul>
+            <figure class="fig" data-k style="--k:3"><!-- fig:madison-campus-guide-demand -->
+<svg class="en" viewBox="0 0 520 226" role="img" aria-label="Stacked bars: distinct people asking about the ten most-asked topics in chat groups, r/UWMadison and r/madisonwi; food, housing and courses have their own tools">
+<rect class="n seg s1" style="--d:0" x="140.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="157.0" y="12.0" text-anchor="start">chat groups</text>
+<rect class="n seg s2" style="--d:0" x="250.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="267.0" y="12.0" text-anchor="start">r/UWMadison</text>
+<rect class="n seg s3" style="--d:0" x="360.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="377.0" y="12.0" text-anchor="start">r/madisonwi</text>
+<text class="k a n" style="--d:0" x="132.0" y="37.0" text-anchor="end">food</text>
+<rect class="n seg s1" style="--d:1" x="140.0" y="26.0" width="13.2" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:1" x="153.2" y="26.0" width="17.8" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:1" x="171.0" y="26.0" width="205.0" height="13" rx="2"/>
+<text class="s n" style="--d:2" x="384.0" y="37.0" text-anchor="start">769</text>
+<text class="k a n" style="--d:3" x="520.0" y="37.0" text-anchor="end">own tool</text>
+<text class="k a n" style="--d:1" x="132.0" y="57.0" text-anchor="end">housing</text>
+<rect class="n seg s1" style="--d:2" x="140.0" y="46.0" width="31.3" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:2" x="171.3" y="46.0" width="63.2" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:2" x="234.5" y="46.0" width="91.8" height="13" rx="2"/>
+<text class="s n" style="--d:3" x="334.3" y="57.0" text-anchor="start">607</text>
+<text class="k a n" style="--d:4" x="520.0" y="57.0" text-anchor="end">own tool</text>
+<text class="k n" style="--d:2" x="132.0" y="77.0" text-anchor="end">parking, car</text>
+<rect class="n seg s2" style="--d:3" x="140.0" y="66.0" width="18.7" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:3" x="158.7" y="66.0" width="139.3" height="13" rx="2"/>
+<text class="s n" style="--d:4" x="306.0" y="77.0" text-anchor="start">515</text>
+<text class="k a n" style="--d:3" x="132.0" y="97.0" text-anchor="end">courses</text>
+<rect class="n seg s1" style="--d:4" x="140.0" y="86.0" width="26.4" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:4" x="166.4" y="86.0" width="85.0" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:4" x="251.4" y="86.0" width="34.1" height="13" rx="2"/>
+<text class="s n" style="--d:5" x="293.5" y="97.0" text-anchor="start">474</text>
+<text class="k a n" style="--d:6" x="520.0" y="97.0" text-anchor="end">own tool</text>
+<text class="k n" style="--d:4" x="132.0" y="117.0" text-anchor="end">things to do</text>
+<rect class="n seg s1" style="--d:5" x="140.0" y="106.0" width="15.0" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:5" x="155.0" y="106.0" width="19.3" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:5" x="174.4" y="106.0" width="97.3" height="13" rx="2"/>
+<text class="s n" style="--d:6" x="279.7" y="117.0" text-anchor="start">429</text>
+<text class="k n" style="--d:5" x="132.0" y="137.0" text-anchor="end">airport, travel</text>
+<rect class="n seg s1" style="--d:6" x="140.0" y="126.0" width="19.3" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:6" x="159.3" y="126.0" width="4.9" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:6" x="164.2" y="126.0" width="30.4" height="13" rx="2"/>
+<text class="s n" style="--d:7" x="202.6" y="137.0" text-anchor="start">178</text>
+<text class="k n" style="--d:6" x="132.0" y="157.0" text-anchor="end">gym, sports</text>
+<rect class="n seg s1" style="--d:7" x="140.0" y="146.0" width="10.7" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:7" x="150.7" y="146.0" width="7.7" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:7" x="158.4" y="146.0" width="28.8" height="13" rx="2"/>
+<text class="s n" style="--d:8" x="195.3" y="157.0" text-anchor="start">154</text>
+<text class="k n" style="--d:7" x="132.0" y="177.0" text-anchor="end">cost of living</text>
+<rect class="n seg s2" style="--d:8" x="140.0" y="166.0" width="4.0" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:8" x="144.0" y="166.0" width="40.8" height="13" rx="2"/>
+<text class="s n" style="--d:9" x="192.8" y="177.0" text-anchor="start">146</text>
+<text class="k n" style="--d:8" x="132.0" y="197.0" text-anchor="end">furniture, moving</text>
+<rect class="n seg s1" style="--d:9" x="140.0" y="186.0" width="11.4" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:9" x="151.4" y="186.0" width="4.3" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:9" x="155.7" y="186.0" width="28.5" height="13" rx="2"/>
+<text class="s n" style="--d:10" x="192.2" y="197.0" text-anchor="start">144</text>
+<text class="k n" style="--d:9" x="132.0" y="217.0" text-anchor="end">safety, scams</text>
+<rect class="n seg s1" style="--d:10" x="140.0" y="206.0" width="4.0" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:10" x="144.0" y="206.0" width="4.9" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:10" x="148.9" y="206.0" width="33.8" height="13" rx="2"/>
+<text class="s n" style="--d:11" x="190.7" y="217.0" text-anchor="start">139</text>
+</svg>
+<svg class="zh" viewBox="0 0 520 226" role="img" aria-label="堆叠条形图：群聊、r/UWMadison 和 r/madisonwi 里被问得最多的十个话题的提问人数；吃饭、租房、选课已各有工具">
+<rect class="n seg s1" style="--d:0" x="140.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="157.0" y="12.0" text-anchor="start">群聊</text>
+<rect class="n seg s2" style="--d:0" x="250.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="267.0" y="12.0" text-anchor="start">r/UWMadison</text>
+<rect class="n seg s3" style="--d:0" x="360.0" y="2.0" width="11.0" height="11" rx="2"/>
+<text class="s n" style="--d:0" x="377.0" y="12.0" text-anchor="start">r/madisonwi</text>
+<text class="k a n" style="--d:0" x="132.0" y="37.0" text-anchor="end">吃饭</text>
+<rect class="n seg s1" style="--d:1" x="140.0" y="26.0" width="13.2" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:1" x="153.2" y="26.0" width="17.8" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:1" x="171.0" y="26.0" width="205.0" height="13" rx="2"/>
+<text class="s n" style="--d:2" x="384.0" y="37.0" text-anchor="start">769</text>
+<text class="k a n" style="--d:3" x="520.0" y="37.0" text-anchor="end">已有工具</text>
+<text class="k a n" style="--d:1" x="132.0" y="57.0" text-anchor="end">租房</text>
+<rect class="n seg s1" style="--d:2" x="140.0" y="46.0" width="31.3" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:2" x="171.3" y="46.0" width="63.2" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:2" x="234.5" y="46.0" width="91.8" height="13" rx="2"/>
+<text class="s n" style="--d:3" x="334.3" y="57.0" text-anchor="start">607</text>
+<text class="k a n" style="--d:4" x="520.0" y="57.0" text-anchor="end">已有工具</text>
+<text class="k n" style="--d:2" x="132.0" y="77.0" text-anchor="end">停车、开车</text>
+<rect class="n seg s2" style="--d:3" x="140.0" y="66.0" width="18.7" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:3" x="158.7" y="66.0" width="139.3" height="13" rx="2"/>
+<text class="s n" style="--d:4" x="306.0" y="77.0" text-anchor="start">515</text>
+<text class="k a n" style="--d:3" x="132.0" y="97.0" text-anchor="end">选课</text>
+<rect class="n seg s1" style="--d:4" x="140.0" y="86.0" width="26.4" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:4" x="166.4" y="86.0" width="85.0" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:4" x="251.4" y="86.0" width="34.1" height="13" rx="2"/>
+<text class="s n" style="--d:5" x="293.5" y="97.0" text-anchor="start">474</text>
+<text class="k a n" style="--d:6" x="520.0" y="97.0" text-anchor="end">已有工具</text>
+<text class="k n" style="--d:4" x="132.0" y="117.0" text-anchor="end">去哪玩</text>
+<rect class="n seg s1" style="--d:5" x="140.0" y="106.0" width="15.0" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:5" x="155.0" y="106.0" width="19.3" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:5" x="174.4" y="106.0" width="97.3" height="13" rx="2"/>
+<text class="s n" style="--d:6" x="279.7" y="117.0" text-anchor="start">429</text>
+<text class="k n" style="--d:5" x="132.0" y="137.0" text-anchor="end">机场、出行</text>
+<rect class="n seg s1" style="--d:6" x="140.0" y="126.0" width="19.3" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:6" x="159.3" y="126.0" width="4.9" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:6" x="164.2" y="126.0" width="30.4" height="13" rx="2"/>
+<text class="s n" style="--d:7" x="202.6" y="137.0" text-anchor="start">178</text>
+<text class="k n" style="--d:6" x="132.0" y="157.0" text-anchor="end">健身、运动</text>
+<rect class="n seg s1" style="--d:7" x="140.0" y="146.0" width="10.7" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:7" x="150.7" y="146.0" width="7.7" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:7" x="158.4" y="146.0" width="28.8" height="13" rx="2"/>
+<text class="s n" style="--d:8" x="195.3" y="157.0" text-anchor="start">154</text>
+<text class="k n" style="--d:7" x="132.0" y="177.0" text-anchor="end">生活开销</text>
+<rect class="n seg s2" style="--d:8" x="140.0" y="166.0" width="4.0" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:8" x="144.0" y="166.0" width="40.8" height="13" rx="2"/>
+<text class="s n" style="--d:9" x="192.8" y="177.0" text-anchor="start">146</text>
+<text class="k n" style="--d:8" x="132.0" y="197.0" text-anchor="end">家具、搬家</text>
+<rect class="n seg s1" style="--d:9" x="140.0" y="186.0" width="11.4" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:9" x="151.4" y="186.0" width="4.3" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:9" x="155.7" y="186.0" width="28.5" height="13" rx="2"/>
+<text class="s n" style="--d:10" x="192.2" y="197.0" text-anchor="start">144</text>
+<text class="k n" style="--d:9" x="132.0" y="217.0" text-anchor="end">安全、诈骗</text>
+<rect class="n seg s1" style="--d:10" x="140.0" y="206.0" width="4.0" height="13" rx="2"/>
+<rect class="n seg s2" style="--d:10" x="144.0" y="206.0" width="4.9" height="13" rx="2"/>
+<rect class="n seg s3" style="--d:10" x="148.9" y="206.0" width="33.8" height="13" rx="2"/>
+<text class="s n" style="--d:11" x="190.7" y="217.0" text-anchor="start">139</text>
+</svg>
+<!-- /fig:madison-campus-guide-demand --><figcaption><span class="en">Distinct people asking about each topic, top ten, June 2025 to October 2026. Topics are tagged by keyword, so the counts rank topics rather than measure them. Campus jobs is left out: most of its Reddit matches were off-campus jobs.</span><span class="zh" lang="zh-CN">每个话题的提问人数（去重），前十名，2025 年 6 月到 2026 年 10 月。话题按关键词归类，所以计数只用来排序，不是精确数字。校内工作没有列入：Reddit 上匹配到的大多是校外工作。</span></figcaption></figure>
+          </div></div>
+        </li>
+        <li class="cap l" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" data-c="D7263D" data-f="FFB070" style="--i:4">
           <figure class="cap-shot"><img src="assets/uw-course-lookup.jpg" width="1400" height="897" alt="Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">04 / 06 &middot; <span class="en">Web app + API</span><span class="zh" lang="zh-CN">网页应用 + API</span></p>
+            <p class="cap-n" data-k style="--k:0">05 / 08 &middot; <span class="en">Web app + API</span><span class="zh" lang="zh-CN">网页应用 + API</span></p>
             <h3 aria-label="uw-course-lookup"><span aria-hidden="true"><span class="ch" style="--c:0">u</span><span class="ch" style="--c:1">w</span><span class="ch" style="--c:2">-</span><span class="ch" style="--c:3">c</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">u</span><span class="ch" style="--c:6">r</span><span class="ch" style="--c:7">s</span><span class="ch" style="--c:8">e</span><span class="ch" style="--c:9">-</span><span class="ch" style="--c:10">l</span><span class="ch" style="--c:11">o</span><span class="ch" style="--c:12">o</span><span class="ch" style="--c:13">k</span><span class="ch" style="--c:14">u</span><span class="ch" style="--c:15">p</span></span></h3>
             <p class="hook" data-k style="--k:2"><span class="en">Grade history, instructor GPAs and seats for all <span class="count" data-to="4438">4,438</span> Fall 2026 UW–Madison courses, plus a timetable planner that knows your degree.</span><span class="zh" lang="zh-CN"><span class="count" data-to="4438">4,438</span> 门 Fall 2026 UW–Madison 课程的成绩历史、教师 GPA 和座位，还有一个了解你学位要求的课表规划器。</span></p>
             <p class="links" data-k style="--k:3"><a href="https://courses.madisonstudents.com/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/uw-course-lookup" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
@@ -1335,10 +1550,81 @@ h2{--w:780}
 <!-- /fig:uw-course-spread --><figcaption><span class="en">The eight largest gaps between the lowest and highest instructor GPA in one course, among 290 tracked courses. Each instructor has at least 30 graded students.</span><span class="zh" lang="zh-CN">在 290 门被跟踪的课程中，同一门课里最低与最高教师 GPA 相差最大的八门。每位教师至少有 30 名有成绩的学生。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap l" id="photo-organizer" data-src="assets/photo-organizer.jpg" data-c="3A8F7E" data-f="E9D2A6" style="--i:4">
+        <li class="cap r" id="cutroom" data-src="assets/cutroom.jpg" data-c="3B6EF5" data-f="B9CCFF" style="--i:5">
+          <figure class="cap-shot"><img src="assets/cutroom.jpg" width="1400" height="840" alt="Cutroom: an effect library on the left, the video preview, a properties panel, and a filmstrip timeline with captions and a music waveform" loading="lazy" decoding="async"></figure>
+          <div class="pg"><div class="pg-in">
+            <p class="cap-n" data-k style="--k:0">06 / 08 &middot; <span class="en">Desktop app</span><span class="zh" lang="zh-CN">桌面应用</span></p>
+            <h3 aria-label="Cutroom"><span aria-hidden="true"><span class="ch" style="--c:0">C</span><span class="ch" style="--c:1">u</span><span class="ch" style="--c:2">t</span><span class="ch" style="--c:3">r</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">o</span><span class="ch" style="--c:6">m</span></span></h3>
+            <p class="hook" data-k style="--k:2"><span class="en">A video editor that keeps each video as one JSON file, so you on the timeline and an AI assistant in the chat panel can edit the same cut.</span><span class="zh" lang="zh-CN">每条视频就是一个 JSON 文件，所以你在时间线上剪、AI 助手在聊天面板里改，改的是同一份剪辑。</span></p>
+            <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/cutroom" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
+            <p class="built" data-k style="--k:3"><span class="en">TypeScript, React, Remotion, Electron</span><span class="zh" lang="zh-CN">TypeScript、React、Remotion、Electron</span></p>
+            <ul>
+              <li data-k style="--k:4"><span class="en">A filmstrip timeline with thumbnails and waveforms, trim, split, undo and a beat grid. One storyboard gives a narrated cut and a beat-synced music cut, each in 16:9 and 9:16.</span><span class="zh" lang="zh-CN">胶片条时间线带缩略图和波形，能裁切、拆分、撤销，还有节拍网格。一份分镜同时出旁白版和卡点版，各有 16:9 和 9:16。</span></li>
+              <li data-k style="--k:5"><span class="en"><span class="count" data-to="182">182</span> effects, among them 39 transitions and 33 text animations, each with a preview that plays on hover. Many follow designs from HeyGen&rsquo;s HyperFrames.</span><span class="zh" lang="zh-CN"><span class="count" data-to="182">182</span> 种特效，其中转场 39 种、文字动画 33 种，鼠标悬停就播放预览。很多设计参考了 HeyGen 的 HyperFrames。</span></li>
+              <li data-k style="--k:6"><span class="en">Exports MP4, GIF, ProRes and SRT. Runs in the browser or as a Windows desktop app, in English or Chinese, under the MIT license.</span><span class="zh" lang="zh-CN">导出 MP4、GIF、ProRes 和 SRT 字幕。可以在浏览器里用，也可以作为 Windows 桌面应用，界面中英文可选，MIT 许可证开源。</span></li>
+            </ul>
+          </div></div>
+          <div class="pg"><div class="pg-in">
+            <p class="pg-h" data-k style="--k:0"><b>Cutroom</b> &middot; <span class="en">How it works</span><span class="zh" lang="zh-CN">运作方式</span></p>
+            <ul>
+              <li data-k style="--k:1"><span class="en">The assistant (Claude) may run only the editor&rsquo;s own CLI on the open project: no file edits, no other programs.</span><span class="zh" lang="zh-CN">AI 助手（Claude）只能对当前项目运行编辑器自己的命令行：不能直接改文件，也不能运行别的程序。</span></li>
+              <li data-k style="--k:2"><span class="en">Every save, from the UI or the CLI, names the version it started from. If the file changed in between, the save is refused and the current file comes back, so neither side overwrites the other.</span><span class="zh" lang="zh-CN">界面和命令行的每次保存都带着它基于的版本号。如果中间文件被改过，这次保存会被拒绝并拿回最新文件，所以谁也不会覆盖谁。</span></li>
+              <li data-k style="--k:3"><span class="en">The preview is a Remotion Player running the composition the renderer uses. A test renders 13 frames both ways and needs at least 50 dB PSNR; a different frame, as a control, must fall below it.</span><span class="zh" lang="zh-CN">预览用的 Remotion Player 跑的就是导出时渲染的同一套合成。测试把 13 帧分别用两种方式渲染，PSNR 至少 50 dB 才算通过；另取一帧当对照，必须低于这个值。</span></li>
+            </ul>
+            <figure class="fig" data-k style="--k:4"><!-- fig:cutroom-architecture -->
+<svg class="en" viewBox="0 0 520 216" role="img" aria-label="The timeline UI and the AI assistant, through the CLI, both save versioned edits to storyboard.json; a Remotion Player previews it and the Remotion renderer exports it">
+<g class="n" style="--d:0"><rect x="0" y="4" width="150" height="50" rx="6"/><text x="13" y="26" class="k">Timeline UI</text><text x="13" y="43" class="s">you</text></g>
+<g class="n" style="--d:2"><rect x="0" y="84" width="150" height="50" rx="6"/><text x="13" y="106" class="k">CLI</text><text x="13" y="123" class="s">edit operations</text></g>
+<g class="n" style="--d:0"><rect x="0" y="164" width="150" height="50" rx="6"/><text x="13" y="186" class="k">AI chat</text><text x="13" y="203" class="s">Claude, CLI only</text></g>
+<g class="n acc" style="--d:4"><rect x="185" y="84" width="150" height="50" rx="6"/><text x="198" y="106" class="k">storyboard.json</text><text x="198" y="123" class="s">versioned saves</text></g>
+<g class="n" style="--d:6"><rect x="370" y="4" width="150" height="50" rx="6"/><text x="383" y="26" class="k">Remotion Player</text><text x="383" y="43" class="s">preview</text></g>
+<g class="n" style="--d:6"><rect x="370" y="164" width="150" height="50" rx="6"/><text x="383" y="186" class="k">Remotion renderer</text><text x="383" y="203" class="s">MP4, GIF, ProRes</text></g>
+<path class="e draw" style="--d:1" d="M40.0 164.0 L40.0 134.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M40.0 134.0 L43.0 140.3 L37.0 140.3Z"/>
+<path class="e draw" style="--d:3" d="M150.0 29.0 L168.0 29.0 L168.0 98.0 L185.0 98.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M185.0 98.0 L178.7 101.0 L178.7 95.0Z"/>
+<path class="e draw" style="--d:3" d="M150.0 118.0 L185.0 118.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M185.0 118.0 L178.7 121.0 L178.7 115.0Z"/>
+<path class="e acc draw" style="--d:5" d="M335.0 98.0 L352.0 98.0 L352.0 29.0 L370.0 29.0" pathLength="1"/>
+<path class="tip n acc" style="--d:9" d="M370.0 29.0 L363.7 32.0 L363.7 26.0Z"/>
+<path class="e acc draw" style="--d:5" d="M335.0 118.0 L352.0 118.0 L352.0 189.0 L370.0 189.0" pathLength="1"/>
+<path class="tip n acc" style="--d:9" d="M370.0 189.0 L363.7 192.0 L363.7 186.0Z"/>
+<text class="s n" style="--d:5" x="260.0" y="154.0" text-anchor="middle">stale save: refused,</text>
+<text class="s n" style="--d:5" x="260.0" y="172.0" text-anchor="middle">current file sent back</text>
+<path class="e dash n" style="--d:7" d="M445 54 L445 164"/>
+<text class="s n" style="--d:7" x="437.0" y="105.0" text-anchor="end">same frames,</text>
+<text class="s n" style="--d:7" x="437.0" y="123.0" text-anchor="end">PSNR ≥ 50 dB</text>
+</svg>
+<svg class="zh" viewBox="0 0 520 216" role="img" aria-label="时间线界面和 AI 助手（通过命令行）都以带版本号的方式保存到 storyboard.json；Remotion Player 负责预览，Remotion 渲染器负责导出">
+<g class="n" style="--d:0"><rect x="0" y="4" width="150" height="50" rx="6"/><text x="13" y="26" class="k">时间线界面</text><text x="13" y="43" class="s">你</text></g>
+<g class="n" style="--d:2"><rect x="0" y="84" width="150" height="50" rx="6"/><text x="13" y="106" class="k">CLI</text><text x="13" y="123" class="s">编辑操作</text></g>
+<g class="n" style="--d:0"><rect x="0" y="164" width="150" height="50" rx="6"/><text x="13" y="186" class="k">AI 聊天</text><text x="13" y="203" class="s">Claude，只能用命令行</text></g>
+<g class="n acc" style="--d:4"><rect x="185" y="84" width="150" height="50" rx="6"/><text x="198" y="106" class="k">storyboard.json</text><text x="198" y="123" class="s">带版本号保存</text></g>
+<g class="n" style="--d:6"><rect x="370" y="4" width="150" height="50" rx="6"/><text x="383" y="26" class="k">Remotion Player</text><text x="383" y="43" class="s">预览</text></g>
+<g class="n" style="--d:6"><rect x="370" y="164" width="150" height="50" rx="6"/><text x="383" y="186" class="k">Remotion renderer</text><text x="383" y="203" class="s">MP4, GIF, ProRes</text></g>
+<path class="e draw" style="--d:1" d="M40.0 164.0 L40.0 134.0" pathLength="1"/>
+<path class="tip n" style="--d:5" d="M40.0 134.0 L43.0 140.3 L37.0 140.3Z"/>
+<path class="e draw" style="--d:3" d="M150.0 29.0 L168.0 29.0 L168.0 98.0 L185.0 98.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M185.0 98.0 L178.7 101.0 L178.7 95.0Z"/>
+<path class="e draw" style="--d:3" d="M150.0 118.0 L185.0 118.0" pathLength="1"/>
+<path class="tip n" style="--d:7" d="M185.0 118.0 L178.7 121.0 L178.7 115.0Z"/>
+<path class="e acc draw" style="--d:5" d="M335.0 98.0 L352.0 98.0 L352.0 29.0 L370.0 29.0" pathLength="1"/>
+<path class="tip n acc" style="--d:9" d="M370.0 29.0 L363.7 32.0 L363.7 26.0Z"/>
+<path class="e acc draw" style="--d:5" d="M335.0 118.0 L352.0 118.0 L352.0 189.0 L370.0 189.0" pathLength="1"/>
+<path class="tip n acc" style="--d:9" d="M370.0 189.0 L363.7 192.0 L363.7 186.0Z"/>
+<text class="s n" style="--d:5" x="260.0" y="154.0" text-anchor="middle">版本过期的保存被拒绝，</text>
+<text class="s n" style="--d:5" x="260.0" y="172.0" text-anchor="middle">并拿回最新文件</text>
+<path class="e dash n" style="--d:7" d="M445 54 L445 164"/>
+<text class="s n" style="--d:7" x="437.0" y="105.0" text-anchor="end">同帧对比，</text>
+<text class="s n" style="--d:7" x="437.0" y="123.0" text-anchor="end">PSNR ≥ 50 dB</text>
+</svg>
+<!-- /fig:cutroom-architecture --><figcaption><span class="en">One file, two editors, and one composition for both preview and export.</span><span class="zh" lang="zh-CN">一个文件，两个编辑者，预览和导出共用一套合成。</span></figcaption></figure>
+          </div></div>
+        </li>
+        <li class="cap l" id="photo-organizer" data-src="assets/photo-organizer.jpg" data-c="3A8F7E" data-f="E9D2A6" style="--i:6">
           <figure class="cap-shot"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">05 / 06 &middot; <span class="en">Python, CLIP</span><span class="zh" lang="zh-CN">Python、CLIP</span></p>
+            <p class="cap-n" data-k style="--k:0">07 / 08 &middot; <span class="en">Python, CLIP</span><span class="zh" lang="zh-CN">Python、CLIP</span></p>
             <h3 aria-label="photo-organizer"><span aria-hidden="true"><span class="ch" style="--c:0">p</span><span class="ch" style="--c:1">h</span><span class="ch" style="--c:2">o</span><span class="ch" style="--c:3">t</span><span class="ch" style="--c:4">o</span><span class="ch" style="--c:5">-</span><span class="ch" style="--c:6">o</span><span class="ch" style="--c:7">r</span><span class="ch" style="--c:8">g</span><span class="ch" style="--c:9">a</span><span class="ch" style="--c:10">n</span><span class="ch" style="--c:11">i</span><span class="ch" style="--c:12">z</span><span class="ch" style="--c:13">e</span><span class="ch" style="--c:14">r</span></span></h3>
             <p class="hook" data-k style="--k:2"><span class="en">Sorts a <span class="count" data-to="310">310</span>&nbsp;GB travel photo library into people, scenery, and per-trip clusters, entirely on a local GPU. Nothing is uploaded.</span><span class="zh" lang="zh-CN">在本地 GPU 上，把 <span class="count" data-to="310">310</span>&nbsp;GB 的旅行照片库分成人像、风景和按旅行划分的聚类，全程不上传任何东西。</span></p>
             <p class="links" data-k style="--k:3"><a href="https://github.com/WEBGRS/photo-organizer" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
@@ -1472,10 +1758,10 @@ h2{--w:780}
 <!-- /fig:photo-organizer --><figcaption><span class="en">Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</span><span class="zh" lang="zh-CN">示意图。只有风景会被聚类；HDBSCAN 无法归入任何旅行的照片会放进 <code>misc</code> 文件夹。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap r" id="datamap" data-src="assets/datamap.jpg" data-c="2F6FE0" data-f="A9C8FF" style="--i:5">
+        <li class="cap r" id="datamap" data-src="assets/datamap.jpg" data-c="2F6FE0" data-f="A9C8FF" style="--i:7">
           <figure class="cap-shot"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
-            <p class="cap-n" data-k style="--k:0">06 / 06 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
+            <p class="cap-n" data-k style="--k:0">08 / 08 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
             <h3 aria-label="DataMap"><span aria-hidden="true"><span class="ch" style="--c:0">D</span><span class="ch" style="--c:1">a</span><span class="ch" style="--c:2">t</span><span class="ch" style="--c:3">a</span><span class="ch" style="--c:4">M</span><span class="ch" style="--c:5">a</span><span class="ch" style="--c:6">p</span></span></h3>
             <p class="hook" data-k style="--k:2"><span class="en">Paste a column of numbers, get a choropleth whose color scale you can defend in a code review.</span><span class="zh" lang="zh-CN">粘贴一列数字，就得到一张分级统计地图，它的色阶经得起代码评审的追问。</span></p>
             <p class="links" data-k style="--k:3"><a href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/datamap" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
@@ -1576,14 +1862,6 @@ h2{--w:780}
             <p class="mini-cr"><span class="en">Piece silhouettes: cburnett (Colin M.L. Burnett), via lichess.</span><span class="zh" lang="zh-CN">棋子轮廓：cburnett（Colin M.L. Burnett），来自 lichess。</span></p>
           </div>
         </li>
-        <li class="noshot">
-          <div class="mini-tx">
-            <p class="mini-kd"><span class="en">Game, TypeScript</span><span class="zh" lang="zh-CN">游戏 · TypeScript</span></p>
-            <h4>Dafeiyu</h4>
-            <p class="mini-ds"><span class="en">A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.</span><span class="zh" lang="zh-CN">一款养成游戏和一款类《吸血鬼幸存者》的肉鸽，建立在纯规则引擎和机器人模拟器之上。239 个测试，界面为中文。</span></p>
-            <p class="mini-cr"><span class="en">Fan-made and non-commercial; not affiliated with DeepSeek.</span><span class="zh" lang="zh-CN">同人作品，非商业；与 DeepSeek 无关。</span></p>
-          </div>
-        </li>
         <li>
           <a class="mini-shot" href="https://github.com/WEBGRS/geo-spoof" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/geo-spoof.jpg" width="1400" height="822" alt="" loading="lazy" decoding="async"></a>
           <div class="mini-tx">
@@ -1604,16 +1882,25 @@ h2{--w:780}
         </li>
         <li class="noshot">
           <div class="mini-tx">
-            <p class="mini-kd"><span class="en">Cloudflare Worker module</span><span class="zh" lang="zh-CN">Cloudflare Worker 模块</span></p>
-            <h4>webgrs-guard</h4>
-            <p class="mini-ds"><span class="en">Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a D1 request log.</span><span class="zh" lang="zh-CN">我的数据站共用的请求防护：Turnstile 会话、每日配额、限流、D1 请求日志。</span></p>
+            <p class="mini-kd"><span class="en">Web app + email</span><span class="zh" lang="zh-CN">网页应用 · 邮件</span></p>
+            <h4>UW Digest</h4>
+            <p class="mini-ds"><span class="en">Daily UW–Madison news from 14 feeds, ranked for students and summarized in English and Chinese by Claude, with email subscriptions.</span><span class="zh" lang="zh-CN">每天从 14 个信息源汇总 UW–Madison 新闻，由 Claude 按对学生的重要程度排序，并写成中英文摘要，可邮件订阅。</span></p>
+            <p class="links"><a href="https://news.madisonstudents.com/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/uw-digest" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
           </div>
         </li>
         <li class="noshot">
           <div class="mini-tx">
-            <p class="mini-kd"><span class="en">Video pipeline</span><span class="zh" lang="zh-CN">视频流水线</span></p>
-            <h4>video-studio</h4>
-            <p class="mini-ds"><span class="en">Storyboard JSON to a finished showcase video: scripted capture, local narration, Remotion.</span><span class="zh" lang="zh-CN">从分镜 JSON 到成品展示视频：脚本化录屏、本地配音、Remotion 合成。</span></p>
+            <p class="mini-kd"><span class="en">Cloudflare Worker module</span><span class="zh" lang="zh-CN">Cloudflare Worker 模块</span></p>
+            <h4>webgrs-guard</h4>
+            <p class="mini-ds"><span class="en">Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a request log, a feedback inbox and a visitor-stats page.</span><span class="zh" lang="zh-CN">我的数据站共用的请求防护：Turnstile 会话、每日配额、限流、请求日志、反馈收件箱和访客统计页。</span></p>
+          </div>
+        </li>
+        <li class="noshot">
+          <div class="mini-tx">
+            <p class="mini-kd"><span class="en">Game, TypeScript</span><span class="zh" lang="zh-CN">游戏 · TypeScript</span></p>
+            <h4>Dafeiyu</h4>
+            <p class="mini-ds"><span class="en">A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.</span><span class="zh" lang="zh-CN">一款养成游戏和一款类《吸血鬼幸存者》的肉鸽，建立在纯规则引擎和机器人模拟器之上。239 个测试，界面为中文。</span></p>
+            <p class="mini-cr"><span class="en">Fan-made and non-commercial; not affiliated with DeepSeek.</span><span class="zh" lang="zh-CN">同人作品，非商业；与 DeepSeek 无关。</span></p>
           </div>
         </li>
       </ul>
@@ -1642,23 +1929,25 @@ h2{--w:780}
   </section>
 
   <section class="block" id="now" aria-labelledby="now-h">
-    <p class="sr"><!-- work:sr --><span class="en">Tools used in these projects: MapLibre GL, Canvas 2D, MediaRecorder, WebGL, Leaflet, Cloudflare Workers, Cloudflare Turnstile, Chrome MV3, Playwright, D3, TopoJSON, OKLCH, SVG, Stable Diffusion XL, Remotion, Whisper, SQLite, Workers AI, GitHub Actions, pdf.js, Cloudflare D1, PyTorch, open_clip, HDBSCAN, FastAPI, TypeScript, React, Vite, Electron, OffscreenCanvas. Data sources: Esri World Imagery, Madison Metro GTFS, OpenStreetMap, Nominatim, Public Health Madison & Dane County, ntfy, World Bank, US Census, ISO 3166, MadGrades API, Course Search & Enroll API, Reddit via Firecrawl, USGS 3DEP.</span><span class="zh" lang="zh-CN">这些项目用到的工具：MapLibre GL、Canvas 2D、MediaRecorder、WebGL、Leaflet、Cloudflare Workers、Cloudflare Turnstile、Chrome MV3、Playwright、D3、TopoJSON、OKLCH、SVG、Stable Diffusion XL、Remotion、Whisper、SQLite、Workers AI、GitHub Actions、pdf.js、Cloudflare D1、PyTorch、open_clip、HDBSCAN、FastAPI、TypeScript、React、Vite、Electron、OffscreenCanvas。数据来源：Esri World Imagery、Madison Metro GTFS、OpenStreetMap、Nominatim、Public Health Madison & Dane County、ntfy、World Bank、US Census、ISO 3166、MadGrades API、Course Search & Enroll API、Reddit via Firecrawl、USGS 3DEP。</span><!-- /work:sr --></p>
+    <p class="sr"><!-- work:sr --><span class="en">Tools used in these projects: MapLibre GL, Canvas 2D, MediaRecorder, WebGL, Leaflet, Cloudflare Workers, Cloudflare Turnstile, Workers AI, DeepSeek, Chrome MV3, Playwright, TypeScript, React, Remotion, Electron, Claude Code, ffmpeg, Vite, SQLite, GitHub Actions, pdf.js, Cloudflare D1, Resend, PyTorch, open_clip, HDBSCAN, FastAPI, D3, TopoJSON, OKLCH, SVG, Stable Diffusion XL, OffscreenCanvas. Data sources: Esri World Imagery, Madison Metro GTFS, OpenStreetMap, Nominatim, Public Health Madison & Dane County, ntfy, MadGrades API, Course Search & Enroll API, Reddit via Firecrawl, World Bank, US Census, ISO 3166, USGS 3DEP.</span><span class="zh" lang="zh-CN">这些项目用到的工具：MapLibre GL、Canvas 2D、MediaRecorder、WebGL、Leaflet、Cloudflare Workers、Cloudflare Turnstile、Workers AI、DeepSeek、Chrome MV3、Playwright、TypeScript、React、Remotion、Electron、Claude Code、ffmpeg、Vite、SQLite、GitHub Actions、pdf.js、Cloudflare D1、Resend、PyTorch、open_clip、HDBSCAN、FastAPI、D3、TopoJSON、OKLCH、SVG、Stable Diffusion XL、OffscreenCanvas。数据来源：Esri World Imagery、Madison Metro GTFS、OpenStreetMap、Nominatim、Public Health Madison & Dane County、ntfy、MadGrades API、Course Search & Enroll API、Reddit via Firecrawl、World Bank、US Census、ISO 3166、USGS 3DEP。</span><!-- /work:sr --></p>
     <!-- work:stack -->
     <script type="application/json" id="stack-data">
 {
   "this site": ["WebGL", "OffscreenCanvas", "Canvas 2D", "USGS 3DEP"],
   "route-animator": ["MapLibre GL", "Canvas 2D", "MediaRecorder", "WebGL", "Esri World Imagery"],
   "Madison Rentals": ["Leaflet", "Madison Metro GTFS", "OpenStreetMap", "Nominatim", "Esri World Imagery"],
+  "Madison Essentials": ["Leaflet", "Cloudflare Workers", "Cloudflare Turnstile", "Workers AI", "DeepSeek", "OpenStreetMap", "Nominatim", "Madison Metro GTFS"],
   "Madison Eats": ["Leaflet", "Cloudflare Workers", "Cloudflare Turnstile", "OpenStreetMap", "Esri World Imagery", "Public Health Madison & Dane County"],
   "geo-spoof": ["Leaflet", "Chrome MV3", "OpenStreetMap", "Nominatim"],
   "tophat-watch": ["Chrome MV3", "ntfy", "Playwright"],
-  "DataMap": ["D3", "TopoJSON", "OKLCH", "Playwright", "World Bank", "US Census", "ISO 3166"],
-  "Model Chess": ["SVG", "Playwright", "Stable Diffusion XL"],
-  "video-studio": ["Remotion", "Playwright", "Whisper"],
+  "Cutroom": ["TypeScript", "React", "Remotion", "Electron", "Claude Code", "Playwright", "ffmpeg"],
+  "Dafeiyu": ["TypeScript", "React", "Vite", "Electron"],
   "uw-course-lookup": ["SQLite", "Cloudflare Workers", "Workers AI", "GitHub Actions", "pdf.js", "MadGrades API", "Course Search & Enroll API", "Reddit via Firecrawl"],
+  "UW Digest": ["Claude Code", "Cloudflare Workers", "Cloudflare D1", "Resend"],
   "webgrs-guard": ["Cloudflare Workers", "Cloudflare D1", "Cloudflare Turnstile"],
   "photo-organizer": ["PyTorch", "open_clip", "HDBSCAN", "FastAPI"],
-  "Dafeiyu": ["TypeScript", "React", "Vite", "Electron"]
+  "DataMap": ["D3", "TopoJSON", "OKLCH", "Playwright", "World Bank", "US Census", "ISO 3166"],
+  "Model Chess": ["SVG", "Playwright", "Stable Diffusion XL"]
 }
     </script>
     <!-- /work:stack -->

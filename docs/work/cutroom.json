@@ -1,0 +1,39 @@
+{
+  "slug": "cutroom",
+  "name": "Cutroom",
+  "order": 25,
+  "tier": "major",
+  "kind": "Desktop app",
+  "summary": "A video editor where you and an AI assistant edit the same storyboard file",
+  "color": ["3B6EF5", "B9CCFF"],
+  "shot": {
+    "src": "assets/cutroom.jpg", "w": 1400, "h": 840,
+    "alt": "Cutroom: an effect library on the left, the video preview, a properties panel, and a filmstrip timeline with captions and a music waveform"
+  },
+  "hook": "A video editor that keeps each video as one JSON file, so you on the timeline and an AI assistant in the chat panel can edit the same cut.",
+  "links": [["Source", "https://github.com/WEBGRS/cutroom"]],
+  "built": "TypeScript, React, Remotion, Electron",
+  "pages": [
+    {
+      "notes": [
+        "A filmstrip timeline with thumbnails and waveforms, trim, split, undo and a beat grid. One storyboard gives a narrated cut and a beat-synced music cut, each in 16:9 and 9:16.",
+        "<span class=\"count\" data-to=\"182\">182</span> effects, among them 39 transitions and 33 text animations, each with a preview that plays on hover. Many follow designs from HeyGen&rsquo;s HyperFrames.",
+        "Exports MP4, GIF, ProRes and SRT. Runs in the browser or as a Windows desktop app, in English or Chinese, under the MIT license."
+      ]
+    },
+    {
+      "title": "How it works",
+      "notes": [
+        "The assistant (Claude) may run only the editor&rsquo;s own CLI on the open project: no file edits, no other programs.",
+        "Every save, from the UI or the CLI, names the version it started from. If the file changed in between, the save is refused and the current file comes back, so neither side overwrites the other.",
+        "The preview is a Remotion Player running the composition the renderer uses. A test renders 13 frames both ways and needs at least 50 dB PSNR; a different frame, as a control, must fall below it."
+      ],
+      "fig": "cutroom-architecture",
+      "caption": "One file, two editors, and one composition for both preview and export."
+    }
+  ],
+  "stack": ["TypeScript", "React", "Remotion", "Electron", "Claude Code", "Playwright", "ffmpeg"],
+  "data_sources": [],
+  "repo": "https://github.com/WEBGRS/cutroom",
+  "blurb": "open-source video editor where you and an AI assistant edit the same storyboard file"
+}

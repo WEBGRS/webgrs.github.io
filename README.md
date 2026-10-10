@@ -88,11 +88,14 @@ The page picks an effects tier on load and logs the choice and the reason to the
 - [route-animator](https://github.com/WEBGRS/route-animator): satellite-globe route videos in the browser
 - [madison-rentals](https://github.com/WEBGRS/madison-rentals): rentals near UW–Madison on one map, with every value's source labeled
 - [madison-food-map](https://github.com/WEBGRS/madison-food-map): every place to eat in Dane County, scored from six rating sources
+- [madison-campus-guide](https://github.com/WEBGRS/madison-campus-guide): the everyday places around UW–Madison, explained in English and Chinese, every fact quoted from its source
 - [uw-course-lookup](https://github.com/WEBGRS/uw-course-lookup): UW–Madison course lookup: grade history, seats and a degree-aware timetable planner
+- [cutroom](https://github.com/WEBGRS/cutroom): open-source video editor where you and an AI assistant edit the same storyboard file
 - [photo-organizer](https://github.com/WEBGRS/photo-organizer): offline CLIP photo sorter
 - [datamap](https://github.com/WEBGRS/datamap): paste data, get a choropleth map
 - [geo-spoof](https://github.com/WEBGRS/geo-spoof): Chrome extension that overrides the Geolocation API
 - [tophat-watch](https://github.com/WEBGRS/tophat-watch): Chrome extension that alerts when a Top Hat question opens
+- [uw-digest](https://github.com/WEBGRS/uw-digest): daily UW–Madison news, ranked for students and summarized in English and Chinese
 <!-- /work:readme -->
 
 ## Run locally

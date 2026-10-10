@@ -251,7 +251,12 @@ def caps(specs):
         for p, (pg, zq) in enumerate(zip(pages, zpages)):
             out.append('          <div class="pg"><div class="pg-in">')
             if p == 0:
-                letters = "".join(f'<span class="ch" style="--c:{c}">{"&nbsp;" if ch == " " else esc(ch)}</span>' for c, ch in enumerate(d["name"]))
+                # Letters per word; a long name wraps between words, never inside one
+                words, c = [], 0
+                for w in d["name"].split(" "):
+                    words.append("".join(f'<span class="ch" style="--c:{c + j}">{esc(ch)}</span>' for j, ch in enumerate(w)))
+                    c += len(w) + 1
+                letters = " ".join(f'<span class="wd">{w}</span>' for w in words) if len(words) > 1 else words[0]
                 out.append(f'            <p class="cap-n" data-k style="--k:0">{i + 1:02d} / {total} &middot; {L(esc(d["kind"]), esc(d["zh"]["kind"]))}</p>')
                 out.append(f'            <h3 aria-label="{attr(d["name"])}"><span aria-hidden="true">{letters}</span></h3>')
                 out.append(f'            <p class="hook" data-k style="--k:2">{L(d["hook"], d["zh"]["hook"])}</p>')

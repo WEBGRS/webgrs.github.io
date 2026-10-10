@@ -4,7 +4,7 @@
   "order": 70,
   "tier": "minor",
   "kind": "Cloudflare Worker module",
-  "summary": "Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a D1 request log.",
+  "summary": "Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a request log, a feedback inbox and a visitor-stats page.",
   "stack": [
     "Cloudflare Workers",
     "Cloudflare D1",

@@ -1,0 +1,48 @@
+{
+  "slug": "madison-campus-guide",
+  "name": "Madison Essentials",
+  "order": 18,
+  "tier": "major",
+  "tool": 4,
+  "kind": "Web app, data",
+  "summary": "The everyday places around campus, explained in English and Chinese, every fact quoted from its source",
+  "color": ["1F9D55", "B5EBC8"],
+  "shot": {
+    "src": "assets/madison-campus-guide.jpg", "w": 1400, "h": 875,
+    "alt": "Madison Essentials: groceries listed with walking time and open status, beside a map of campus with a colored pin for each place"
+  },
+  "hook": "<span class=\"count\" data-to=\"131\">131</span> everyday places around campus, each explained in English and Chinese, with every fact quoted from its source.",
+  "links": [["Live site", "https://guide.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/madison-campus-guide"]],
+  "built": "Vanilla JS, Leaflet, Python checks, Cloudflare Workers",
+  "pages": [
+    {
+      "notes": [
+        "Groceries, clinics, campus offices, gyms, libraries, banks, IDs and help. Each place has a page: what it is, how to use it, what it costs and who may use it, tips for international students, hours with open-now in Madison time, and the nearest bus stops.",
+        "39 written answers cover what new students ask most, from getting here from O&rsquo;Hare to a bank account without an SSN, and an Ask tab answers the rest from the guide."
+      ]
+    },
+    {
+      "title": "How it works",
+      "notes": [
+        "Every address, phone number, opening time, price and eligibility rule carries a verbatim quote from the page it came from: <span class=\"count\" data-to=\"4449\">4,449</span> quotes from 694 pages.",
+        "A checker finds each quote again in a saved copy of its page and confirms that phone numbers, street numbers and opening times appear there. OpenStreetMap coordinates are cross-checked with the US Census geocoder.",
+        "Ask picks the matching entries and a model answers from those alone. The Worker shows an answer only if it cites them or gives a fixed pointer such as 911, behind a human check and 10 questions a day."
+      ],
+      "fig": "madison-campus-guide-evidence",
+      "caption": "From source pages to the guide and the Ask tab. Each place shows the date its sources were last read."
+    },
+    {
+      "title": "What the data says",
+      "notes": [
+        "The places and questions were picked by counting who asks about what: <span class=\"count\" data-to=\"17986\">17,986</span> question-like messages and posts in 15 chat groups, r/UWMadison and r/madisonwi since June 2025. Only topic counts were kept, never the messages.",
+        "Three of the four most-asked topics, food, housing and courses, already had their own tools. The guide takes parking and everything below it; phone plans, haircuts, laundry and utilities got entries because of the count."
+      ],
+      "fig": "madison-campus-guide-demand",
+      "caption": "Distinct people asking about each topic, top ten, June 2025 to October 2026. Topics are tagged by keyword, so the counts rank topics rather than measure them. Campus jobs is left out: most of its Reddit matches were off-campus jobs."
+    }
+  ],
+  "stack": ["Leaflet", "Cloudflare Workers", "Cloudflare Turnstile", "Workers AI", "DeepSeek", "OpenStreetMap", "Nominatim", "Madison Metro GTFS"],
+  "data_sources": ["OpenStreetMap", "Nominatim", "Madison Metro GTFS"],
+  "repo": "https://github.com/WEBGRS/madison-campus-guide",
+  "blurb": "the everyday places around UW–Madison, explained in English and Chinese, every fact quoted from its source"
+}

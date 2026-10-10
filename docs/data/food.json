@@ -1,13 +1,13 @@
 {
- "built": "2026-10-04",
+ "built": "2026-10-08",
  "places_total": 2438,
  "places_shown": 2292,
  "orderable": 1160,
  "coverage": {
   "dd": 859,
-  "ue": 817,
-  "gh": 539,
   "es": 274,
+  "gh": 539,
+  "ue": 817,
   "toast": 182
  },
  "ratings": {

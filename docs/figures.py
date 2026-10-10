@@ -378,6 +378,80 @@ def food_agreement():
     return f
 
 
+# madison-campus-guide: quotes from source pages, checked, then published to the page and the Ask Worker
+def guide_evidence():
+    d = load("guide")
+    f = Fig("madison-campus-guide-evidence", 520, 216, "Source pages back entries with quotes; every quote is found again in a saved copy; coordinates and bus stops join them in the site data, which feeds the page and the Ask tab")
+    f.node(0, 4, T("Source pages"), T("{n}, saved copies", n=f"{d['pages']:,}"), w=160, d=0, tr=False)
+    f.node(180, 4, T("Entries"), T("{p} places, {a} answers", p=d["places"], a=d["answers"]), w=160, d=1, tr=False)
+    f.node(360, 4, T("Quote check"), T("all {q} found again", q=f"{d['quotes']:,}"), w=160, d=3, accent=True, tr=False)
+    f.node(0, 96, "Coordinates", "OSM, checked vs Census", w=160, d=2)
+    f.node(0, 166, "Bus stops", "Madison Metro GTFS", w=160, d=2)
+    f.node(180, 131, "Site data", "places, answers, stops", w=160, d=5)
+    f.node(360, 96, "Guide page", "list, map, full guide", w=160, d=7)
+    f.node(360, 166, "Ask", "answers must cite", w=160, d=8, accent=True)
+    f.edge([(160, 29), (180, 29)], d=0)
+    f.edge([(340, 29), (360, 29)], d=2, accent=True)
+    f.edge([(440, 54), (440, 76), (260, 76), (260, 131)], d=4, accent=True)
+    f.edge([(160, 121), (170, 121), (170, 148), (180, 148)], d=3)
+    f.edge([(160, 191), (170, 191), (170, 164), (180, 164)], d=3)
+    f.edge([(340, 148), (350, 148), (350, 121), (360, 121)], d=6)
+    f.edge([(340, 164), (350, 164), (350, 191), (360, 191)], d=7)
+    return f
+
+
+# madison-campus-guide: who asks about what, from docs/data/guide.json (counts from docs/SIGNALS.md)
+def guide_demand():
+    d = load("guide")["signals"]["topics"]
+    short = {"restaurants / food": "food", "housing / sublease": "housing", "parking / car": "parking, car",
+             "courses / enrollment": "courses", "airport / Chicago / travel": "airport, travel", "gym / sports": "gym, sports",
+             "food pantry / cost of living": "cost of living", "furniture / moving": "furniture, moving",
+             "safety / scams / police": "safety, scams", "bike / scooter": "bike, scooter", "doctor / clinic": "doctor, clinic"}
+    # Campus job is starred in the source table: its Reddit matches are mostly off-campus jobs
+    rows = [t for t in d if t["topic"] != "campus job"][:10]
+    f = Fig("madison-campus-guide-demand", 520, 226, "Stacked bars: distinct people asking about the ten most-asked topics in chat groups, r/UWMadison and r/madisonwi; food, housing and courses have their own tools")
+    x0, W, top = 140, 236, max(t["total"] for t in rows)
+    for cls, text, dx in (("s1", "chat groups", x0), ("s2", "r/UWMadison", x0 + 110), ("s3", "r/madisonwi", x0 + 220)):
+        f.rect(dx, 2, 11, 11, f"seg {cls}", d=0)
+        f.text(dx + 17, 12, text, d=0, tr=(cls == "s1"))
+    for r, t in enumerate(rows):
+        y = 26 + r * 20
+        own = t["tool"] is not None
+        f.text(x0 - 8, y + 11, short.get(t["topic"], t["topic"].replace(" / ", ", ")), cls="k" + (" a" if own else ""), anchor="end", d=r)
+        x = x0
+        for cls, key in (("s1", "chat"), ("s2", "uw"), ("s3", "wi")):
+            w = W * t[key] / top
+            if w > 0:
+                f.rect(x, y, w, 13, f"seg {cls}", d=r + 1)
+            x += w
+        f.text(x + 8, y + 11, f"{t['total']:,}", d=r + 2)
+        if own:
+            f.text(520, y + 11, "own tool", cls="k a", anchor="end", d=r + 3)
+    return f
+
+
+# cutroom: the UI and the AI both edit storyboard.json; preview and export render the same composition
+def cutroom_arch():
+    f = Fig("cutroom-architecture", 520, 216, "The timeline UI and the AI assistant, through the CLI, both save versioned edits to storyboard.json; a Remotion Player previews it and the Remotion renderer exports it")
+    f.node(0, 4, "Timeline UI", "you", w=150, d=0)
+    f.node(0, 84, "CLI", T("edit operations"), w=150, d=2, tr=False)
+    f.node(0, 164, "AI chat", "Claude, CLI only", w=150, d=0)
+    f.node(185, 84, "storyboard.json", T("versioned saves"), w=150, d=4, accent=True, tr=False)
+    f.node(370, 4, "Remotion Player", T("preview"), w=150, d=6, tr=False)
+    f.node(370, 164, "Remotion renderer", "MP4, GIF, ProRes", w=150, d=6, tr=False)
+    f.edge([(40, 164), (40, 134)], d=1)
+    f.edge([(150, 29), (168, 29), (168, 98), (185, 98)], d=3)
+    f.edge([(150, 118), (185, 118)], d=3)
+    f.edge([(335, 98), (352, 98), (352, 29), (370, 29)], d=5, accent=True)
+    f.edge([(335, 118), (352, 118), (352, 189), (370, 189)], d=5, accent=True)
+    f.text(260, 154, "stale save: refused,", anchor="middle", d=5)
+    f.text(260, 172, "current file sent back", anchor="middle", d=5)
+    f.add('<path class="e dash n" style="--d:7" d="M445 54 L445 164"/>')
+    f.text(437, 105, "same frames,", anchor="end", d=7)
+    f.text(437, 123, "PSNR ≥ 50 dB", anchor="end", d=7)
+    return f
+
+
 # Every "fig" name used in docs/work/*.json must be registered here
 FIGS = {
     "route-animator": route,
@@ -393,6 +467,9 @@ FIGS = {
     "uw-course-planner": course_planner,
     "madison-food-map-pipeline": food_pipeline,
     "madison-food-map-agreement": food_agreement,
+    "madison-campus-guide-evidence": guide_evidence,
+    "madison-campus-guide-demand": guide_demand,
+    "cutroom-architecture": cutroom_arch,
 }
 
 
