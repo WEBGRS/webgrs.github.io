@@ -1,15 +1,15 @@
 # Aggregate the rentals dataset into the numbers the two madison-rentals figures draw.
-#   python docs/data/extract_rentals.py [path/to/properties.js]
-# Reads the dataset the public API serves, from the working copy in the private madison-housing repo (the public
-# madison-rentals page no longer carries it), and writes docs/data/rentals.json: counts only, no addresses, names
+#   python docs/data/extract_rentals.py [path/to/data.json | properties.js]
+# Reads the dataset the public API serves (madison-housing/worker/data.json, written by its publish.py; the public
+# madison-rentals page no longer carries it) and writes docs/data/rentals.json: counts only, no addresses, names
 # or contact details. Its built date must match the live /api/meta.
 import collections, json, math, pathlib, random, statistics as st, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-SRC = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE.parent.parent.parent / "madison-housing" / "web" / "data" / "properties.js"
+SRC = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE.parent.parent.parent / "madison-housing" / "worker" / "data.json"
 
 raw = SRC.read_text(encoding="utf-8")
-data = json.loads(raw[raw.index("=") + 1:].rstrip().rstrip(";"))
+data = json.loads(raw) if SRC.suffix == ".json" else json.loads(raw[raw.index("=") + 1:].rstrip().rstrip(";"))
 props, meta = data["properties"], data["meta"]
 
 # Where each property field came from. prov is site / uw / inferred / absent; a field with no entry has no value at all

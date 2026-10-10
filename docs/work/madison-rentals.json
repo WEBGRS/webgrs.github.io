@@ -11,13 +11,13 @@
     "src": "assets/madison-rentals.jpg", "w": 1400, "h": 875,
     "alt": "Map of rentals near the UW–Madison campus, with filters and a price-colored pin for each property"
   },
-  "hook": "<span class=\"count\" data-to=\"605\">605</span> rentals near campus on one map, every value labeled by where it came from, every gap turned into a question.",
+  "hook": "<span class=\"count\" data-to=\"600\">600</span> rentals near campus on one map, every value labeled by where it came from.",
   "links": [["Live site", "https://housing.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/madison-rentals"]],
   "built": "Leaflet, vanilla JS, Python collectors, Madison Metro GTFS",
   "pages": [
     {
       "notes": [
-        "<span class=\"count\" data-to=\"2988\">2,988</span> units and floor plans from 67 landlords, merged from their own sites and the UW Off-Campus Housing service.",
+        "<span class=\"count\" data-to=\"2959\">2,959</span> units and floor plans from 67 landlords, merged from their own sites and the UW Off-Campus Housing service.",
         "Filters for bedrooms, price per person or per unit, distance from a landmark or your own saved places, utilities, pets and laundry. 305 Madison Metro stops come from the city&rsquo;s GTFS feed."
       ]
     },
@@ -29,16 +29,16 @@
         "Phone and email of individual landlords who appear only on the UW list stay off the page; it links to that listing instead."
       ],
       "fig": "madison-rentals-provenance",
-      "caption": "Where seven fields came from across all <span class=\"count\" data-to=\"605\">605</span> properties. Solid is a source, dashed is none. Furnished is unknown for 85% of them, and the map says so."
+      "caption": "Where seven fields came from across all <span class=\"count\" data-to=\"600\">600</span> properties. Solid is a source, dashed is none. Furnished is unknown for 85% of them, and the map says so."
     },
     {
       "title": "What the data says",
       "notes": [
-        "Closer costs more, and not just because of bedrooms: median rent per person is $1,200 within 0.4 mi of Bascom Hall and $978 at 1&ndash;1.25 mi.",
-        "Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.29 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001)."
+        "Closer costs more, and not just because of bedrooms: median rent per person is $1,200 within 0.4 mi of Bascom Hall and $970 at 1&ndash;1.25 mi.",
+        "Each property is one point, its median listing; shared rooms are left out. The rank correlation is &minus;0.28 once each rent is divided by the median for its bedroom count (permutation p &lt; 0.001)."
       ],
       "fig": "madison-rentals-distance",
-      "caption": "Rent per person for 403 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 116, 105, 67, 38, 22, 26)."
+      "caption": "Rent per person for 397 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 111, 105, 68, 37, 22, 25)."
     }
   ],
   "stack": ["Leaflet", "Madison Metro GTFS", "OpenStreetMap", "Nominatim", "Esri World Imagery"],

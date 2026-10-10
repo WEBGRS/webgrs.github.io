@@ -224,7 +224,7 @@ def load(name):
 def rentals_provenance():
     d = load("rentals")
     total = d["properties"]
-    f = Fig("madison-rentals-provenance", 520, 232, "Stacked bars: for seven property fields, the share of 605 properties whose value came from the landlord site, the UW list, a description, or no source")
+    f = Fig("madison-rentals-provenance", 520, 232, "Stacked bars: for seven property fields, the share of 600 properties whose value came from the landlord site, the UW list, a description, or no source")
     x0, W = 128, 342
     legend = [("s1", "landlord site", 0), ("s2", "UW list", 108), ("s3", "read from description", 184), ("s0", "not stated (%)", 352)]
     for cls, text, dx in legend:
@@ -246,7 +246,7 @@ def rentals_provenance():
 # madison-rentals: rent per person against distance, from docs/data/rentals.json
 def rentals_distance():
     d = load("rentals")["distance"]
-    f = Fig("madison-rentals-distance", 520, 236, "Scatter of rent per person against distance from campus for 403 properties, with the median of each distance band rising toward campus")
+    f = Fig("madison-rentals-distance", 520, 236, "Scatter of rent per person against distance from campus for 397 properties, with the median of each distance band rising toward campus")
     L, R, Tp, B = 46, 512, 10, 190
     X = lambda mi: L + (R - L) * mi / 2.0
     Y = lambda usd: B - (B - Tp) * (usd - 500) / 2000
