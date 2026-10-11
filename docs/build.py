@@ -100,7 +100,7 @@ def hue(hexs):
     return colorsys.rgb_to_hsv(r, g, b)[0] * 360
 
 
-ZH_LINKS = {"Live site": "在线站点", "Source": "源码"}
+ZH_LINKS = {"Live site": "在线站点", "Source": "源码", "Download": "下载"}
 
 
 def L(en, zh):
