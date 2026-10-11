@@ -13,7 +13,7 @@
     "src": "assets/cutroom.jpg",
     "w": 1400,
     "h": 840,
-    "alt": "Cutroom: a transition library on the left, the video preview, effect settings, and a timeline with lanes for overlays, effects, camera moves, captions, sound effects and music"
+    "alt": "Cutroom: a transition library on the left, the video preview, effect settings, and a timeline with lanes for overlays, effects, camera moves, captions, voice-over and sound effects"
   },
   "hook": "A video editor that keeps each video as one JSON file, so you on the timeline and an AI assistant in the chat panel can edit the same cut.",
   "links": [
@@ -30,9 +30,9 @@
   "pages": [
     {
       "notes": [
-        "A filmstrip timeline with trim, split and undo, and lanes that show where each overlay, effect, camera move and sound sits. One storyboard gives a narrated cut and a beat-synced music cut, each in 16:9 and 9:16.",
-        "<span class=\"count\" data-to=\"182\">182</span> effects and 58 sound effects, each previewed on hover. Many effects follow designs from HeyGen&rsquo;s HyperFrames.",
-        "Ctrl+click a spot in the preview and tell the assistant what to change there. It runs on a Claude, ChatGPT or Google subscription, or any OpenAI-compatible model. A Windows installer, MIT-licensed."
+        "A filmstrip timeline with lanes for every overlay, effect, camera move, voice line and sound. One storyboard gives a narrated cut and a beat-synced music cut, each in 16:9 and 9:16.",
+        "<span class=\"count\" data-to=\"182\">182</span> effects, 58 sound effects, and free offline voice-over in 100 Chinese and 3 English voices.",
+        "Ctrl+click a spot in the preview and tell the assistant what to change. It also records websites and voices the narration, on a Claude, ChatGPT or Google subscription or any OpenAI-compatible model."
       ]
     },
     {
@@ -53,6 +53,7 @@
     "Electron",
     "Claude Code",
     "MCP",
+    "sherpa-onnx",
     "Playwright",
     "ffmpeg"
   ],
