@@ -3438,10 +3438,10 @@ void main(){
     if (goTo) goTo(first[i], true);
     else scrollTo({ top: caps[i].getBoundingClientRect().top + scrollY - 90, behavior: reduce ? 'auto' : 'smooth' });
   }));
-  // The deck needs room for a screenshot and a column of notes side by side, on a landscape screen
-  const land = matchMedia('(min-width: 900px) and (min-height: 560px) and (min-aspect-ratio: 11/10)').matches;
-  // Portrait phones: screenshot on top, notes below, paged like the desktop deck
-  const pt = !land && matchMedia('(max-width: 899px) and (min-height: 560px) and (max-aspect-ratio: 1/1)').matches;
+  // The deck needs room for a screenshot and a column of notes side by side; square-ish windows count
+  const land = matchMedia('(min-width: 900px) and (min-height: 560px) and (min-aspect-ratio: 3/4)').matches;
+  // Portrait screens of any width: screenshot on top, notes below, paged like the desktop deck
+  const pt = !land && matchMedia('(min-height: 560px) and (max-aspect-ratio: 1/1)').matches;
   if (reduce || basic() || !(land || pt)) return;
   const cv = film.querySelector('.film-gl');
   const gl = cv.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'high-performance' });
