@@ -6,7 +6,7 @@
   "tool": 3,
   "kind": "Web app, data",
   "summary": "Every place to eat in Dane County on one map, scored from six rating sources",
-  "color": ["D99A00", "FFE29A"],
+  "color": ["38BDF8", "BAE6FD"],
   "shot": {
     "src": "assets/madison-food-map.jpg", "w": 1400, "h": 875,
     "alt": "Madison Eats: a grid of photo cards for restaurants, each with an overall score, its rank within its cuisine and a few highlights"

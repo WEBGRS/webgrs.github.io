@@ -5,7 +5,7 @@
   "tier": "major",
   "kind": "Python, CLIP",
   "summary": "Sorts a 310&nbsp;GB photo library on a local GPU",
-  "color": ["3A8F7E", "E9D2A6"],
+  "color": ["38BDF8", "BAE6FD"],
   "shot": {
     "src": "assets/photo-organizer.jpg", "w": 1000, "h": 560,
     "alt": "Photo organizer web UI showing a cluster of coastal landscape photos"

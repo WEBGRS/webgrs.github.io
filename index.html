@@ -10,10 +10,10 @@
 <meta property="og:description" content="Web tools that turn messy public data into maps, schedules, and scores.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://webgrs.github.io/docs/light.jpg">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%231E5AA8' stroke-width='3'/><circle cx='16' cy='16' r='4' fill='%231E5AA8'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%230369A1' stroke-width='3'/><path d='M16 8.5 23.5 16 16 23.5 8.5 16Z' fill='%23FACC15' stroke='%230B1A2C' stroke-width='2'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500..900&family=Bodoni+Moda:opsz,wght@6..96,700..900&family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
 <script>
 // Map renderer: 2 WebGL water, 1 canvas, 0 static. ?fx=0|1|2 overrides.
 // data-lite marks weak devices, where the text effects are dropped as well.
@@ -39,17 +39,19 @@
 
 <style>
 :root{
-  --paper:#FBFCFB; --ink:#16202A; --muted:#16202A; --faint:#16202A; --rule:#DCE1E4; --edge:#B9C2C9;
-  --accent:#1E5AA8; --signal:#2E7D55; --plate:#EDF0F2;
-  --line:22,32,42; --water:30,90,168;
-  --font:"Archivo",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --paper:#FFFFFF; --ink:#0B1A2C; --muted:#0B1A2C; --faint:#0B1A2C; --rule:#CFE3F1; --edge:#8FB3CC;
+  --accent:#0369A1; --signal:#FACC15; --plate:#F0F9FF;
+  --sky:#38BDF8; --gold:#FACC15;
+  --line:11,26,44; --water:56,189,248;
+  --font:"Instrument Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Big Shoulders Display","Instrument Sans",sans-serif;
   --out:cubic-bezier(.23,1,.32,1); --io:cubic-bezier(.76,0,.24,1);
   --gut:clamp(16px,4vw,56px);
 }
 :root[data-theme="dark"]{
-  --paper:#0F161D; --ink:#E2E8ED; --muted:#E2E8ED; --faint:#E2E8ED; --rule:#24303B; --edge:#3A4754;
-  --accent:#8AB8EE; --signal:#6FC495; --plate:#18222C;
-  --line:226,232,237; --water:138,184,238;
+  --paper:#081726; --ink:#F1F3F7; --muted:#F1F3F7; --faint:#F1F3F7; --rule:#1C3550; --edge:#3B5A78;
+  --accent:#7DD3FC; --signal:#FACC15; --plate:#0E2236;
+  --line:241,243,247; --water:56,189,248;
 }
 
 *{box-sizing:border-box}
@@ -86,7 +88,7 @@ a:hover{text-decoration-thickness:2px}
    width axis and capitals that the Latin display type relies on. */
 html:not([lang^="zh"]) .zh, html[lang^="zh"] .en{display:none !important}
 .zh{letter-spacing:normal; font-stretch:100%; text-transform:none}
-html[lang^="zh"]{--font:"Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif}
+html[lang^="zh"]{--font:"Instrument Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif}
 
 /* hero */
 .hero{position:relative; overflow:clip; background:var(--paper); min-height:max(640px,100svh); display:flex; flex-direction:column; justify-content:flex-end; padding:96px 0 0}
@@ -332,13 +334,6 @@ section.tools{padding-top:clamp(56px,8vw,104px)}
 /* background sheet */
 #bgmap{position:fixed; left:0; top:0; z-index:-1; pointer-events:none; will-change:transform}
 
-/* decisions */
-.decs{display:grid; grid-template-columns:1fr; gap:40px}
-@media (min-width:860px){ .decs{grid-template-columns:repeat(3,1fr); gap:48px} }
-.dec{position:relative; padding-top:22px}
-.dec::before{content:""; position:absolute; left:0; right:0; top:0; height:2px; background:var(--ink); transform-origin:left}
-.dec h3{margin:0; font-size:1.4rem; line-height:1.2; font-weight:720; letter-spacing:-.018em}
-.dec p{margin:14px 0 0; color:var(--muted)}
 
 /* stack + now */
 .two{display:grid; grid-template-columns:1fr; gap:72px}
@@ -430,7 +425,6 @@ footer .src{margin-left:auto}
 @keyframes fill-in{to{opacity:1}}
 
 /* decorative canvases */
-#decisions{position:relative; isolation:isolate}
 .net{height:clamp(300px,30vw,380px); margin:0 0 clamp(40px,6vw,72px)}
 .net canvas{display:block; width:100%; height:100%}
 /* The constellation needs width to read: phones go straight to the lists, unless ?full asks for everything */
@@ -503,10 +497,6 @@ h2{--w:780}
   .js [data-dec]:not(.on){color:transparent}
   .js .shead p{opacity:0}
   .js .shead.on p{animation:flash 1s ease-out .45s both}
-  .js .dec::before{transform:scaleX(0)}
-  .js .dec .blk{color:transparent}
-  .js .decs.seen .dec::before{transform:none; transition:transform .9s var(--io) calc(var(--i) * 140ms)}
-  .js .decs.seen .dec .blk{animation:wipe .95s var(--io) both; animation-delay:calc(.3s + var(--i) * 140ms)}
 }
 @supports (animation-timeline:scroll()){
   @media (prefers-reduced-motion:no-preference){
@@ -558,6 +548,197 @@ h2{--w:780}
 .film.live.pt .cap .fig svg{width:100%}
 .film.live.pt .film-rail{right:5px; height:22svh}
 .full .orb{display:block; width:112vw; top:46%; translate:46% -50%; opacity:.4}
+
+/* ===== Bright: one sky ramp + sun yellow; sections are neighbouring tints joined on the root ===== */
+:root{
+  --sky-50:#F0F9FF; --sky-100:#E0F2FE; --sky-200:#BAE6FD; --sky-300:#7DD3FC; --sky-400:#38BDF8;
+  --sun:#FACC15; --sun-300:#FDE047;
+  --tint-tools:var(--sky-100); --tint-work:var(--sky-50); --tint-now:var(--sky-100); --tint-contact:var(--sky-300);
+  --mast:"Bodoni Moda",Didot,"Bodoni 72",Georgia,serif;
+}
+:root[data-theme="dark"]{
+  --tint-tools:#0B2A40; --tint-work:#0A1F31; --tint-now:#0B2A40; --tint-contact:#0F3D5E;
+}
+html{background-color:var(--paper)}
+body{font-size:17px; background:none}
+
+/* type: masthead name in a Didone, section titles in a condensed grotesk */
+h2,.index .nm,.cap h3,.tbx h3,.mini h4,.big,.minor .shead h3{font-family:var(--display); font-stretch:100%}
+h1,.mark,.intro-t{font-family:var(--mast); font-stretch:100%}
+h1{font-weight:900; font-size:clamp(7rem,22vw,21rem); line-height:.82; letter-spacing:-.03em; margin-left:-.03em; font-variation-settings:"opsz" 14}
+h1 .mask{white-space:nowrap; padding-top:.06em}
+.mark{font-weight:800; font-size:1.45rem; letter-spacing:-.02em; font-variation-settings:"opsz" 24}
+h2{font-weight:900; text-transform:uppercase; font-size:clamp(3.4rem,8.4vw,8rem); line-height:.86; letter-spacing:-.005em}
+.index .nm{font-weight:800; font-size:clamp(2.4rem,4.8vw,4.6rem); letter-spacing:0; line-height:.95}
+.index a:hover .nm{font-stretch:100%}
+.minor .shead h3{font-weight:900; text-transform:uppercase; font-size:clamp(2rem,3.4vw,3rem); letter-spacing:0}
+.cap h3{font-weight:800; letter-spacing:0}
+.film.live .cap h3{font-size:min(3.9em, calc(38vw / 7.6))}
+.tbx h3{font-weight:800; font-size:1.6rem; letter-spacing:.005em}
+.mini h4{font-weight:800; font-size:clamp(1.7rem,2.4vw,2.1rem); letter-spacing:.005em}
+.big{font-weight:900; font-size:clamp(3rem,11.5vw,10.5rem); letter-spacing:0; line-height:.9}
+
+/* hero */
+.who{font-size:1.15rem; font-weight:500}
+.avail{font-size:1.15rem; font-weight:650}
+.avail::before{width:12px; height:12px; margin-top:.42em; background:var(--sun); box-shadow:0 0 0 2px var(--ink)}
+.toolgo a{background:var(--sun); color:#0B1A2C; border-radius:0; padding:.85em 1.6em; font-size:1.1rem; box-shadow:5px 5px 0 var(--ink); transition:transform .2s var(--out), box-shadow .2s var(--out)}
+.toolgo a:hover{filter:none; transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink)}
+.toolgo a:active{transform:translate(3px,3px); box-shadow:2px 2px 0 var(--ink)}
+.nav li a.go{background:var(--sun); color:#0B1A2C}
+.nav li a.go:hover,.nav li a.go[aria-current="true"]{background:var(--sun); color:#0B1A2C; filter:none}
+.legend{border-top:2px solid var(--ink)}
+
+/* sections carry no background of their own: the root gradient tints them, the contour sheet shows through */
+section.tools{margin-top:clamp(48px,7vw,96px); padding:clamp(64px,8vw,112px) 0 clamp(72px,9vw,128px)}
+.contact{background:none}
+#work{--paper:var(--tint-work)}
+
+/* toolbox cards */
+.tbx li{border:2px solid var(--ink); border-radius:18px; background:#fff}
+:root[data-theme="dark"] .tbx li{background:var(--plate)}
+@media (hover:hover){ .tbx li:hover{transform:translateY(-6px); border-color:var(--ink); box-shadow:0 8px 0 var(--ink)} }
+.tbx-shot{border-bottom:2px solid var(--ink); background:var(--sky-50)}
+.tbx-go .open{background:var(--sun); color:#0B1A2C; box-shadow:inset 0 0 0 2px var(--ink)}
+.tbx-go .open:hover{filter:none; background:var(--sun-300)}
+.tbx-go .star{box-shadow:inset 0 0 0 2px var(--ink)}
+.tbx-go .star:hover{background:var(--sky-100)}
+.tbx-go .star svg{color:#E0A100}
+
+/* work index: a sun bar sweeps under the row */
+.index{border-top:2px solid var(--ink)}
+.index a{border-bottom:2px solid var(--ink)}
+.index a::before{background:var(--sun-300); inset:0 -18px}
+:root[data-theme="dark"] .index a:hover{color:#0B1A2C}
+.index .kd{font-weight:600}
+.mini{border-top:2px solid var(--ink)}
+.mini-shot{border:2px solid var(--ink); background:#fff}
+.cap-n,.mini-kd,.pg-h{font-weight:700}
+.cap li::marker{color:var(--sky-400)}
+.film.live .film-rail{background:rgba(var(--line),.15)}
+
+/* contact on the brightest sky */
+#contact{--ink:#0B1A2C; --muted:#0B1A2C; --faint:#0B1A2C; --rule:rgba(11,26,44,.25); color:#0B1A2C}
+:root[data-theme="dark"] #contact{--ink:#F1F3F7; --muted:#F1F3F7; --faint:#F1F3F7; --rule:rgba(241,243,247,.25); color:#F1F3F7}
+#contact .big:hover{background-size:100% 6px}
+.after a{box-shadow:inset 0 0 0 2px var(--ink); color:var(--ink)}
+.after a:hover,.after a:focus-visible{background:var(--ink); color:var(--sky-300); box-shadow:inset 0 0 0 2px var(--ink)}
+.after a.hl{background:var(--sun); color:#0B1A2C; box-shadow:inset 0 0 0 2px #0B1A2C}
+.after a.hl:hover,.after a.hl:focus-visible{background:#fff; color:#0B1A2C}
+#contact footer{border-top:2px solid var(--ink)}
+#contact footer a{color:var(--ink)}
+#contact .big.copied{color:#fff}
+
+::selection{background:var(--sun-300); color:#0B1A2C}
+:focus-visible{outline:3px solid var(--sky-400)}
+
+/* ===== Pass 3: drawn wordmark, blue contours, lemon finale, colour on the quiet parts ===== */
+:root{--contour:7,89,133; --tint-contact:#082F49}
+:root[data-theme="dark"]{--contour:125,211,252; --tint-contact:#03111D}
+
+/* the name is drawn, not set: an SVG wordmark from docs/wordmark (build.py draws, embed.py places) */
+.hero h1{font-size:inherit; line-height:1}
+.hero h1 .mask{padding:.02em 0 .04em}
+.hero h1 .l{display:inline-block; vertical-align:top}
+.wm{display:block; height:clamp(120px,18vw,330px); width:auto; max-width:calc(100vw - 2 * var(--gut))}
+.wm, .wm-s{--wm-ink:var(--ink); --wm-dot:var(--sun); --wm-shadow:var(--sky-400); --wm-band:var(--sky-400)}
+.wm-s{display:block; width:auto}
+.mark .wm-s{height:24px}
+.intro-t .wm-s{height:clamp(48px,7vw,72px); margin:0 auto}
+:root.pick 
+
+/* section titles: same type and size, a different device each, taken from what the section is */
+/* Selected work: misregistered print, ink outline over a sun fill that slipped */
+#work-h .sc{color:transparent; -webkit-text-stroke:.022em var(--ink); text-shadow:.075em .06em 0 var(--sun)}
+/* Stack: the letters sit on two lighter copies of themselves */
+#stack-h .sc{text-shadow:.03em .1em 0 var(--sky-400), .06em .2em 0 var(--sky-200)}
+/* Contact, on the deep water: outlined in sky */
+#contact-h .sc{color:transparent; -webkit-text-stroke:.022em var(--sky-300)}
+.minor .shead h3{color:var(--ink)}
+:root[data-theme="dark"] #work-h .sc{text-shadow:.075em .06em 0 rgba(250,204,21,.85)}
+:root[data-theme="dark"] #stack-h .sc{text-shadow:0 .085em 0 #0369A1, 0 .17em 0 #0C4A6E}
+@media (prefers-reduced-motion:no-preference){
+  .js #work-h .rev.in .sc{animation:sc-in .95s var(--out) both, slip .7s var(--out) both; animation-delay:calc(var(--i) * 34ms), calc(.45s + var(--i) * 34ms)}
+  @keyframes slip{from{text-shadow:0 0 0 var(--sun)}}
+  .js #stack-h .rev.in .sc{animation:sc-in .95s var(--out) both, stack .6s cubic-bezier(.3,1.4,.5,1) both; animation-delay:calc(var(--i) * 34ms), calc(.5s + var(--i) * 50ms)}
+  @keyframes stack{from{text-shadow:0 0 0 var(--sky-400), 0 0 0 var(--sky-200)}}
+  }
+
+/* contact: the deepest water, light type */
+#contact{--ink:#F1F5F9; --muted:#F1F5F9; --faint:#F1F5F9; --rule:rgba(241,245,249,.22); color:#F1F5F9}
+:root[data-theme="dark"] #contact{--ink:#F1F5F9; --muted:#F1F5F9; --faint:#F1F5F9}
+#contact .after a{box-shadow:inset 0 0 0 2px rgba(241,245,249,.55); color:#F1F5F9}
+#contact .after a:hover,#contact .after a:focus-visible{background:#F1F5F9; color:#082F49; box-shadow:inset 0 0 0 2px #F1F5F9}
+#contact .after a.hl{background:var(--sun); color:#0B1A2C; box-shadow:none}
+#contact .after a.hl:hover,#contact .after a.hl:focus-visible{background:#fff; color:#0B1A2C}
+#contact .big.copied{color:var(--sun)}
+#contact footer a{color:var(--sky-300)}
+
+/* quiet parts: type chips, list labels, the month tag, small project cards */
+.index .kd{justify-self:end; padding:.3em .85em; border-radius:999px; background:var(--sky-100); color:#075985; font-size:.84rem; font-weight:650; white-space:nowrap}
+:root[data-theme="dark"] .index .kd{background:#0E3550; color:var(--sky-200)}
+dl.kv dt{color:var(--accent); font-weight:700}
+.when{display:inline-block; margin-left:14px; padding:.15em .5em; background:var(--sun); color:#0B1A2C; font-family:var(--font); font-weight:700; font-size:.95rem; letter-spacing:.02em; vertical-align:middle}
+.mini{border-top:0; padding-top:0}
+.mini li{background:#fff; border-radius:18px; padding:14px}
+:root[data-theme="dark"] .mini li{background:var(--plate)}
+.mini-shot{border-radius:10px}
+.mini-kd{display:inline-block; padding:.2em .7em; border-radius:999px; background:var(--sky-100); color:#075985; letter-spacing:.02em}
+:root[data-theme="dark"] .mini-kd{background:#0E3550; color:var(--sky-200)}
+.cap-n{color:var(--accent); font-weight:700}
+:root[data-theme="dark"] .cap-n{color:var(--sky-300)}
+
+
+/* ===== Pass 5: one title entrance, toolbox label in the button language, a coloured project deck ===== */
+/* Section titles rise as one line from behind their baseline (no letter-by-letter) */
+h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margin:.35em; vertical-align:top}
+@media (prefers-reduced-motion:no-preference){
+  .js h2 .rev .sc, .js .minor h3 .rev .sc{opacity:1 !important; animation:none !important}
+  .js h2 .rev > [aria-hidden], .js .minor h3 .rev > [aria-hidden]{display:inline-block; transform:translateY(140%)}
+  .js h2 .rev.in > [aria-hidden], .js .minor h3 .rev.in > [aria-hidden]{animation:line-up 1s var(--out) both}
+  .js h2 .rev.done > [aria-hidden], .js .minor h3 .rev.done > [aria-hidden]{transform:none}
+  @keyframes line-up{from{transform:translateY(140%)}to{transform:none}}
+  .js #work-h .rev.in .sc{animation:slip .7s var(--out) .75s both !important}
+  .js #stack-h .rev.in .sc{animation:stack .6s cubic-bezier(.3,1.4,.5,1) .8s both !important}
+  .js #work-h .rev.done .sc, .js #stack-h .rev.done .sc{animation:none !important}
+}
+/* Project titles: one line that rises from its baseline */
+.film.live .cap h3{overflow:clip; overflow-clip-margin:.2em}
+.film.live .cap h3 .ch{opacity:1 !important; transform:none !important; filter:none !important; transition:none !important}
+.film.live .cap h3 > span{display:inline-block; transform:translateY(130%); transition:transform .3s var(--out)}
+.film.live .pg.on h3 > span{transform:none; transition:transform 1s var(--out) calc(var(--in, 0ms) + 90ms)}
+.film.live .pg.off h3 > span{transform:translateY(-130%)}
+/* Deck accents in light blue instead of the deep one */
+.film{--accent:#0EA5E9}
+:root[data-theme="dark"] .film{--accent:#7DD3FC}
+.film .links a, .film .pg-h{font-weight:700}
+/* Stack is the way down to the contact water */
+:root{--deep1:#7DD3FC; --deep2:#0369A1}
+:root[data-theme="dark"]{--deep1:#0B3A5A; --deep2:#062338}
+#now{padding-bottom:clamp(120px,14vw,200px)}
+/* Project dock: jump to any project, or past them all */
+.film-dock{position:fixed; left:50%; bottom:16px; z-index:30; display:flex; gap:4px; align-items:center; max-width:calc(100vw - 32px); overflow-x:auto; scrollbar-width:none; padding:5px; background:#fff; border:2px solid var(--ink); border-radius:18px; box-shadow:0 10px 30px -14px rgba(11,26,44,.45); translate:-50% 0; transform:translateY(calc(100% + 24px)); opacity:0; pointer-events:none; transition:transform .45s var(--out), opacity .3s}
+:root[data-theme="dark"] .film-dock{background:var(--plate)}
+.film-in .film-dock{transform:none; opacity:1; pointer-events:auto}
+.film-dock button{flex:none; padding:.55em .85em; border:0; border-radius:12px; background:none; color:var(--ink); font:600 .84rem/1 var(--font); white-space:nowrap; cursor:pointer}
+.film-dock button:hover{background:var(--sky-100)}
+:root[data-theme="dark"] .film-dock button:hover{background:#0E3550}
+.film-dock button[aria-current="true"]{background:var(--sun); color:#0B1A2C}
+.film-dock .skip{margin-left:4px; background:var(--ink); color:var(--paper)}
+.film-dock .skip:hover{background:var(--ink); filter:brightness(1.25)}
+.film-in{--wgfb-lift:66px}
+/* Stack alone: the four rows in two columns */
+#now .two{grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ #now dl.kv{grid-template-columns:8.5em minmax(0,1fr) 8.5em minmax(0,1fr); column-gap:28px} }
+
+
+/* After the project deck the contour sheet gives way to a survey grid: dots every 24 px, a rule every 192 px */
+.grid-sheet{position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transition:opacity .8s var(--out);
+  background-image:radial-gradient(circle, rgba(14,165,233,.38) 1.3px, transparent 1.7px), linear-gradient(rgba(14,165,233,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,.15) 1px, transparent 1px);
+  background-size:24px 24px, 192px 192px, 192px 192px; background-position:-12px -12px, 0 0, 0 0}
+:root[data-theme="dark"] .grid-sheet{background-image:radial-gradient(circle, rgba(125,211,252,.22) 1.3px, transparent 1.7px), linear-gradient(rgba(125,211,252,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(125,211,252,.09) 1px, transparent 1px)}
+.grid-on .grid-sheet{opacity:1}
+.grid-on #bgmap{opacity:0}
 </style>
 </head>
 <body id="top">
@@ -565,7 +746,7 @@ h2{--w:780}
   <canvas class="aur"></canvas>
   <div class="intro-c">
     <svg class="mono" viewBox="0 0 100 100"><path pathLength="1" style="--i:0" d="M46.1 89.8 43.5 90.6 40.6 90.5 37.5 89.5 34.7 87.9 32.2 85.8 30.2 83.3 28.7 80.6 27.6 77.6 27.0 74.5 26.7 71.3 26.6 68.1 26.8 64.9 27.0 61.7 27.3 58.5 27.5 55.2 27.6 52.0 27.4 48.7 26.9 45.5 26.0 42.3 24.9 39.1 23.6 36.0 22.4 32.9 21.3 29.9 20.5 26.9 20.2 24.1 20.5 21.3 21.6 18.7 23.4 16.2 25.9 14.0 28.9 12.0 32.2 10.4 35.7 9.2 39.3 8.5 42.7 8.3 45.9 8.7 48.6 9.8 50.9 11.5 52.9 13.8 54.5 16.4 56.0 19.4 57.4 22.4 58.8 25.5 60.2 28.4 61.9 31.1 63.8 33.4 65.9 35.4 68.3 37.2 70.6 38.8 73.0 40.4 75.3 42.2 77.4 44.1 79.2 46.4 80.6 49.1 81.5 52.2 81.9 55.7 81.9 59.2 81.3 62.6 80.1 65.7 78.5 68.3 76.3 70.3 73.7 71.8 70.7 73.0 67.6 73.9 64.4 74.7 61.3 75.6 58.3 76.7 55.6 78.2 53.4 80.3 51.5 82.9 49.9 85.6 48.1 88.1Z"/><path pathLength="1" style="--i:1" d="M43.4 86.8 40.9 86.9 38.2 86.1 35.5 84.6 33.3 82.5 31.7 80.2 30.7 77.6 30.0 74.9 29.7 72.1 29.5 69.3 29.4 66.5 29.4 63.7 29.3 60.9 29.3 58.1 29.3 55.3 29.2 52.5 29.1 49.6 28.9 46.8 28.6 43.9 28.1 41.0 27.5 38.1 26.7 35.1 26.0 32.2 25.3 29.3 24.9 26.6 24.8 24.0 25.3 21.7 26.3 19.6 28.1 17.9 30.5 16.5 33.4 15.4 36.6 14.8 40.0 14.6 43.3 14.8 46.4 15.5 49.2 16.7 51.5 18.4 53.1 20.5 54.4 23.1 55.4 25.8 56.2 28.6 57.0 31.4 57.9 34.1 59.0 36.4 60.6 38.4 62.6 39.9 65.0 41.0 67.5 42.1 70.0 43.3 72.4 44.9 74.5 46.9 76.2 49.3 77.4 51.9 78.2 54.6 78.5 57.2 78.2 59.8 77.5 62.2 76.3 64.5 74.7 66.6 72.8 68.5 70.6 70.2 68.2 71.7 65.6 72.9 62.9 73.9 60.1 74.6 57.3 75.3 54.7 76.2 52.3 77.4 50.4 79.2 48.7 81.4 47.1 83.7 45.4 85.6Z"/><path pathLength="1" style="--i:2" d="M43.1 81.7 40.9 82.0 38.6 81.5 36.5 80.4 34.6 78.8 33.3 76.9 32.5 74.6 32.1 72.1 31.9 69.6 31.9 67.0 31.9 64.6 31.9 62.1 31.9 59.8 31.8 57.4 31.8 55.1 31.7 52.7 31.6 50.3 31.4 47.9 31.1 45.4 30.8 42.8 30.3 40.2 29.9 37.5 29.4 34.8 29.0 32.2 28.8 29.6 28.8 27.3 29.1 25.2 29.7 23.4 30.7 21.9 32.2 20.9 34.1 20.2 36.3 19.9 38.7 19.9 41.3 20.3 43.8 21.0 46.3 22.0 48.6 23.2 50.7 24.7 52.4 26.4 53.6 28.3 54.6 30.4 55.3 32.6 55.8 34.8 56.4 37.1 57.0 39.4 57.8 41.6 59.0 43.7 60.5 45.7 62.4 47.5 64.6 49.2 66.9 50.9 69.2 52.5 71.3 54.1 72.9 55.7 74.1 57.5 74.5 59.4 74.2 61.4 73.4 63.4 72.1 65.4 70.3 67.3 68.2 69.0 65.9 70.4 63.5 71.5 61.0 72.2 58.6 72.6 56.2 73.0 54.0 73.4 51.9 74.2 50.0 75.5 48.3 77.2 46.7 79.0 45.0 80.6Z"/><path pathLength="1" style="--i:3" d="M41.6 76.0 40.2 76.1 39.0 75.7 38.0 75.0 37.1 73.8 36.4 72.4 35.9 70.8 35.4 69.0 35.0 67.0 34.7 64.9 34.5 62.8 34.3 60.7 34.2 58.6 34.0 56.6 33.9 54.5 33.8 52.5 33.7 50.5 33.6 48.5 33.5 46.4 33.4 44.4 33.2 42.3 33.1 40.1 32.9 38.0 32.8 35.9 32.8 33.9 32.9 32.0 33.2 30.3 33.7 28.8 34.4 27.5 35.4 26.5 36.8 25.8 38.5 25.4 40.5 25.4 42.5 25.7 44.5 26.3 46.2 27.2 47.6 28.4 48.7 29.9 49.6 31.5 50.3 33.2 50.9 35.1 51.4 37.0 52.0 39.0 52.8 40.9 53.7 42.8 54.8 44.5 56.1 46.2 57.5 47.8 59.0 49.4 60.5 50.9 61.9 52.4 63.3 53.9 64.4 55.5 65.4 57.1 66.1 58.7 66.6 60.2 66.8 61.8 66.7 63.3 66.4 64.6 65.8 65.9 64.8 67.0 63.5 67.9 61.9 68.6 60.0 69.2 58.0 69.8 55.8 70.3 53.5 70.9 51.2 71.6 49.0 72.6 46.9 73.6 45.0 74.7 43.2 75.5Z"/><path pathLength="1" style="--i:4" d="M45.8 69.5 44.5 69.6 43.2 69.6 42.2 69.4 41.2 69.1 40.4 68.5 39.7 67.9 39.1 67.1 38.7 66.2 38.3 65.1 37.9 64.0 37.7 62.8 37.5 61.5 37.3 60.1 37.2 58.7 37.2 57.2 37.1 55.7 37.0 54.1 37.0 52.5 36.9 50.9 36.8 49.3 36.7 47.8 36.6 46.2 36.4 44.7 36.3 43.2 36.3 41.7 36.4 40.3 36.5 38.9 36.9 37.6 37.4 36.4 38.0 35.2 38.7 34.3 39.5 33.5 40.3 32.9 41.2 32.5 42.1 32.4 42.9 32.7 43.7 33.2 44.5 34.0 45.2 35.0 45.9 36.2 46.6 37.6 47.3 39.1 48.0 40.6 48.7 42.1 49.4 43.6 50.2 45.0 51.0 46.3 51.8 47.4 52.7 48.5 53.6 49.5 54.5 50.5 55.4 51.6 56.3 52.7 57.1 53.8 57.9 55.1 58.6 56.3 59.2 57.6 59.7 58.9 60.0 60.1 60.1 61.3 59.9 62.4 59.6 63.4 58.9 64.2 58.0 64.9 56.9 65.6 55.5 66.2 54.0 66.8 52.4 67.4 50.7 68.1 49.0 68.6 47.4 69.1Z"/></svg>
-    <p class="intro-t">H. Gu</p>
+    <p class="intro-t" aria-label="H. Gu"><svg class="wm-s" viewBox="-2.0 -2.0 365.9 104.0" aria-hidden="true" focusable="false"><path fill="var(--wm-ink)" fill-rule="evenodd" d="M13.19 85 L0 100 L10 100 L35 100 L45 100 L38.19 85 L43.29 61 L82.29 61 L77.19 85 L64 100 L74 100 L99 100 L109 100 L102.19 85 L117.07 15 L130.26 0 L120.26 0 L95.26 0 L85.26 0 L92.07 15 L86.54 41 L47.54 41 L53.07 15 L66.26 0 L56.26 0 L31.26 0 L21.26 0 L28.07 15Z M240.94 25 L221.26 0 L183.26 0 L151.73 26 L141.53 74 L162 100 L200 100 L231.53 74 L232.38 70 L236.63 50 L211.63 50 L192.63 50 L188.38 70 L204.38 70 L198.31 75 L174.31 75 L168.01 67 L175.24 33 L184.94 25 L207.94 25 L208.94 25 L213.94 25 L237.4 44 L241.44 25Z M257.1 76 L255.4 84 L272 100 L302 100 L312 100 L337 100 L347 100 L340.19 85 L348.69 45 L361.88 30 L351.88 30 L326.88 30 L316.88 30 L323.69 45 L317.31 75 L282.31 75 L282.53 74 L288.69 45 L301.88 30 L291.88 30 L266.88 30 L256.88 30 L263.69 45 L257.53 74Z"/><path fill="var(--wm-dot)" d="M121.1 76 L137.1 76 L128 100 L112 100Z"/></svg></p>
     <p class="intro-s">43.1320° N&nbsp;&nbsp;89.5119° W&nbsp;&nbsp;337 m</p>
     <div class="ld"><span class="ld-bar"><i></i></span><span class="ld-n">0%</span></div>
   </div>
@@ -579,12 +760,11 @@ h2{--w:780}
 
 <header class="bar" id="bar">
   <div class="wrap">
-    <a class="mark" href="#top">H. Gu</a>
+    <a class="mark" href="#top" aria-label="H. Gu"><svg class="wm-s" viewBox="-2.0 -2.0 365.9 104.0" aria-hidden="true" focusable="false"><path fill="var(--wm-ink)" fill-rule="evenodd" d="M13.19 85 L0 100 L10 100 L35 100 L45 100 L38.19 85 L43.29 61 L82.29 61 L77.19 85 L64 100 L74 100 L99 100 L109 100 L102.19 85 L117.07 15 L130.26 0 L120.26 0 L95.26 0 L85.26 0 L92.07 15 L86.54 41 L47.54 41 L53.07 15 L66.26 0 L56.26 0 L31.26 0 L21.26 0 L28.07 15Z M240.94 25 L221.26 0 L183.26 0 L151.73 26 L141.53 74 L162 100 L200 100 L231.53 74 L232.38 70 L236.63 50 L211.63 50 L192.63 50 L188.38 70 L204.38 70 L198.31 75 L174.31 75 L168.01 67 L175.24 33 L184.94 25 L207.94 25 L208.94 25 L213.94 25 L237.4 44 L241.44 25Z M257.1 76 L255.4 84 L272 100 L302 100 L312 100 L337 100 L347 100 L340.19 85 L348.69 45 L361.88 30 L351.88 30 L326.88 30 L316.88 30 L323.69 45 L317.31 75 L282.31 75 L282.53 74 L288.69 45 L301.88 30 L291.88 30 L266.88 30 L256.88 30 L263.69 45 L257.53 74Z"/><path fill="var(--wm-dot)" d="M121.1 76 L137.1 76 L128 100 L112 100Z"/></svg></a>
     <ul class="nav" aria-label="Sections">
       <li class="gl"><a class="go" href="#tools"><span class="en">Tools</span><span class="zh" lang="zh-CN">工具箱</span></a></li>
       <li><a href="#work"><span class="en">Work</span><span class="zh" lang="zh-CN">项目</span></a></li>
-      <li><a href="#decisions"><span class="en">Decisions</span><span class="zh" lang="zh-CN">决定</span></a></li>
-      <li><a href="#now"><span class="en">Now</span><span class="zh" lang="zh-CN">近况</span></a></li>
+      <li><a href="#now"><span class="en">Stack</span><span class="zh" lang="zh-CN">技术栈</span></a></li>
       <li><a href="#contact"><span class="en">Contact</span><span class="zh" lang="zh-CN">联系</span></a></li>
     </ul>
     <div class="tools">
@@ -596,11 +776,12 @@ h2{--w:780}
   </div>
 </header>
 
+<div class="grid-sheet" aria-hidden="true"></div>
 <main>
   <section class="hero" aria-labelledby="name">
     <div class="map" id="map" role="img" aria-label="Contour map of Madison, Wisconsin, with Lake Mendota and Lake Monona"><canvas id="terrain" aria-hidden="true"></canvas></div>
     <div class="wrap">
-      <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0">H</span><span class="l" style="--i:1">.</span> <span class="l" style="--i:2">G</span><span class="l" style="--i:3">u</span></span></h1>
+      <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0"><svg class="wm" viewBox="-2.0 -2.0 365.9 104.0" aria-hidden="true" focusable="false"><path fill="var(--wm-ink)" fill-rule="evenodd" d="M13.19 85 L0 100 L10 100 L35 100 L45 100 L38.19 85 L43.29 61 L82.29 61 L77.19 85 L64 100 L74 100 L99 100 L109 100 L102.19 85 L117.07 15 L130.26 0 L120.26 0 L95.26 0 L85.26 0 L92.07 15 L86.54 41 L47.54 41 L53.07 15 L66.26 0 L56.26 0 L31.26 0 L21.26 0 L28.07 15Z M240.94 25 L221.26 0 L183.26 0 L151.73 26 L141.53 74 L162 100 L200 100 L231.53 74 L232.38 70 L236.63 50 L211.63 50 L192.63 50 L188.38 70 L204.38 70 L198.31 75 L174.31 75 L168.01 67 L175.24 33 L184.94 25 L207.94 25 L208.94 25 L213.94 25 L237.4 44 L241.44 25Z M257.1 76 L255.4 84 L272 100 L302 100 L312 100 L337 100 L347 100 L340.19 85 L348.69 45 L361.88 30 L351.88 30 L326.88 30 L316.88 30 L323.69 45 L317.31 75 L282.31 75 L282.53 74 L288.69 45 L301.88 30 L291.88 30 L266.88 30 L256.88 30 L263.69 45 L257.53 74Z"/><path fill="var(--wm-dot)" d="M121.1 76 L137.1 76 L128 100 L112 100Z"/></svg></span></span></h1>
       <p class="who" style="--i:0"><span class="en">Computer Science at UW–Madison, class of 2029.</span><span class="zh" lang="zh-CN">威斯康星大学麦迪逊分校（UW–Madison）计算机科学专业，2029 届。</span></p>
       <p class="avail" style="--i:1"><span class="en">Open to Summer 2027 SWE and ML internships</span><span class="zh" lang="zh-CN">正在寻找 2027 年夏季的软件工程和机器学习实习</span></p>
       <p class="toolgo" style="--i:2"><a href="#tools"><span class="en">Open the toolbox</span><span class="zh" lang="zh-CN">打开工具箱</span></a></p>
@@ -699,7 +880,7 @@ h2{--w:780}
         <canvas class="film-gl" aria-hidden="true"></canvas>
         <ol class="film-caps">
         <!-- work:caps -->
-        <li class="cap l" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg" data-c="1996AE" data-f="9BE7F2" style="--i:0">
+        <li class="cap l" id="route-animator" data-src="assets/route-animator.jpg" data-thumb="assets/route-animator-peek.jpg" data-c="38BDF8" data-f="BAE6FD" style="--i:0">
           <figure class="cap-shot"><img src="assets/route-animator.jpg" width="1000" height="625" alt="A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">01 / 08 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
@@ -754,7 +935,7 @@ h2{--w:780}
 <!-- /fig:route-animator --><figcaption><span class="en">Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%.</span><span class="zh" lang="zh-CN">单段航程的高度曲线，由 route-animator 自己的 <code>altOf()</code> 绘出。若按缓动后的距离计算，飞机在航程的 18% 之前一直停在跑道上，到 38% 时仍在爬升。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap r" id="madison-rentals" data-src="assets/madison-rentals.jpg" data-c="7A4FD0" data-f="D9C6FF" style="--i:1">
+        <li class="cap r" id="madison-rentals" data-src="assets/madison-rentals.jpg" data-c="FACC15" data-f="FEF08A" style="--i:1">
           <figure class="cap-shot"><img src="assets/madison-rentals.jpg" width="1400" height="875" alt="Map of rentals near the UW–Madison campus, with filters and a price-colored pin for each property" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">02 / 08 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
@@ -945,7 +1126,7 @@ h2{--w:780}
 <!-- /fig:madison-rentals-distance --><figcaption><span class="en">Rent per person for 397 properties with a listed 1&ndash;5 bedroom rent for 2026&ndash;27 or 2027&ndash;28. The blue line is the median of each distance band (n = 29, 111, 105, 68, 37, 22, 25).</span><span class="zh" lang="zh-CN">397 处房源的人均租金，仅含 2026&ndash;27 或 2027&ndash;28 学年、1&ndash;5 间卧室且有标价的报价。蓝线是各距离段的中位数（n = 29、111、105、68、37、22、25）。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap l" id="madison-food-map" data-src="assets/madison-food-map.jpg" data-c="D99A00" data-f="FFE29A" style="--i:2">
+        <li class="cap l" id="madison-food-map" data-src="assets/madison-food-map.jpg" data-c="38BDF8" data-f="BAE6FD" style="--i:2">
           <figure class="cap-shot"><img src="assets/madison-food-map.jpg" width="1400" height="875" alt="Madison Eats: a grid of photo cards for restaurants, each with an overall score, its rank within its cuisine and a few highlights" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">03 / 08 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
@@ -1130,7 +1311,7 @@ h2{--w:780}
 <!-- /fig:madison-food-map-agreement --><figcaption><span class="en">Rank correlation of star ratings between pairs of sources, over the 2,292 places shown. n is the number of places rated on both.</span><span class="zh" lang="zh-CN">同一批 2,292 家显示的店铺，每两个来源之间星级的秩相关。n 是两边都有评分的店铺数。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap r" id="madison-campus-guide" data-src="assets/madison-campus-guide.jpg" data-c="1F9D55" data-f="B5EBC8" style="--i:3">
+        <li class="cap r" id="madison-campus-guide" data-src="assets/madison-campus-guide.jpg" data-c="FACC15" data-f="FEF08A" style="--i:3">
           <figure class="cap-shot"><img src="assets/madison-campus-guide.jpg" width="1400" height="875" alt="Madison Essentials: groceries listed with walking time and open status, beside a map of campus with a colored pin for each place" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">04 / 08 &middot; <span class="en">Web app, data</span><span class="zh" lang="zh-CN">网页应用 · 数据</span></p>
@@ -1329,7 +1510,7 @@ h2{--w:780}
 <!-- /fig:madison-campus-guide-demand --><figcaption><span class="en">Distinct people asking about each topic, top ten, June 2025 to October 2026. Topics are tagged by keyword, so the counts rank topics rather than measure them. Campus jobs is left out: most of its Reddit matches were off-campus jobs.</span><span class="zh" lang="zh-CN">每个话题的提问人数（去重），前十名，2025 年 6 月到 2026 年 10 月。话题按关键词归类，所以计数只用来排序，不是精确数字。校内工作没有列入：Reddit 上匹配到的大多是校外工作。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap l" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" data-c="D7263D" data-f="FFB070" style="--i:4">
+        <li class="cap l" id="uw-course-lookup" data-src="assets/uw-course-lookup.jpg" data-c="38BDF8" data-f="BAE6FD" style="--i:4">
           <figure class="cap-shot"><img src="assets/uw-course-lookup.jpg" width="1400" height="897" alt="Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">05 / 08 &middot; <span class="en">Web app + API</span><span class="zh" lang="zh-CN">网页应用 + API</span></p>
@@ -1550,7 +1731,7 @@ h2{--w:780}
 <!-- /fig:uw-course-spread --><figcaption><span class="en">The eight largest gaps between the lowest and highest instructor GPA in one course, among 290 tracked courses. Each instructor has at least 30 graded students.</span><span class="zh" lang="zh-CN">在 290 门被跟踪的课程中，同一门课里最低与最高教师 GPA 相差最大的八门。每位教师至少有 30 名有成绩的学生。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap r" id="cutroom" data-src="assets/cutroom.jpg" data-c="3B6EF5" data-f="B9CCFF" style="--i:5">
+        <li class="cap r" id="cutroom" data-src="assets/cutroom.jpg" data-c="FACC15" data-f="FEF08A" style="--i:5">
           <figure class="cap-shot"><img src="assets/cutroom.jpg" width="1400" height="840" alt="Cutroom: a transition library on the left, the video preview, effect settings, and a timeline with lanes for overlays, effects, camera moves, captions, voice-over and sound effects" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">06 / 08 &middot; <span class="en">Desktop app</span><span class="zh" lang="zh-CN">桌面应用</span></p>
@@ -1621,7 +1802,7 @@ h2{--w:780}
 <!-- /fig:cutroom-architecture --><figcaption><span class="en">One file, two editors, and one composition for both preview and export.</span><span class="zh" lang="zh-CN">一个文件，两个编辑者，预览和导出共用一套合成。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap l" id="photo-organizer" data-src="assets/photo-organizer.jpg" data-c="3A8F7E" data-f="E9D2A6" style="--i:6">
+        <li class="cap l" id="photo-organizer" data-src="assets/photo-organizer.jpg" data-c="38BDF8" data-f="BAE6FD" style="--i:6">
           <figure class="cap-shot"><img src="assets/photo-organizer.jpg" width="1000" height="560" alt="Photo organizer web UI showing a cluster of coastal landscape photos" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">07 / 08 &middot; <span class="en">Python, CLIP</span><span class="zh" lang="zh-CN">Python、CLIP</span></p>
@@ -1758,7 +1939,7 @@ h2{--w:780}
 <!-- /fig:photo-organizer --><figcaption><span class="en">Schematic. Only scenery is clustered; photos HDBSCAN can&rsquo;t place in any trip go to a <code>misc</code> folder.</span><span class="zh" lang="zh-CN">示意图。只有风景会被聚类；HDBSCAN 无法归入任何旅行的照片会放进 <code>misc</code> 文件夹。</span></figcaption></figure>
           </div></div>
         </li>
-        <li class="cap r" id="datamap" data-src="assets/datamap.jpg" data-c="2F6FE0" data-f="A9C8FF" style="--i:7">
+        <li class="cap r" id="datamap" data-src="assets/datamap.jpg" data-c="FACC15" data-f="FEF08A" style="--i:7">
           <figure class="cap-shot"><img src="assets/datamap.jpg" width="1340" height="838" alt="DataMap showing a choropleth of 2025 GDP by US state" loading="lazy" decoding="async"></figure>
           <div class="pg"><div class="pg-in">
             <p class="cap-n" data-k style="--k:0">08 / 08 &middot; <span class="en">Web app</span><span class="zh" lang="zh-CN">网页应用</span></p>
@@ -1908,27 +2089,7 @@ h2{--w:780}
     <!-- /work:minor -->
   </section>
 
-  <section class="block" id="decisions" aria-labelledby="dec-h">
-    <div class="wrap">
-      <div class="shead"><h2 id="dec-h"><span class="en" data-split="char">Decisions I'd defend</span><span class="zh" lang="zh-CN" data-split="char">我会坚持的决定</span></h2></div>
-      <div class="decs">
-        <div class="dec" style="--i:0">
-          <h3><span class="en" data-split="word">Show the gap, don't fake the data.</span><span class="zh" lang="zh-CN" data-split="char">如实展示缺口，不要伪造数据。</span></h3>
-          <p><span class="en">Connecticut replaced its eight counties with planning regions in 2022, and the two do not partition each other. DataMap renders the old counties as <em>no data</em> rather than inventing a crosswalk that would look correct and be wrong.</span><span class="zh" lang="zh-CN">康涅狄格州在 2022 年用规划区取代了原来的八个县，两套边界并不互相对应。DataMap 把旧的县显示为 <em>无数据</em>，而不是编一张看起来正确、实际上错误的对照表。</span></p>
-        </div>
-        <div class="dec" style="--i:1">
-          <h3><span class="en" data-split="word">Aggregates leave the machine; records don't.</span><span class="zh" lang="zh-CN" data-split="char">离开这台电脑的是汇总，不是原始记录。</span></h3>
-          <p><span class="en">The course tool is built on a private chat archive. Only anonymized counts are published; the archive itself is gitignored and stays on one disk. A useful dataset is not a licence to ship it.</span><span class="zh" lang="zh-CN">课程工具建立在一份私人聊天记录之上。公开的只有匿名化的计数，记录本身被 gitignore，只留在一块硬盘上。数据有用，并不意味着可以随便发布。</span></p>
-        </div>
-        <div class="dec" style="--i:2">
-          <h3><span class="en" data-split="word">Public repos are original work only.</span><span class="zh" lang="zh-CN" data-split="char">公开仓库只放原创作品。</span></h3>
-          <p><span class="en">Graded coursework stays off GitHub, no exceptions. What's public is what I designed, and I can walk through every line of it.</span><span class="zh" lang="zh-CN">计分的课程作业不上 GitHub，没有例外。公开的都是我自己设计的东西，每一行我都能讲清楚。</span></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block" id="now" aria-labelledby="now-h">
+  <section class="block" id="now" aria-labelledby="stack-h">
     <p class="sr"><!-- work:sr --><span class="en">Tools used in these projects: MapLibre GL, Canvas 2D, MediaRecorder, WebGL, Leaflet, Cloudflare Workers, Cloudflare Turnstile, Workers AI, DeepSeek, Chrome MV3, Playwright, TypeScript, React, Remotion, Electron, Claude Code, MCP, sherpa-onnx, ffmpeg, Vite, SQLite, GitHub Actions, pdf.js, Cloudflare D1, Resend, PyTorch, open_clip, HDBSCAN, FastAPI, D3, TopoJSON, OKLCH, SVG, Stable Diffusion XL, OffscreenCanvas. Data sources: Esri World Imagery, Madison Metro GTFS, OpenStreetMap, Nominatim, Public Health Madison & Dane County, ntfy, MadGrades API, Course Search & Enroll API, Reddit via Firecrawl, World Bank, US Census, ISO 3166, USGS 3DEP.</span><span class="zh" lang="zh-CN">这些项目用到的工具：MapLibre GL、Canvas 2D、MediaRecorder、WebGL、Leaflet、Cloudflare Workers、Cloudflare Turnstile、Workers AI、DeepSeek、Chrome MV3、Playwright、TypeScript、React、Remotion、Electron、Claude Code、MCP、sherpa-onnx、ffmpeg、Vite、SQLite、GitHub Actions、pdf.js、Cloudflare D1、Resend、PyTorch、open_clip、HDBSCAN、FastAPI、D3、TopoJSON、OKLCH、SVG、Stable Diffusion XL、OffscreenCanvas。数据来源：Esri World Imagery、Madison Metro GTFS、OpenStreetMap、Nominatim、Public Health Madison & Dane County、ntfy、MadGrades API、Course Search & Enroll API、Reddit via Firecrawl、World Bank、US Census、ISO 3166、USGS 3DEP。</span><!-- /work:sr --></p>
     <!-- work:stack -->
     <script type="application/json" id="stack-data">
@@ -1963,14 +2124,6 @@ h2{--w:780}
           <dt><span class="en">Tooling</span><span class="zh" lang="zh-CN">工具</span></dt><dd><span class="en">Git, Playwright, Remotion, Linux over SSH, CUDA</span><span class="zh" lang="zh-CN">Git、Playwright、Remotion、通过 SSH 使用 Linux、CUDA</span></dd>
         </dl>
       </div>
-      <div>
-        <h2 id="now-h"><span class="en" data-split="char">Now</span><span class="zh" lang="zh-CN" data-split="char">近况</span><span class="when"><span class="en">October 2026</span><span class="zh" lang="zh-CN">2026 年 10 月</span></span></h2>
-        <dl class="kv">
-          <dt><span class="en">Drilling</span><span class="zh" lang="zh-CN">刷题</span></dt><dd><span class="en">About 150 pattern-based algorithm problems, grouped by technique rather than count.</span><span class="zh" lang="zh-CN">约 150 道按套路分类的算法题，按技巧分组，而不是只看数量。</span></dd>
-          <dt><span class="en">Learning</span><span class="zh" lang="zh-CN">学习</span></dt><dd><span class="en">Applied ML in depth: embeddings, retrieval, and the infrastructure around them.</span><span class="zh" lang="zh-CN">深入学习应用机器学习：嵌入向量、检索，以及它们周边的基础设施。</span></dd>
-          <dt><span class="en">Coursework</span><span class="zh" lang="zh-CN">课程</span></dt><dd><span class="en">CS 577 Introduction to Algorithms, CS 354 Machine Organization and Programming.</span><span class="zh" lang="zh-CN">CS 577 算法导论，CS 354 机器组织与编程。</span></dd>
-        </dl>
-      </div>
     </div>
   </section>
 
@@ -2002,7 +2155,7 @@ const basic = () => root.hasAttribute('data-lite');
 // The text intro starts as the intro overlay leaves, or once the display face is ready
 let goAt = 0, introFinished = false, introResolve;
 const introDone = new Promise(r => { introResolve = r; }).then(() => { introFinished = true; });
-const fontReady = Promise.race([document.fonts.load('800 100px Archivo'), new Promise(r => setTimeout(r, 800))]);
+const fontReady = Promise.race([Promise.all([document.fonts.load('900 100px "Bodoni Moda"'), document.fonts.load('900 100px "Big Shoulders Display"')]), new Promise(r => setTimeout(r, 800))]);
 introDone.then(() => requestAnimationFrame(() => { root.classList.add('go'); goAt = performance.now(); }));
 
 // Language: both versions are in the page, <html lang> shows one. 'zh-CN' is Chinese, anything else English.
@@ -2102,20 +2255,14 @@ const split = (el, text) => {
 document.querySelectorAll('[data-split]').forEach(el => split(el));
 // Once a reveal has played, drop its animations so the letters stop being separate layers
 const settle = (el) => { const n = el.querySelectorAll('.sc, .sw').length; setTimeout(() => el.classList.add('done'), 1600 + n * 46 + (parseFloat(el.style.getPropertyValue('--d')) || 0) * 1000); };
-// Reveal once in view; the hero line waits for the intro, decision titles for their section
+// Reveal once in view; the hero line waits for the intro
 const revIO = new IntersectionObserver((es) => es.forEach(e => {
   if (!e.isIntersecting) return;
   revIO.unobserve(e.target);
   const sh = e.target.closest('.shead'); if (sh) sh.classList.add('on');
   e.target.classList.add('in'); settle(e.target);
 }), { threshold: .6 });
-document.querySelectorAll('[data-split]').forEach(el => { if (!el.closest('.hero') && !el.closest('.dec')) revIO.observe(el); });
-const decsIO = new IntersectionObserver((es) => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  e.target.classList.add('seen'); decsIO.unobserve(e.target);
-  e.target.querySelectorAll('[data-split]').forEach((el, k) => { el.style.setProperty('--d', (.3 + k * .14) + 's'); el.classList.add('in'); settle(el); });
-}), { threshold: .3 });
-document.querySelectorAll('.decs').forEach(d => decsIO.observe(d));
+document.querySelectorAll('[data-split]').forEach(el => { if (!el.closest('.hero')) revIO.observe(el); });
 
 // Project names: a weight wave runs through the letters on hover
 if ((fine || root.classList.contains('full')) && !basic()) {
@@ -2198,12 +2345,44 @@ addEventListener('scroll', () => {
   if (Math.abs(d) > 6) { bar.classList.toggle('away', d > 0 && y > innerHeight * .8 && !bar.contains(document.activeElement)); lastY = y; }
 }, { passive: true });
 
+// Survey grid behind the small projects and the stack
+(() => {
+  const film = document.getElementById('film'), contact = document.getElementById('contact');
+  if (!film || !contact) return;
+  let a = 0, b = 0, onNow = null, raf = 0;
+  const measure = () => { a = film.getBoundingClientRect().bottom + scrollY; b = contact.getBoundingClientRect().top + scrollY; check(); };
+  const check = () => { raf = 0; const m = scrollY + innerHeight / 2, on = m > a && m < b; if (on !== onNow) { onNow = on; root.classList.toggle('grid-on', on); } };
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(check); }, { passive: true });
+  new ResizeObserver(measure).observe(document.body);
+  measure();
+})();
+
 // Nav scroll-spy
 const navLinks = [...document.querySelectorAll('.nav a')];
 const spy = new IntersectionObserver((es) => es.forEach(e => {
   if (e.isIntersecting) navLinks.forEach(a => a.setAttribute('aria-current', a.hash === '#' + e.target.id ? 'true' : 'false'));
 }), { rootMargin: '-40% 0px -55% 0px' });
-['tools', 'work', 'decisions', 'now', 'contact'].forEach(id => spy.observe(document.getElementById(id)));
+['tools', 'work', 'now', 'contact'].forEach(id => spy.observe(document.getElementById(id)));
+
+// Page tint: each section is a neighbouring sky tint, joined by one gradient on the root so the
+// contour sheet stays visible and no section boundary is a hard edge. Colours are CSS vars, so the
+// theme switch needs no recompute; only positions are measured.
+(() => {
+  const F = 240, secs = ['tools', 'work', 'now', 'contact'], oklch = CSS.supports('background-image', 'linear-gradient(to bottom in oklch, red, blue)');
+  const set = () => {
+    const y = (id) => Math.round(document.getElementById(id).getBoundingClientRect().top + scrollY);
+    const st = ['var(--paper) 0px']; let prev = 'var(--paper)';
+    secs.forEach(id => {
+      const t = y(id), c = `var(--tint-${id})`;
+      if (id === 'contact') { const kb = Math.round(document.querySelector('#now .two').getBoundingClientRect().bottom + scrollY); st.push(`var(--deep1) ${kb + 40}px`, `var(--deep2) ${t + 30}px`, `${c} ${t + 160}px`); }
+      else st.push(`${prev} ${t - F / 2}px`, `${c} ${t + F / 2}px`);
+      prev = c;
+    });
+    st.push(`${prev} 100%`);
+    root.style.backgroundImage = `linear-gradient(${oklch ? 'to bottom in oklch' : 'to bottom'}, ${st.join(', ')})`;
+  };
+  set(); new ResizeObserver(set).observe(document.body);
+})();
 
 // Frame-rate independent damping (after Lenis)
 const damp = (x, y, lambda, dt) => x + (y - x) * (1 - Math.exp(-lambda * dt));
@@ -2398,11 +2577,43 @@ function terrainCore(port) {
   };
   // Water tint, contours and shoreline; a = opacities
   const paint = (b, t, v, col, a) => {
-    const { w, h } = M, m = new ImageData(w, h), [wr, wg, wb] = col.water.split(',').map(Number);
-    for (let k = 0; k < w * h; k++) { const q = Math.max(0, Math.min(1, (SHORE + .9 - g[k]) / 1.4)); m.data[k * 4] = wr; m.data[k * 4 + 1] = wg; m.data[k * 4 + 2] = wb; m.data[k * 4 + 3] = q * a.water * 255; }
-    const mc = mk(w, h); mc.getContext('2d').putImageData(m, 0, 0);
-    b.imageSmoothingEnabled = true; b.imageSmoothingQuality = 'high';
-    b.drawImage(mc, v.ox, v.oy, w * v.s, h * v.s);
+    const { w, h } = M, [wr, wg, wb] = col.water.split(',').map(Number);
+    if (a.water > .5) {
+      // Solid lakes: fill at device resolution, antialiased on the same isoline as the shoreline
+      const cw = b.canvas.width, ch = b.canvas.height, d = b.getTransform().a, sp = v.s * d, m = new ImageData(cw, ch);
+      // Two 3x3 box passes round off the flattened, blocky water cells in the DEM
+      let gs = g;
+      for (let pass = 0; pass < 2; pass++) {
+        const o = new Float32Array(w * h);
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+          let s = 0, n = 0;
+          for (let dy = -1; dy <= 1; dy++) { const yy = y + dy; if (yy < 0 || yy >= h) continue;
+            for (let dx = -1; dx <= 1; dx++) { const xx = x + dx; if (xx < 0 || xx >= w) continue; s += gs[yy * w + xx]; n++; } }
+          o[y * w + x] = s / n;
+        }
+        gs = o;
+      }
+      for (let py = 0; py < ch; py++) {
+        const j = (py / d - v.oy) / v.s; if (j < 0 || j > h - 1.001) continue;
+        const j0 = j | 0, fy = j - j0;
+        for (let px = 0; px < cw; px++) {
+          const i = (px / d - v.ox) / v.s; if (i < 0 || i > w - 1.001) continue;
+          const i0 = i | 0, fx = i - i0, k = j0 * w + i0, A = gs[k], B = gs[k + 1], C = gs[k + w + 1], D = gs[k + w];
+          const e = (A * (1 - fx) + B * fx) * (1 - fy) + (D * (1 - fx) + C * fx) * fy;
+          if (e > SHORE + 3) continue;
+          const gx = (B - A) * (1 - fy) + (C - D) * fy, gy = (D - A) * (1 - fx) + (C - B) * fx;
+          const q = Math.max(0, Math.min(1, .5 + (SHORE - e) * sp / Math.max(1e-3, Math.hypot(gx, gy))));
+          if (q > 0) { const o = (py * cw + px) * 4; m.data[o] = wr; m.data[o + 1] = wg; m.data[o + 2] = wb; m.data[o + 3] = q * a.water * 255; }
+        }
+      }
+      b.putImageData(m, 0, 0);
+    } else {
+      const m = new ImageData(w, h);
+      for (let k = 0; k < w * h; k++) { const q = Math.max(0, Math.min(1, (SHORE + .9 - g[k]) / 1.4)); m.data[k * 4] = wr; m.data[k * 4 + 1] = wg; m.data[k * 4 + 2] = wb; m.data[k * 4 + 3] = q * a.water * 255; }
+      const mc = mk(w, h); mc.getContext('2d').putImageData(m, 0, 0);
+      b.imageSmoothingEnabled = true; b.imageSmoothingQuality = 'high';
+      b.drawImage(mc, v.ox, v.oy, w * v.s, h * v.s);
+    }
     b.lineJoin = 'round'; b.lineCap = 'round';
     t.levels.forEach(L => {
       const idx = L.v % 25 === 0;
@@ -2637,7 +2848,7 @@ const terrain = (() => {
   if (port instanceof Worker) { port.onerror = toLocal; setTimeout(toLocal, 3000); }
   const paintReq = (v, pd, a, ids) => new Promise(res => {
     const id = ++pid; waiting.set(id, res);
-    port.postMessage({ type: 'paint', id, v, dpr: pd, col: { line: css('--line'), water: css('--water') }, a, ids });
+    port.postMessage({ type: 'paint', id, v, dpr: pd, col: { line: css('--contour'), water: css('--water') }, a, ids });
   });
   let lineIds = null;
 
@@ -2695,24 +2906,40 @@ const terrain = (() => {
     b.drawImage(img, 0, 0);
     b.setTransform(dpr, 0, 0, dpr, 0, 0);
     const water = css('--water');
-    b.fillStyle = `rgba(${water},${isDark() ? .85 : .9})`; b.textAlign = 'center'; b.textBaseline = 'middle';
+    b.fillStyle = 'rgba(11,26,44,.9)'; b.textAlign = 'center'; b.textBaseline = 'middle';
     LABELS.forEach(l => {
       const [i, j] = toGrid(l.lat, l.lon), x = ox + i * s, y = oy + j * s, px = Math.round(Math.max(12, Math.min(17, W / 95)) * l.size);
-      b.font = `italic 500 ${px}px Archivo, sans-serif`; b.letterSpacing = '0.18em';
+      b.font = `italic 600 ${px}px "Instrument Sans", sans-serif`; b.letterSpacing = '0.16em';
       const hw = b.measureText(l.t).width / 2;
       if (x - hw < 12 || x + hw > W - 12 || y < 76 || y > H - 20 || blocked(x - hw, y - px, x + hw, y + px)) return;
       b.fillText(l.t, x, y);
     });
     b.letterSpacing = '0px';
     const [fx, fy] = focusPx();
-    if (blocked(fx - 9, fy - 9, fx + 9, fy + 9)) return;
-    b.fillStyle = css('--accent'); b.strokeStyle = css('--accent'); b.lineWidth = 1.2;
-    b.beginPath(); b.arc(fx, fy, 3.2, 0, 7); b.fill();
-    b.beginPath(); b.arc(fx, fy, 8, 0, 7); b.stroke();
-    b.font = '600 12px Archivo, sans-serif'; b.fillStyle = css('--ink');
-    const tw = b.measureText('UW–Madison').width, right = !blocked(fx + 14, fy - 8, fx + 14 + tw, fy + 8) && fx + 14 + tw < W - 12;
+    // Campus: Bascom Hill's own contours turn gold and fade out from the hilltop, with a map label beside it
+    if (blocked(fx - 6, fy - 6, fx + 6, fy + 6) || !g) return;
+    const R = Math.max(80, Math.min(150, W / 11)), t = core.trace({ s, ox, oy, W, H });
+    const off = document.createElement('canvas'); off.width = base.width; off.height = base.height;
+    const o = off.getContext('2d'); o.setTransform(dpr, 0, 0, dpr, 0, 0);
+    o.lineJoin = 'round'; o.lineCap = 'round';
+    t.levels.forEach(L => { const idx = L.v % 25 === 0; o.strokeStyle = idx ? '#CA8A04' : '#EAB308'; o.lineWidth = idx ? 2.6 : 1.8; o.stroke(L.p); });
+    o.globalCompositeOperation = 'destination-in';
+    const gr = o.createRadialGradient(fx, fy, 0, fx, fy, R);
+    gr.addColorStop(0, '#000'); gr.addColorStop(.45, 'rgba(0,0,0,.95)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    o.fillStyle = gr; o.fillRect(0, 0, W, H);
+    b.setTransform(1, 0, 0, 1, 0, 0); b.drawImage(off, 0, 0); b.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const ink = css('--ink');
+    b.fillStyle = css('--paper'); b.beginPath(); b.arc(fx, fy, 6, 0, 7); b.fill();
+    b.fillStyle = ink; b.beginPath(); b.arc(fx, fy, 3.6, 0, 7); b.fill();
+    b.font = '800 13px "Instrument Sans", sans-serif'; b.letterSpacing = '0.2em'; b.textBaseline = 'middle';
+    const lab = 'UW–MADISON', tw = b.measureText(lab).width, right = !blocked(fx + 14, fy - 9, fx + 14 + tw, fy + 9) && fx + 14 + tw < W - 12;
     b.textAlign = right ? 'left' : 'right';
-    if (right || !blocked(fx - 14 - tw, fy - 8, fx - 14, fy + 8)) b.fillText('UW–Madison', right ? fx + 14 : fx - 14, fy);
+    b.lineJoin = 'round'; b.strokeStyle = css('--paper'); b.lineWidth = 4;
+    if (right || !blocked(fx - 14 - tw, fy - 9, fx - 14, fy + 9)) {
+      const lx = right ? fx + 14 : fx - 14;
+      b.strokeText(lab, lx, fy); b.fillStyle = ink; b.fillText(lab, lx, fy);
+    }
+    b.letterSpacing = '0px';
   };
 
   let colors = null;
@@ -2740,7 +2967,7 @@ const terrain = (() => {
     kick();
   };
 
-  const heroAlpha = () => isDark() ? { water: .13, minor: .15, index: .34, shore: .7 } : { water: .1, minor: .16, index: .36, shore: .7 };
+  const heroAlpha = () => isDark() ? { water: 1, minor: .22, index: .46, shore: 0 } : { water: 1, minor: .22, index: .46, shore: 0 };
   const renderHero = async () => {
     const gen = ++heroGen;
     layoutView();
@@ -2748,7 +2975,7 @@ const terrain = (() => {
     if (gen !== heroGen) return;
     img = res.img; lineIds = res.ids; compose(); present();
     // Labels drawn before the italic face arrived get redrawn once it does
-    if (!document.fonts.check('italic 500 14px Archivo')) document.fonts.load('italic 500 14px Archivo').then(() => { if (gen === heroGen) { compose(); if (glmap) glmap.setBase(base); kick(true); } });
+    if (!document.fonts.check('italic 600 14px "Instrument Sans"')) document.fonts.load('italic 600 14px "Instrument Sans"').then(() => { if (gen === heroGen) { compose(); if (glmap) glmap.setBase(base); kick(true); } });
   };
 
   // Contour highlights. The level under the pointer lights up in a soft patch that widens
@@ -2874,7 +3101,7 @@ const terrain = (() => {
     const SH = vh + travel, bd = Math.min(devicePixelRatio || 1, 1.5);
     const { w, h } = META, bs = Math.max(vw / (w - 1), SH / (h - 1)), [fi] = toGrid(FOCUS.lat, FOCUS.lon);
     const v = { s: bs, ox: Math.min(0, Math.max(vw - (w - 1) * bs, vw * .5 - fi * bs)), oy: Math.min(0, (SH - (h - 1) * bs) / 2), W: vw, H: SH };
-    const im = (await paintReq(v, bd, isDark() ? { water: .05, minor: .06, index: .11, shore: .2 } : { water: .045, minor: .065, index: .12, shore: .22 })).img;
+    const im = (await paintReq(v, bd, isDark() ? { water: .06, minor: .08, index: .14, shore: .2 } : { water: .05, minor: .09, index: .17, shore: .22 })).img;
     if (gen !== bgGen) return;
     bg.style.width = vw + 'px'; bg.style.height = SH + 'px';
     bgMode = bgMode || (typeof ImageBitmap !== 'undefined' && im instanceof ImageBitmap && 'ImageBitmapRenderingContext' in window ? 'bitmaprenderer' : '2d');
@@ -2949,8 +3176,8 @@ const terrain = (() => {
     const o = document.createElement('canvas'); o.width = Math.ceil(W); o.height = Math.ceil(H);
     const og = o.getContext('2d', { willReadFrequently: true });
     let fs = Math.min(H * .36, W * .3);
-    og.font = `800 ${fs}px Archivo, sans-serif`; og.fontStretch = 'expanded';
-    fs *= Math.min(1, W * .9 / og.measureText('hello').width); og.font = `800 ${fs}px Archivo, sans-serif`;
+    og.font = `900 ${fs}px "Big Shoulders Display", sans-serif`;
+    fs *= Math.min(1, W * .9 / og.measureText('hello').width); og.font = `900 ${fs}px "Big Shoulders Display", sans-serif`;
     og.textAlign = 'right'; og.textBaseline = 'middle'; og.fillText('hello', W - 8, H * .24);
     const d = og.getImageData(0, 0, o.width, o.height).data, T2 = [];
     for (let y = gap / 2; y < H; y += gap) for (let x = gap / 2; x < W; x += gap) if (d[((y | 0) * o.width + (x | 0)) * 4 + 3] > 128) T2.push([x, y]);
@@ -2979,7 +3206,7 @@ const terrain = (() => {
   let quietUntil = 0, inside = false;
   setInterval(() => { if (performance.now() > quietUntil && !inside && onScreen && !still && !document.hidden) morph(); }, 5200);
   const draw = () => {
-    if (!col) col = [cssv('--water'), cssv('--line')].map(v => v.split(',').map(Number));
+    if (!col) col = [[56, 189, 248], [241, 245, 249]];
     ctx.clearRect(0, 0, W, H);
     // Five color steps between water blue (lakes) and ink (the word)
     for (let b = 0; b < 5; b++) {
@@ -3074,9 +3301,9 @@ void main(){
   const u = (n) => gl.getUniformLocation(pr, n), ur = u('r'), ut = u('t');
   const tint = () => {
     const d = isDark();
-    gl.uniform3fv(u('P'), d ? [.06, .086, .114] : [.984, .988, .984]);
-    gl.uniform3fv(u('A'), d ? [.1, .19, .31] : [.83, .9, .97]);
-    gl.uniform3fv(u('B'), d ? [.07, .2, .16] : [.86, .94, .89]);
+    gl.uniform3fv(u('P'), d ? [.031, .09, .149] : [1, 1, 1]);
+    gl.uniform3fv(u('A'), d ? [.03, .2, .32] : [.73, .9, .99]);
+    gl.uniform3fv(u('B'), d ? [.09, .12, .27] : [1, .96, .6]);
   };
   tint();
   let w = 0, h = 0;
@@ -3193,7 +3420,7 @@ const onScreenLoop = (el, draw) => {
   const draw = (t, dt) => {
     const r = fit(cv, 1.5), W = r.W, H = r.H;
     ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
-    if (!col) { const ev = (n) => getComputedStyle(cv).getPropertyValue(n).trim(); col = { line: ev('--line'), acc: ev('--water'), ink: ev('--ink'), muted: ev('--muted'), paper: hexRgb(ev('--bg') || ev('--paper')) }; }
+    if (!col) { const ev = (n) => getComputedStyle(cv).getPropertyValue(n).trim(); col = { line: ev('--contour'), acc: ev('--water'), ink: ev('--ink'), muted: ev('--muted'), paper: hexRgb(ev('--bg') || ev('--paper')) }; }
     // Keeps turning; slows down and tilts toward the pointer while it is over the globe
     T += dt; spin = damp(spin, mx === null ? .2 : .05, 2, dt); yaw += spin * dt;
     pitch = damp(pitch, my === null ? .42 : .42 + (my - .5) * .6, 3, dt);
@@ -3236,7 +3463,7 @@ const onScreenLoop = (el, draw) => {
     ctx.fillStyle = `rgba(${col.paper},.62)`; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
     ctx.strokeStyle = `rgba(${col.line},.16)`; ctx.lineWidth = 1; ctx.stroke();
     dots(true); lines(true);
-    ctx.font = '600 11px Archivo, sans-serif'; ctx.textBaseline = 'middle';
+    ctx.font = '600 11px "Instrument Sans", sans-serif'; ctx.textBaseline = 'middle';
     main.names.forEach((n) => {
       const [x, y, z] = P(ll(...C[n])); if (z < .1) return;
       ctx.globalAlpha = Math.min(1, (z - .1) * 4);
@@ -3244,7 +3471,7 @@ const onScreenLoop = (el, draw) => {
       ctx.fillStyle = col.ink; ctx.fillText(n, x + 7, y);
     });
     // Other routes name their ends while the plane is in the air
-    ctx.font = '500 10px Archivo, sans-serif';
+    ctx.font = '500 10px "Instrument Sans", sans-serif';
     for (const rt of others) {
       const st = state(rt, T); if (!st.flying || still) continue;
       [rt.names[0], rt.names.at(-1)].forEach((n) => {
@@ -3301,7 +3528,7 @@ const onScreenLoop = (el, draw) => {
   };
   const draw = (t, dt) => {
     if (!W) layout();
-    if (!col) col = { line: cssv('--line'), acc: cssv('--water'), ink: cssv('--ink'), mut: cssv('--muted') };
+    if (!col) col = { line: cssv('--contour'), acc: isDark() ? cssv('--water') : '3,105,161', ink: cssv('--ink'), mut: cssv('--muted') };
     for (const nd of nodes) {
       let tx = nd.hx + Math.sin(t / 1700 + nd.ph) * 6, ty = nd.hy + Math.cos(t / 2100 + nd.ph * 1.3) * 5;
       const dx = nd.x - mx, dy = nd.y - my, d = Math.hypot(dx, dy);
@@ -3317,7 +3544,7 @@ const onScreenLoop = (el, draw) => {
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const placed = [], free = (b) => !placed.some(q => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
     for (const p of keys) {
-      const [x, y] = centers[p]; ctx.font = `italic ${lit(p) ? 600 : 500} 12px Archivo, sans-serif`;
+      const [x, y] = centers[p]; ctx.font = `italic ${lit(p) ? 600 : 500} 12px "Instrument Sans", sans-serif`;
       const w = ctx.measureText(p).width; placed.push([x - w / 2 - 3, y - 8, x + w / 2 + 3, y + 8]);
       ctx.fillStyle = `rgba(${col.acc},${lit(p) ? 1 : .6})`; ctx.fillText(p, x, y);
     }
@@ -3330,7 +3557,7 @@ const onScreenLoop = (el, draw) => {
       // ...and inward near the edges, so nothing is clipped
       const left = nd.x > W - 110 || (nd.x > 110 && nd.projs.length === 1 && nd.x < centers[nd.projs[0]][0]);
       ctx.textAlign = left ? 'right' : 'left';
-      ctx.font = `${on ? 600 : 500} 11.5px Archivo, sans-serif`;
+      ctx.font = `${on ? 600 : 500} 11.5px "Instrument Sans", sans-serif`;
       const w = ctx.measureText(nd.n).width, lx = left ? nd.x - 7 - w : nd.x + 7, box = [lx - 2, nd.y - 8, lx + w + 2, nd.y + 8];
       if (!free(box)) continue;
       placed.push(box); ctx.fillStyle = on ? col.ink : col.mut; ctx.fillText(nd.n, nd.x + (left ? -7 : 7), nd.y);
@@ -3386,7 +3613,7 @@ void main(){
 };
 (() => {
   const now = document.getElementById('orb');
-  if (now) liquidOrb(now, () => isDark() ? [[.28, .42, .64], [.6, .76, .96]] : [[.7, .8, .94], [.95, .98, 1]]);
+  if (now) liquidOrb(now, () => isDark() ? [[.13, .45, .62], [.49, .83, .99]] : [[.22, .74, .97], [.88, .95, 1]]);
 })();
 
 // Signal line above the footer: a few sine waves that swell as the pointer comes near
@@ -3401,7 +3628,7 @@ void main(){
   const draw = (t, dt) => {
     const r = fit(cv, 2), W = r.W, H = r.H;
     ctx.setTransform(r.d, 0, 0, r.d, 0, 0); ctx.clearRect(0, 0, W, H);
-    if (!col) col = [cssv('--water'), hexRgb(cssv('--signal')), cssv('--line')];
+    if (!col) col = ['56,189,248', hexRgb(cssv('--gold')), '241,245,249'];
     amp = damp(amp, tamp, 3, dt);
     ctx.lineWidth = 1.4;
     for (const [c, a, f, ph] of [[col[0], .9, 1, 0], [col[1], .6, 1.35, 1.3], [col[2], .35, .8, 2.4]]) {
@@ -3610,7 +3837,7 @@ void main(){
       gl.uniform2f(uh.uOrb, x, y); gl.uniform1f(uh.uOrbR, o.r); gl.uniform1f(uh.uAsp, va); gl.uniform1f(uh.uPh, phase);
       gl.uniform1f(uh.uEx, boost); gl.uniform1f(uh.uSide, side); gl.uniform1f(uh.uPx, 3 * dpr);
       const mc = mix3(o.c, o.c2, o.sw), mf = mix3(o.f, o.f2, o.sw);
-      gl.uniform3fv(uh.uCol, isDark() ? mf : mix3(mc, INK, .35));
+      gl.uniform3fv(uh.uCol, isDark() ? mf : [.01, .41, .63]);
       off(); attr(bTR, 0, 4); attr(bTK, 1, 1); gl.uniform1f(uh.uPt, 0); gl.drawArrays(gl.LINES, 0, NM * TS * 2);
       off(); attr(bHR, 0, 4); attr(bHK, 1, 1); gl.uniform1f(uh.uPt, 1); gl.drawArrays(gl.POINTS, 0, NM);
     };
@@ -3638,6 +3865,7 @@ void main(){
     const now = performance.now(), k = projOf[to], same = from >= 0 && projOf[from] === k;
     const D = from < 0 ? 1500 : same ? 700 : 1300, lead = from < 0 ? 380 : same ? 240 : 560;
     pages.forEach((pg, i) => { pg.style.setProperty('--in', lead + 'ms'); pg.classList.toggle('on', i === to); pg.classList.toggle('off', i === from); });
+    film.dispatchEvent(new CustomEvent('filmpage', { detail: k }));
     // Canvases on pages that are not showing stop drawing
     pages.forEach((pg, i) => pg.querySelectorAll('canvas').forEach(c => { if (i === to) { delete c.dataset.paused; if (c._resume) c._resume(); } else c.dataset.paused = '1'; }));
     // The arriving figure draws itself once its block has risen in; the others reset out of sight
@@ -3732,6 +3960,21 @@ void main(){
   // The first page arrives once the stage is mostly on screen
   new IntersectionObserver(([e]) => { if (e.isIntersecting && cur < 0 && !tr) start(-1, nearest(scrollY)); }, { threshold: .55 }).observe(stage);
   document.addEventListener('visibilitychange', kick);
+  // Dock: one button per project and one past them all; follows the project on show
+  const dock = document.createElement('nav');
+  dock.className = 'film-dock'; dock.setAttribute('aria-label', root.lang.startsWith('zh') ? '跳到项目' : 'Jump to a project');
+  const btns = caps.map((c, k) => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.textContent = c.querySelector('h3').getAttribute('aria-label');
+    b.addEventListener('click', () => goTo(first[k], true));
+    dock.append(b); return b;
+  });
+  const skip = document.createElement('button'); skip.type = 'button'; skip.className = 'skip';
+  skip.innerHTML = '<span class="en">Skip projects \u2193</span><span class="zh" lang="zh-CN">跳过项目 \u2193</span>';
+  skip.addEventListener('click', () => { const m = document.querySelector('.minor') || film.nextElementSibling; glide(m.getBoundingClientRect().top + scrollY - 90, 1100); });
+  dock.append(skip);
+  document.body.append(dock);
+  film.addEventListener('filmpage', (e) => btns.forEach((b, k) => b.setAttribute('aria-current', k === e.detail ? 'true' : 'false')));
   // ?lab: hooks for checking pages from a test script
   if (new URLSearchParams(location.search).has('lab')) {
     window.filmState = () => ({ cur, tr: tr && [tr.from, tr.to], y: Math.round(scrollY), slot: Math.round(slot(Math.max(0, cur))), P });
@@ -3749,7 +3992,7 @@ void main(){
   mq.addEventListener('change', () => root.classList.toggle('mm', mq.matches));
   const bar = document.createElement('i'); bar.className = 'prog'; bar.setAttribute('aria-hidden', 'true'); document.body.append(bar);
   const full = film_live();
-  const sel = ['.tbx li', '.index li', '.mini li', ...(full ? [] : ['.cap [data-k]', '.cap h3']), '.dec', 'dl.kv dt', 'dl.kv dd', '#contact .wrap > p:not(.sr)', '#contact .after', '#contact .wx'];
+  const sel = ['.tbx li', '.index li', '.mini li', ...(full ? [] : ['.cap [data-k]', '.cap h3']), 'dl.kv dt', 'dl.kv dd', '#contact .wrap > p:not(.sr)', '#contact .after', '#contact .wx'];
   const els = [...document.querySelectorAll(sel.join(','))].filter(el => !el.closest('.hero'));
   els.forEach(el => el.classList.add(el.matches('.cap h3') ? 'mvh' : 'mv'));
   const io = new IntersectionObserver((es) => {

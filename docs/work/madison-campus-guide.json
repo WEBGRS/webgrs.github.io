@@ -6,7 +6,7 @@
   "tool": 4,
   "kind": "Web app, data",
   "summary": "The everyday places around campus, explained in English and Chinese, every fact quoted from its source",
-  "color": ["1F9D55", "B5EBC8"],
+  "color": ["FACC15", "FEF08A"],
   "shot": {
     "src": "assets/madison-campus-guide.jpg", "w": 1400, "h": 875,
     "alt": "Madison Essentials: groceries listed with walking time and open status, beside a map of campus with a colored pin for each place"

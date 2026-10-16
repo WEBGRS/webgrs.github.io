@@ -5,10 +5,7 @@
   "tier": "major",
   "kind": "Desktop app",
   "summary": "A video editor where you and an AI assistant edit the same storyboard file",
-  "color": [
-    "3B6EF5",
-    "B9CCFF"
-  ],
+  "color": ["FACC15", "FEF08A"],
   "shot": {
     "src": "assets/cutroom.jpg",
     "w": 1400,

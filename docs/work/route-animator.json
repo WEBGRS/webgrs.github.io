@@ -5,10 +5,7 @@
   "tier": "major",
   "kind": "Web app",
   "summary": "Flies a route over a satellite globe and records the video in the browser",
-  "color": [
-    "1996AE",
-    "9BE7F2"
-  ],
+  "color": ["38BDF8", "BAE6FD"],
   "shot": {
     "src": "assets/route-animator.jpg",
     "w": 1000,

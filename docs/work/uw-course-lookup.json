@@ -6,7 +6,7 @@
   "tool": 1,
   "kind": "Web app + API",
   "summary": "Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course",
-  "color": ["D7263D", "FFB070"],
+  "color": ["38BDF8", "BAE6FD"],
   "shot": {
     "src": "assets/uw-course-lookup.jpg", "w": 1400, "h": 897,
     "alt": "Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course"

@@ -6,10 +6,7 @@
   "tool": 5,
   "kind": "Web app",
   "summary": "Paste a column of numbers, get a choropleth",
-  "color": [
-    "2F6FE0",
-    "A9C8FF"
-  ],
+  "color": ["FACC15", "FEF08A"],
   "shot": {
     "src": "assets/datamap.jpg",
     "w": 1340,
