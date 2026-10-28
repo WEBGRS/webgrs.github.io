@@ -1,7 +1,7 @@
 {
   "kind": "网页应用 + API",
   "summary": "Fall 2026 和 Spring 2027 全部 UW–Madison 课程的成绩、座位，外加了解你学位要求的课表规划器",
-  "hook": "<span class=\"count\" data-to=\"6771\">6,771</span> 门 Fall 2026 和 Spring 2027 UW–Madison 课程的成绩历史、教师 GPA 和座位，还有一个了解你学位要求的课表规划器。",
+  "hook": "<span class=\"count\" data-to=\"6776\">6,776</span> 门 Fall 2026 和 Spring 2027 UW–Madison 课程的成绩历史、教师 GPA 和座位，还有一个了解你学位要求的课表规划器。",
   "built": "原生 JS、Cloudflare Workers 与 Workers AI、SQLite、GitHub Actions CI",
   "pages": [
     {
