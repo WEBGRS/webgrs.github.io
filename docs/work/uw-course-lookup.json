@@ -5,13 +5,13 @@
   "tier": "major",
   "tool": 1,
   "kind": "Web app + API",
-  "summary": "Grades, seats and a degree-aware timetable planner for every Fall 2026 UW–Madison course",
+  "summary": "Grades, seats and a degree-aware timetable planner for every Fall 2026 and Spring 2027 UW–Madison course",
   "color": ["38BDF8", "BAE6FD"],
   "shot": {
     "src": "assets/uw-course-lookup.jpg", "w": 1400, "h": 897,
     "alt": "Course list with a grade band across the top, filter lenses, and a GPA bar, trend and open seats for each course"
   },
-  "hook": "Grade history, instructor GPAs and seats for all <span class=\"count\" data-to=\"4438\">4,438</span> Fall 2026 UW–Madison courses, plus a timetable planner that knows your degree.",
+  "hook": "Grade history, instructor GPAs and seats for all <span class=\"count\" data-to=\"6771\">6,771</span> UW–Madison courses in the Fall 2026 and Spring 2027 catalogs, plus a timetable planner that knows your degree.",
   "links": [["Live site", "https://courses.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/uw-course-lookup"]],
   "built": "Vanilla JS, Cloudflare Workers and Workers AI, SQLite, GitHub Actions CI",
   "pages": [
@@ -45,10 +45,10 @@
       "title": "What the data says",
       "notes": [
         "Instructor beats course. In MATH 320 the most and least generous instructors, each with 200+ graded students, sit 1.67 GPA points apart on the same syllabus.",
-        "How often a course comes up in chat says nothing about its grade (&rho; = &minus;0.07, n = 215). The tone of its Reddit threads does (&rho; = +0.43, n = 220)."
+        "How often a course comes up in chat says nothing about its grade (&rho; = &minus;0.07, n = 215). The tone of its Reddit threads does (&rho; = +0.43, n = 219)."
       ],
       "fig": "uw-course-spread",
-      "caption": "The eight largest gaps between the lowest and highest instructor GPA in one course, among 290 tracked courses. Each instructor has at least 30 graded students."
+      "caption": "The eight largest gaps between the lowest and highest instructor GPA in one course, among 291 tracked courses. Each instructor has at least 30 graded students."
     }
   ],
   "stack": ["SQLite", "Cloudflare Workers", "Workers AI", "GitHub Actions", "pdf.js", "MadGrades API", "Course Search & Enroll API", "Reddit via Firecrawl"],

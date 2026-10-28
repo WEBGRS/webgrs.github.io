@@ -1,7 +1,7 @@
 {
   "kind": "网页应用 + API",
-  "summary": "Fall 2026 全部 UW–Madison 课程的成绩、座位，外加了解你学位要求的课表规划器",
-  "hook": "<span class=\"count\" data-to=\"4438\">4,438</span> 门 Fall 2026 UW–Madison 课程的成绩历史、教师 GPA 和座位，还有一个了解你学位要求的课表规划器。",
+  "summary": "Fall 2026 和 Spring 2027 全部 UW–Madison 课程的成绩、座位，外加了解你学位要求的课表规划器",
+  "hook": "<span class=\"count\" data-to=\"6771\">6,771</span> 门 Fall 2026 和 Spring 2027 UW–Madison 课程的成绩历史、教师 GPA 和座位，还有一个了解你学位要求的课表规划器。",
   "built": "原生 JS、Cloudflare Workers 与 Workers AI、SQLite、GitHub Actions CI",
   "pages": [
     {
@@ -32,9 +32,9 @@
       "title": "数据说了什么",
       "notes": [
         "教师比课程更重要。在 MATH 320 里，最宽松和最严格的教师（各有 200 多名有成绩的学生）在同一份大纲下 GPA 相差 1.67 分。",
-        "一门课在群聊里被提到的次数和它的成绩无关（&rho; = &minus;0.07，n = 215），而它在 Reddit 帖子里的口碑有关（&rho; = +0.43，n = 220）。"
+        "一门课在群聊里被提到的次数和它的成绩无关（&rho; = &minus;0.07，n = 215），而它在 Reddit 帖子里的口碑有关（&rho; = +0.43，n = 219）。"
       ],
-      "caption": "在 290 门被跟踪的课程中，同一门课里最低与最高教师 GPA 相差最大的八门。每位教师至少有 30 名有成绩的学生。"
+      "caption": "在 291 门被跟踪的课程中，同一门课里最低与最高教师 GPA 相差最大的八门。每位教师至少有 30 名有成绩的学生。"
     }
   ]
 }

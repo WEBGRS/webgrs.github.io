@@ -1,6 +1,6 @@
 {
- "courses": 290,
- "graded_students": 1909097,
+ "courses": 291,
+ "graded_students": 1901631,
  "spread": [
   {
    "code": "MATH 320",
@@ -94,9 +94,9 @@
    "n": 215
   },
   "reddit_tone_vs_gpa": {
-   "rho": 0.433,
+   "rho": 0.435,
    "p": 0.0005,
-   "n": 220
+   "n": 219
   }
  },
  "campus": {
@@ -106,7 +106,7 @@
   },
   "last": {
    "label": "Spring 2026",
-   "gpa": 3.388
+   "gpa": 3.386
   }
  }
 }
