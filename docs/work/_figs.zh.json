@@ -46,7 +46,7 @@
   "Source pages": "来源页面",
   "Source pages back entries with quotes; every quote is found again in a saved copy; coordinates and bus stops join them in the site data, which feeds the page and the Ask tab": "来源页面为条目提供原文引用；每条引用都在存档里重新找到；坐标和公交站一起并入站点数据，供页面和 Ask 使用",
   "Stacked bars: distinct people asking about the ten most-asked topics in chat groups, r/UWMadison and r/madisonwi; food, housing and courses have their own tools": "堆叠条形图：群聊、r/UWMadison 和 r/madisonwi 里被问得最多的十个话题的提问人数；吃饭、租房、选课已各有工具",
-  "Stacked bars: for seven property fields, the share of 600 properties whose value came from the landlord site, the UW list, a description, or no source": "堆叠条形图：七个房源字段的值，来自房东网站、UW 列表、描述文字，或没有来源的占比（600 处房源）",
+  "Stacked bars: for seven property fields, the share of 540 properties whose value came from the landlord site, the UW list, a description, or no source": "堆叠条形图：七个房源字段的值，来自房东网站、UW 列表、描述文字，或没有来源的占比（540 处房源）",
   "Still needed": "还差什么",
   "The timeline UI and the AI assistant, through the CLI, both save versioned edits to storyboard.json; a Remotion Player previews it and the Remotion renderer exports it": "时间线界面和 AI 助手（通过命令行）都以带版本号的方式保存到 storyboard.json；Remotion Player 负责预览，Remotion 渲染器负责导出",
   "Timeline UI": "时间线界面",

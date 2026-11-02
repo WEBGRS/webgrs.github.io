@@ -143,9 +143,9 @@ h2{margin:0; font-size:clamp(1.9rem,3.6vw,3rem); line-height:1.02; font-weight:7
   .index a:hover .nm{font-stretch:118%}
 }
 @media (max-width:760px){
-  .index a{grid-template-columns:1fr auto}
-  .index .ds{grid-column:1/-1; grid-row:2}
-  .index .kd{grid-column:2; grid-row:1}
+  .index a{display:flex; flex-wrap:wrap; align-items:center; column-gap:12px}
+  .index .kd{margin-left:auto}
+  .index .ds{flex-basis:100%; order:3}
 }
 /* Toolbox: the live web tools straight under the hero (docs/work/*.json with "tool": n) */
 section.tools{padding-top:clamp(56px,8vw,104px)}
@@ -956,7 +956,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
               <li data-k style="--k:3"><span class="en">Phone and email of individual landlords who appear only on the UW list stay off the page; it links to that listing instead.</span><span class="zh" lang="zh-CN">只出现在 UW 列表上的个人房东，电话和邮箱不会出现在页面上，页面改为链接到那条列表。</span></li>
             </ul>
             <figure class="fig" data-k style="--k:4"><!-- fig:madison-rentals-provenance -->
-<svg class="en" viewBox="0 0 520 232" role="img" aria-label="Stacked bars: for seven property fields, the share of 600 properties whose value came from the landlord site, the UW list, a description, or no source">
+<svg class="en" viewBox="0 0 520 232" role="img" aria-label="Stacked bars: for seven property fields, the share of 540 properties whose value came from the landlord site, the UW list, a description, or no source">
 <rect class="n seg s1" style="--d:0" x="0.0" y="2.0" width="11.0" height="11" rx="2"/>
 <text class="s n" style="--d:0" x="17.0" y="12.0" text-anchor="start">landlord site</text>
 <rect class="n seg s2" style="--d:0" x="108.0" y="2.0" width="11.0" height="11" rx="2"/>
@@ -1006,7 +1006,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
 <rect class="n seg s0" style="--d:7" x="186.3" y="198.0" width="283.7" height="20" rx="2"/>
 <text class="k a n" style="--d:8" x="520.0" y="212.0" text-anchor="end">83%</text>
 </svg>
-<svg class="zh" viewBox="0 0 520 232" role="img" aria-label="堆叠条形图：七个房源字段的值，来自房东网站、UW 列表、描述文字，或没有来源的占比（600 处房源）">
+<svg class="zh" viewBox="0 0 520 232" role="img" aria-label="堆叠条形图：七个房源字段的值，来自房东网站、UW 列表、描述文字，或没有来源的占比（540 处房源）">
 <rect class="n seg s1" style="--d:0" x="0.0" y="2.0" width="11.0" height="11" rx="2"/>
 <text class="s n" style="--d:0" x="17.0" y="12.0" text-anchor="start">房东网站</text>
 <rect class="n seg s2" style="--d:0" x="108.0" y="2.0" width="11.0" height="11" rx="2"/>

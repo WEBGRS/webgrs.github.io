@@ -224,7 +224,7 @@ def load(name):
 def rentals_provenance():
     d = load("rentals")
     total = d["properties"]
-    f = Fig("madison-rentals-provenance", 520, 232, "Stacked bars: for seven property fields, the share of 600 properties whose value came from the landlord site, the UW list, a description, or no source")
+    f = Fig("madison-rentals-provenance", 520, 232, f"Stacked bars: for seven property fields, the share of {total:,} properties whose value came from the landlord site, the UW list, a description, or no source")
     x0, W = 128, 342
     legend = [("s1", "landlord site", 0), ("s2", "UW list", 108), ("s3", "read from description", 184), ("s0", "not stated (%)", 352)]
     for cls, text, dx in legend:
