@@ -7,9 +7,9 @@
   "summary": "Flies a route over a satellite globe and records the video in the browser",
   "color": ["38BDF8", "BAE6FD"],
   "shot": {
-    "src": "assets/route-animator.jpg",
-    "w": 1000,
-    "h": 625,
+    "src": "assets/route-animator-frame.jpg",
+    "w": 572,
+    "h": 308,
     "alt": "A Madison to Reykjavik to Paris flight drawn on the satellite globe in Route Animator",
     "peek": "assets/route-animator-peek.jpg"
   },
