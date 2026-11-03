@@ -202,7 +202,7 @@ section.tools{padding-top:clamp(56px,8vw,104px)}
 /* work film: each project is one or two pages on a sticky stage. The screenshot glides between
    sides; a translucent liquid orb behind it moves with every project. Within a project only the
    notes change. Type is the same size on every page. */
-.film{position:relative; margin-top:clamp(40px,5vw,72px); --s:min(1vh, .625vw)}
+.film{position:relative; margin-top:clamp(8px,1vw,16px); --s:min(1vh, .625vw)}
 .film-stage{position:relative}
 .film-gl,.film-rail,.media{display:none}
 .film-caps{margin:0 auto; padding:0 var(--gut); max-width:1320px; list-style:none; display:grid; gap:clamp(64px,9vw,120px)}
@@ -590,7 +590,7 @@ h2{font-weight:900; text-transform:uppercase; font-size:clamp(3.4rem,8.4vw,8rem)
 .legend{border-top:2px solid var(--ink)}
 
 /* sections carry no background of their own: the root gradient tints them, the contour sheet shows through */
-section.tools{margin-top:clamp(48px,7vw,96px); padding:clamp(64px,8vw,112px) 0 clamp(72px,9vw,128px)}
+section.tools{margin-top:0; padding:clamp(24px,3vw,40px) 0 clamp(72px,9vw,128px)}
 .contact{background:none}
 #work{--paper:var(--tint-work)}
 
@@ -2375,6 +2375,8 @@ const spy = new IntersectionObserver((es) => es.forEach(e => {
     secs.forEach(id => {
       const t = y(id), c = `var(--tint-${id})`;
       if (id === 'contact') { const kb = Math.round(document.querySelector('#now .two').getBoundingClientRect().bottom + scrollY); st.push(`var(--deep1) ${kb + 40}px`, `var(--deep2) ${t + 30}px`, `${c} ${t + 160}px`); }
+      // Toolbox starts right at the hero's edge, so its tint ramps in below that edge
+      else if (id === 'tools') st.push(`${prev} ${t}px`, `${c} ${t + F}px`);
       else st.push(`${prev} ${t - F / 2}px`, `${c} ${t + F / 2}px`);
       prev = c;
     });
@@ -3957,8 +3959,8 @@ void main(){
   new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) kick(); }).observe(film);
   // While the projects fill the middle of the screen, the contour sheet behind the page fades out
   new IntersectionObserver(([e]) => root.classList.toggle('film-in', e.isIntersecting), { rootMargin: '-35% 0px -35% 0px' }).observe(film);
-  // The first page arrives once the stage is mostly on screen
-  new IntersectionObserver(([e]) => { if (e.isIntersecting && cur < 0 && !tr) start(-1, nearest(scrollY)); }, { threshold: .55 }).observe(stage);
+  // The first page arrives as the stage scrolls in, so no blank stage follows the index
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && cur < 0 && !tr) start(-1, nearest(scrollY)); }, { threshold: .12 }).observe(stage);
   document.addEventListener('visibilitychange', kick);
   // Dock: one button per project and one past them all; follows the project on show
   const dock = document.createElement('nav');
