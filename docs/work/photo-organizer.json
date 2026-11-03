@@ -1,6 +1,6 @@
 {
   "slug": "photo-organizer",
-  "name": "photo-organizer",
+  "name": "Photo Organizer",
   "order": 30,
   "tier": "major",
   "kind": "Python, CLIP",

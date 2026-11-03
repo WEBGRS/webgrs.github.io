@@ -1,6 +1,6 @@
 {
   "slug": "route-animator",
-  "name": "route-animator",
+  "name": "Route Animator",
   "order": 10,
   "tier": "major",
   "kind": "Web app",
@@ -38,7 +38,7 @@
         "Altitude follows leg-local time rather than distance; keying it to distance let the climb eat a third of the flight."
       ],
       "fig": "route-animator",
-      "caption": "Altitude over one flying leg, plotted from route-animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%."
+      "caption": "Altitude over one flying leg, plotted from Route Animator&rsquo;s own <code>altOf()</code>. Keyed to eased distance, the plane sits on the runway until 18% of the leg and is still climbing at 38%."
     }
   ],
   "stack": [
