@@ -4,6 +4,7 @@
   "order": 20,
   "tier": "major",
   "tool": 1,
+  "tool_crop": [75, 55, 2.2],
   "kind": "Web app + API",
   "summary": "Grades, seats and a degree-aware timetable planner for every Fall 2026 and Spring 2027 UW–Madison course",
   "color": ["38BDF8", "BAE6FD"],

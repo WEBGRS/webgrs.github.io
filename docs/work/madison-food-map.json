@@ -4,6 +4,7 @@
   "order": 17,
   "tier": "major",
   "tool": 3,
+  "tool_crop": [14, 30, 2.1],
   "kind": "Web app, data",
   "summary": "Every place to eat in Dane County on one map, scored from six rating sources",
   "color": ["38BDF8", "BAE6FD"],

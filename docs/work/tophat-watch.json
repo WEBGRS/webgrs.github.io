@@ -7,8 +7,8 @@
   "summary": "Alerts you when a Top Hat question opens",
   "color": ["23A35A", "A8F0C0"],
   "shot": {
-    "src": "assets/tophat-watch.jpg", "w": 1400, "h": 700,
-    "alt": "Mock Top Hat classroom page with an unanswered question and the extension's Watch: ON indicator"
+    "src": "assets/tophat-watch.jpg", "w": 1400, "h": 875,
+    "alt": "A Top Hat question opening: the extension's desktop notification over the Classroom tab, with its toolbar popup"
   },
   "hook": "Chrome extension that sends a desktop and phone alert the moment a Top Hat question or attendance check opens.",
   "links": [["Source", "https://github.com/WEBGRS/tophat-watch"]],

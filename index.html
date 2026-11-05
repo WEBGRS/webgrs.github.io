@@ -713,8 +713,8 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
 :root[data-theme="dark"] .film{--accent:#7DD3FC}
 .film .links a, .film .pg-h{font-weight:700}
 /* Stack is the way down to the contact water */
-:root{--deep1:#7DD3FC; --deep2:#0369A1}
-:root[data-theme="dark"]{--deep1:#0B3A5A; --deep2:#062338}
+:root{--deep2:#0369A1}
+:root[data-theme="dark"]{--deep2:#062338}
 #now{padding-bottom:clamp(120px,14vw,200px)}
 /* Project dock: jump to any project, or past them all */
 .film-dock{position:fixed; left:50%; bottom:16px; z-index:30; display:flex; gap:4px; align-items:center; max-width:calc(100vw - 32px); overflow-x:auto; scrollbar-width:none; padding:5px; background:#fff; border:2px solid var(--ink); border-radius:18px; box-shadow:0 10px 30px -14px rgba(11,26,44,.45); translate:-50% 0; transform:translateY(calc(100% + 24px)); opacity:0; pointer-events:none; transition:transform .45s var(--out), opacity .3s}
@@ -732,13 +732,184 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
 @media (min-width:900px){ #now dl.kv{grid-template-columns:8.5em minmax(0,1fr) 8.5em minmax(0,1fr); column-gap:28px} }
 
 
-/* After the project deck the contour sheet gives way to a survey grid: dots every 24 px, a rule every 192 px */
-.grid-sheet{position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0; transition:opacity .8s var(--out);
-  background-image:radial-gradient(circle, rgba(14,165,233,.38) 1.3px, transparent 1.7px), linear-gradient(rgba(14,165,233,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,.15) 1px, transparent 1px);
-  background-size:24px 24px, 192px 192px, 192px 192px; background-position:-12px -12px, 0 0, 0 0}
-:root[data-theme="dark"] .grid-sheet{background-image:radial-gradient(circle, rgba(125,211,252,.22) 1.3px, transparent 1.7px), linear-gradient(rgba(125,211,252,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(125,211,252,.09) 1px, transparent 1px)}
-.grid-on .grid-sheet{opacity:1}
-.grid-on #bgmap{opacity:0}
+
+
+/* ===== Pass 6: text on white, one title device, quieter texture ===== */
+/* Toolbox and contact buttons lift onto a hard ink shadow, like the hero button */
+.tbx-go a, .after a{transition:transform .2s var(--out), box-shadow .2s var(--out), background-color .2s}
+.tbx-go .open:hover, #contact .after a.hl:hover, #contact .after a.hl:focus-visible{background:var(--sun); transform:translate(-2px,-2px); box-shadow:inset 0 0 0 2px #0B1A2C, 4px 4px 0 #0B1A2C}
+.tbx-go .star:hover{transform:translate(-2px,-2px); box-shadow:inset 0 0 0 2px var(--ink), 4px 4px 0 var(--ink)}
+/* Contact: every button is a white or sun plate, so no text sits straight on the deep water */
+#contact .after a{background:#fff; color:#0B1A2C; box-shadow:none}
+#contact .after a:hover, #contact .after a:focus-visible{background:#fff; color:#0B1A2C; transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--sky-400)}
+#contact .after a.hl{box-shadow:none}
+#contact .after a.hl:hover, #contact .after a.hl:focus-visible{box-shadow:4px 4px 0 var(--sky-400)}
+
+/* Section titles: plain ink, each closed by the wordmark's slanted sun full stop */
+.js h2#work-h .rev .sc, .js h2#stack-h .rev .sc{animation:none !important}
+#work-h .sc, #stack-h .sc, :root[data-theme="dark"] #work-h .sc, :root[data-theme="dark"] #stack-h .sc{color:inherit; -webkit-text-stroke:0; text-shadow:none}
+#contact-h .sc{color:#F1F5F9; -webkit-text-stroke:0}
+h2::after, .minor .shead h3::after{content:""; display:inline-block; width:.21em; height:.2em; margin-left:.06em; background:var(--sun); clip-path:polygon(36% 0,100% 0,64% 100%,0 100%)}
+@media (prefers-reduced-motion:no-preference){
+  .js h2::after, .js .minor .shead h3::after{transform:scale(0)}
+  .js h2:has(.rev.in)::after, .js h2:has(.rev.done)::after, .js .minor .shead h3:has(.rev.in)::after, .js .minor .shead h3:has(.rev.done)::after{animation:stop-in .5s cubic-bezier(.3,1.6,.5,1) .65s both}
+  @keyframes stop-in{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
+}
+
+/* Hero: a map-label halo round the name, and the two lines on a white plate */
+.wm{overflow:visible}
+.wm path{stroke:var(--paper); stroke-width:3.5; stroke-linejoin:round; paint-order:stroke}
+.hplate{width:fit-content; max-width:100%; margin:28px 0 0; background:#fff; border-radius:24px; box-shadow:0 0 22px 18px #fff}
+.hplate .who{margin-top:0}
+:root[data-theme="dark"] .hplate{background:var(--plate)}
+:root[data-theme="dark"] .hplate{box-shadow:0 0 22px 18px var(--plate)}
+
+/* Toolbox: each thumbnail shows one detail (docs/work "tool_crop"), and less air under the row */
+.tbx-shot img{transform-origin:var(--fx,0) var(--fy,0); transform:scale(var(--z,1))}
+@media (hover:hover){ .tbx li:hover .tbx-shot img{transform:scale(calc(var(--z,1) * 1.06))} }
+section.tools{padding-bottom:clamp(40px,5vw,72px)}
+#work{padding-top:clamp(64px,8vw,112px)}
+
+/* Work list: type chips white with ink text */
+.index .kd, .mini-kd{background:#fff; color:#0B1A2C}
+:root[data-theme="dark"] .index .kd, :root[data-theme="dark"] .mini-kd{background:var(--plate); color:var(--ink)}
+
+/* Deck: the stage takes a pale wash of the project's colour; the dock already marks progress, so the rail goes */
+@property --stage{syntax:'<color>'; inherits:true; initial-value:#F0F9FF}
+.film.live .film-stage{--stage:color-mix(in srgb, var(--stage-c, var(--paper)) 24%, #fff); transition:--stage 1.2s var(--io)}
+:root[data-theme="dark"] .film.live .film-stage{--stage:var(--paper)}
+.film.live .film-stage::before{background:linear-gradient(transparent, var(--stage) 9%, var(--stage) 91%, transparent)}
+.film.live .film-rail{display:none}
+
+/* Stack: the constellation follows the list */
+.net{margin:clamp(40px,5vw,64px) 0 0}
+
+/* Name entrance: the name is written. Each stroke is drawn out along the way a pen would go, in writing
+   order: H down, down, across; G from the hook right to left, down the left side, along the bottom, then
+   the bar in from the right; u down, round the bowl, down. The sun full stop is tapped in last, then a sun
+   slash signs under the name while a glint runs back across it with the map's ring */
+.hero h1 .mask, .hero h1 .wm{overflow:visible}
+.wm .wd{transform-box:fill-box; transform-origin:50% 60%}
+.wm .pc{stroke:var(--wm-ink); stroke-width:.8; stroke-linejoin:round}
+@media (prefers-reduced-motion:no-preference){
+  .js .hero h1 .l{animation:none !important}
+  /* The page round the name arrives with the sign-off and settles with it */
+  .js .hero .who, .js .hero .avail, .js .hero .toolgo{animation-duration:.4s; animation-delay:calc(var(--name-end, .9s) + var(--i) * 40ms)}
+  .js .hero .avail::before{animation-duration:.45s; animation-delay:var(--name-end, .9s)}
+  .js .legend, .js .legend .bar-s, .js .legend .note, .js .bar{animation-duration:.47s; animation-delay:var(--name-end, .9s)}
+  .go .north path, .go .north text, .go .north .fill{animation-duration:.47s; animation-delay:var(--name-end, .9s)}
+  .js .wm .wl, .js .wm .wd, .js .hero h1 .wm > path{opacity:0}
+  .js .wm .pc{clip-path:var(--c0)}
+  .go .wm .pc{animation:pc-write var(--t) cubic-bezier(.45,.05,.35,1) var(--d) both}
+  .go .wm .pcs{animation:wm-swap 0s linear var(--end) both}
+  .go .wm .wl{animation:wl-show 0s linear var(--end) both}
+  .go .wm .wd{animation:wd-tap .25s linear var(--fin, var(--end)) both}
+  .js .wm .wsl{clip-path:inset(-2px calc(100% + 4px) -2px -2px)}
+  .go .wm .wsl{animation:wsl-sign .47s linear calc(var(--fin, var(--end)) + .08s) both}
+  .go .wm .wgl{animation:wgl-run var(--gl-dur, .43s) linear var(--gl-at, calc(var(--fin, var(--end)) + .12s)) both}
+}
+.wm .wsl{fill:var(--sun)}
+.wm .wgl{transform:translateX(470px) skewX(-20deg)}
+@media (prefers-reduced-motion:reduce){ .wm .wfin{display:none} }
+@keyframes wsl-sign{
+  0%{clip-path:inset(-2px calc(100% + 4px) -2px -2px); animation-timing-function:cubic-bezier(.6,0,.2,1)}
+  35%{clip-path:inset(-2px -2px -2px -2px)}
+  55%{clip-path:inset(-2px -2px -2px -2px); animation-timing-function:cubic-bezier(.7,0,.3,1)}
+  100%{clip-path:inset(-2px -2px -2px calc(100% + 4px))}
+}
+@keyframes wgl-run{from{transform:translateX(470px) skewX(-20deg)}to{transform:translateX(-60px) skewX(-20deg)}}
+@media (prefers-reduced-motion:reduce){ .wm .pcs{display:none} }
+@keyframes pc-write{from{clip-path:var(--c0)}to{clip-path:inset(-2px)}}
+@keyframes wd-tap{
+  0%{opacity:0; transform:scale(.2) rotate(-25deg); animation-timing-function:cubic-bezier(.3,0,.5,1)}
+  35%{opacity:1; transform:scale(1.25,.8)}
+  65%{transform:scale(.92,1.08)}
+  100%{opacity:1; transform:none}
+}
+@keyframes wm-swap{to{visibility:hidden}}
+@keyframes wl-show{from{opacity:0}to{opacity:1}}
+@keyframes wd-key{
+  0%{opacity:0; transform:translateY(160%) scale(.8,1.2); animation-timing-function:cubic-bezier(.3,0,.4,1)}
+  20%{opacity:1}
+  60%{transform:translateY(-14%) scale(.9,1.12); animation-timing-function:cubic-bezier(.5,0,.5,1)}
+  80%{transform:translateY(0) scale(1.14,.86)}
+  100%{opacity:1; transform:none}
+}
+@keyframes wl-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes wl-slide{from{transform:translateX(-14%) skewX(-18deg)}to{transform:none}}
+@keyframes wl-fill{from{fill-opacity:0; stroke:var(--ink); stroke-width:1.4}to{fill-opacity:1; stroke:var(--paper); stroke-width:3.5}}
+@keyframes wd-drop{
+  0%{opacity:0; transform:translateY(-320%) rotate(-50deg); animation-timing-function:cubic-bezier(.5,0,.9,.5)}
+  12%{opacity:1}
+  55%{transform:translateY(0) rotate(0) scale(1.25,.7); animation-timing-function:cubic-bezier(.2,.8,.4,1)}
+  75%{transform:translateY(-18%) scale(.92,1.1)}
+  100%{opacity:1; transform:none}
+}
+
+/* After the project deck, from the small projects down through the contact water: caustics on the lake
+   floor. The canvas lies in the page (JS sets its top and height), so it scrolls with the content */
+#tail{position:absolute; left:0; width:100%; z-index:-1; pointer-events:none; opacity:0; transition:opacity .9s var(--out);
+  -webkit-mask-image:linear-gradient(transparent, #000 320px); mask-image:linear-gradient(transparent, #000 320px)}
+.tail-on #tail{opacity:1}
+.tail-on #bgmap{opacity:0}
+
+/* Smaller projects: a looping carousel, two cards a view (one on phones); the next card peeks in from the right */
+.minor .shead{align-items:center}
+.car-vp{overflow:hidden; margin-right:calc((100% - 100vw) / 2); padding:4px 0 14px}
+.car .mini{display:flex; grid-template-columns:none; transition:transform .85s var(--io); will-change:transform}
+.car .mini > li{flex:0 0 var(--cw); min-width:0}
+@media (max-width:560px){ .car .mini > li{grid-template-columns:minmax(0,1fr); gap:12px} }
+.car-ctl{display:flex; align-items:center; gap:12px}
+.car-ctl .ar{display:grid; place-items:center; width:42px; height:42px; padding:0; border:0; border-radius:50%; background:#fff; color:#0B1A2C; cursor:pointer; box-shadow:0 8px 20px -12px rgba(11,26,44,.45); transition:transform .2s var(--out), box-shadow .2s var(--out)}
+.car-ctl .ar:hover{transform:translateY(-2px); box-shadow:0 12px 24px -12px rgba(11,26,44,.5)}
+.car-ctl .ar:active{transform:scale(.94)}
+:root[data-theme="dark"] .car-ctl .ar{background:var(--plate); color:var(--ink)}
+.car-dots{display:flex; gap:6px}
+.car-dots button{position:relative; width:22px; height:6px; padding:0; border:0; border-radius:3px; background:rgba(var(--line),.16); overflow:hidden; cursor:pointer; transition:width .35s var(--out)}
+.car-dots button[aria-current="true"]{width:46px}
+.car-dots button[aria-current="true"]::after{content:""; position:absolute; inset:0; background:var(--sun); transform-origin:left}
+.car-ctl.tick .car-dots button[aria-current="true"]::after{animation:car-fill 4.5s linear both}
+@keyframes car-fill{from{transform:scaleX(0)}}
+/* Each card: its screenshot fills the card and the text sits on white that rises out of the picture;
+   a card without a screenshot shows its name in outline over a sky-to-sun wash */
+.car .mini > li{position:relative; display:flex; flex-direction:column; justify-content:flex-end; min-height:clamp(380px,32vw,460px); padding:0; overflow:hidden; isolation:isolate}
+.car .mini-shot{position:absolute; inset:0; z-index:-2; aspect-ratio:auto; border:0; border-radius:0}
+.car .mini-shot img{object-position:center top; transition:transform 1.4s var(--out)}
+.car .mini > li::after{content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(rgba(255,255,255,0) 24%, rgba(255,255,255,.9) 54%, #fff 72%)}
+:root[data-theme="dark"] .car .mini > li::after{background:linear-gradient(rgba(14,34,54,0) 24%, rgba(14,34,54,.92) 54%, var(--plate) 72%)}
+.car .mini-tx{padding:0 22px 22px}
+@media (hover:hover){ .car .mini > li:hover .mini-shot img{transform:scale(1.05)} }
+.car .mini > li.noshot{background:linear-gradient(135deg, var(--sky-200), var(--sky-50) 55%, #FEF9C3)}
+.car .mini > li.noshot::before{content:attr(data-name); position:absolute; left:18px; top:14px; z-index:-2; font:900 clamp(4.5rem,8vw,7.5rem)/.88 var(--display); text-transform:uppercase; color:transparent; -webkit-text-stroke:1.5px rgba(2,132,199,.4); white-space:nowrap}
+:root[data-theme="dark"] .car .mini > li.noshot{background:linear-gradient(135deg, #0B3A5A, var(--plate) 60%)}
+@media (max-width:560px){ .car .mini > li{min-height:420px} }
+
+/* Stack: the globe in front of four tilted columns of the stack list flowing up and down; the list itself
+   stays for screen readers, and on phones (no globe) it shows as it was */
+.net{position:relative; height:clamp(520px,50vw,680px); margin:clamp(20px,3vw,40px) 0 0; cursor:grab}
+.net:active{cursor:grabbing}
+.net canvas{position:relative; z-index:1; -webkit-mask-image:linear-gradient(transparent, #000 7%, #000 93%, transparent); mask-image:linear-gradient(transparent, #000 7%, #000 93%, transparent)}
+@media (min-width:761px){ dl.kv.has-fall{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap} }
+.sb-fall{position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  -webkit-mask-image:linear-gradient(transparent, #000 12%, #000 88%, transparent); mask-image:linear-gradient(transparent, #000 12%, #000 88%, transparent)}
+/* Four columns across the whole stage; the globe floats over them */
+.sb-fall .cols{position:absolute; inset:-14% 4%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(18px,3vw,56px); transform:rotate(-7deg); opacity:.32}
+:root[data-theme="dark"] .sb-fall .cols{opacity:.26}
+.sb-fall .col{display:flex; flex-direction:column; align-items:flex-start; min-width:0; min-height:0; padding-top:16%}
+.sb-fall .hd{margin:0 0 14px; padding:.45em .95em; border-radius:999px; background:var(--sun); color:#0B1A2C; font:700 .88rem/1 var(--font); letter-spacing:.07em; text-transform:uppercase}
+.sb-fall .win{flex:1; min-height:0; width:100%; overflow:hidden}
+.sb-fall .vtrk{display:flex; flex-direction:column; animation:sb-y var(--dur) linear infinite}
+.sb-fall .vtrk > span{display:flex; flex-direction:column; align-items:flex-start}
+.sb-fall .it{color:var(--ink); font:800 clamp(1.7rem,2.9vw,2.8rem)/1.02 var(--display); text-transform:uppercase; letter-spacing:.005em}
+.sb-fall .sep{width:.5em; height:.46em; margin:.32em 0 .38em; background:var(--sun); clip-path:polygon(36% 0,100% 0,64% 100%,0 100%); font-size:clamp(1.7rem,2.9vw,2.8rem)}
+.sb-fall .col:nth-child(even) .vtrk{animation-direction:reverse}
+.sb-fall .col:nth-child(even) .it{color:transparent; -webkit-text-stroke:1.3px var(--ink)}
+@keyframes sb-y{to{transform:translateY(-50%)}}
+@media (prefers-reduced-motion:reduce){ .sb-fall .vtrk{animation:none} }
+
+/* Seams: the deck's canvas fades out at the stage's edges, so the orb is never cut by a straight line */
+.film.live .film-gl{-webkit-mask-image:linear-gradient(transparent, #000 18%, #000 82%, transparent); mask-image:linear-gradient(transparent, #000 18%, #000 82%, transparent)}
+.film.live .film-stage::before{background:linear-gradient(transparent, var(--stage) 20%, var(--stage) 80%, transparent)}
 </style>
 </head>
 <body id="top">
@@ -776,14 +947,16 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
   </div>
 </header>
 
-<div class="grid-sheet" aria-hidden="true"></div>
+<canvas id="tail" aria-hidden="true"></canvas>
 <main>
   <section class="hero" aria-labelledby="name">
     <div class="map" id="map" role="img" aria-label="Contour map of Madison, Wisconsin, with Lake Mendota and Lake Monona"><canvas id="terrain" aria-hidden="true"></canvas></div>
     <div class="wrap">
       <h1 id="name" aria-label="H. Gu"><span class="mask"><span class="l" style="--i:0"><svg class="wm" viewBox="-2.0 -2.0 365.9 104.0" aria-hidden="true" focusable="false"><path fill="var(--wm-ink)" fill-rule="evenodd" d="M13.19 85 L0 100 L10 100 L35 100 L45 100 L38.19 85 L43.29 61 L82.29 61 L77.19 85 L64 100 L74 100 L99 100 L109 100 L102.19 85 L117.07 15 L130.26 0 L120.26 0 L95.26 0 L85.26 0 L92.07 15 L86.54 41 L47.54 41 L53.07 15 L66.26 0 L56.26 0 L31.26 0 L21.26 0 L28.07 15Z M240.94 25 L221.26 0 L183.26 0 L151.73 26 L141.53 74 L162 100 L200 100 L231.53 74 L232.38 70 L236.63 50 L211.63 50 L192.63 50 L188.38 70 L204.38 70 L198.31 75 L174.31 75 L168.01 67 L175.24 33 L184.94 25 L207.94 25 L208.94 25 L213.94 25 L237.4 44 L241.44 25Z M257.1 76 L255.4 84 L272 100 L302 100 L312 100 L337 100 L347 100 L340.19 85 L348.69 45 L361.88 30 L351.88 30 L326.88 30 L316.88 30 L323.69 45 L317.31 75 L282.31 75 L282.53 74 L288.69 45 L301.88 30 L291.88 30 L266.88 30 L256.88 30 L263.69 45 L257.53 74Z"/><path fill="var(--wm-dot)" d="M121.1 76 L137.1 76 L128 100 L112 100Z"/></svg></span></span></h1>
-      <p class="who" style="--i:0"><span class="en">Computer Science at UW–Madison, graduating December 2028.</span><span class="zh" lang="zh-CN">威斯康星大学麦迪逊分校（UW–Madison）计算机科学专业，2028 年 12 月毕业。</span></p>
-      <p class="avail" style="--i:1"><span class="en">Open to Summer 2027 SWE and ML internships</span><span class="zh" lang="zh-CN">正在寻找 2027 年夏季的软件工程和机器学习实习</span></p>
+      <div class="hplate">
+        <p class="who" style="--i:0"><span class="en">Computer Science at UW–Madison, graduating December 2028.</span><span class="zh" lang="zh-CN">威斯康星大学麦迪逊分校（UW–Madison）计算机科学专业，2028 年 12 月毕业。</span></p>
+        <p class="avail" style="--i:1"><span class="en">Open to Summer 2027 SWE and ML internships</span><span class="zh" lang="zh-CN">正在寻找 2027 年夏季的软件工程和机器学习实习</span></p>
+      </div>
       <p class="toolgo" style="--i:2"><a href="#tools"><span class="en">Open the toolbox</span><span class="zh" lang="zh-CN">打开工具箱</span></a></p>
       <div class="legend">
         <div class="scale" aria-hidden="true"><div class="bar-s" id="sbar"><i></i><i></i><i></i><i></i></div><div class="ticks"><span>0</span><span id="shalf"></span><span id="sfull"></span></div></div>
@@ -799,7 +972,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
       <ul class="tbx">
         <!-- work:tools -->
         <li>
-          <a class="tbx-shot" href="https://courses.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/uw-course-lookup.jpg" width="1400" height="897" alt="" loading="lazy" decoding="async"></a>
+          <a class="tbx-shot" href="https://courses.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/uw-course-lookup.jpg" width="1400" height="897" alt="" loading="lazy" decoding="async" style="--fx:75%;--fy:55%;--z:2.2"></a>
           <div class="tbx-tx">
             <h3>UW Course Lookup</h3>
             <p class="tbx-ds"><span class="en">Grades, seats and a degree-aware timetable planner for every Fall 2026 and Spring 2027 UW–Madison course</span><span class="zh" lang="zh-CN">Fall 2026 和 Spring 2027 全部 UW–Madison 课程的成绩、座位，外加了解你学位要求的课表规划器</span></p>
@@ -810,7 +983,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
           </div>
         </li>
         <li>
-          <a class="tbx-shot" href="https://housing.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/madison-rentals.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async"></a>
+          <a class="tbx-shot" href="https://housing.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/madison-rentals.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async" style="--fx:72%;--fy:45%;--z:2.4"></a>
           <div class="tbx-tx">
             <h3>Madison Rentals</h3>
             <p class="tbx-ds"><span class="en">Every rental near campus on one map, each value labeled with where it came from</span><span class="zh" lang="zh-CN">校园周边的租房信息都在一张地图上，每个数值都标明来源</span></p>
@@ -821,7 +994,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
           </div>
         </li>
         <li>
-          <a class="tbx-shot" href="https://food.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/madison-food-map.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async"></a>
+          <a class="tbx-shot" href="https://food.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/madison-food-map.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async" style="--fx:14%;--fy:30%;--z:2.1"></a>
           <div class="tbx-tx">
             <h3>Madison Eats</h3>
             <p class="tbx-ds"><span class="en">Every place to eat in Dane County on one map, scored from six rating sources</span><span class="zh" lang="zh-CN">戴恩县所有能吃饭的地方放在一张地图上，按六个评分来源打分</span></p>
@@ -832,7 +1005,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
           </div>
         </li>
         <li>
-          <a class="tbx-shot" href="https://guide.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/madison-campus-guide.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async"></a>
+          <a class="tbx-shot" href="https://guide.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/madison-campus-guide.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async" style="--fx:66%;--fy:50%;--z:2.2"></a>
           <div class="tbx-tx">
             <h3>Madison Essentials</h3>
             <p class="tbx-ds"><span class="en">The everyday places around campus, explained in English and Chinese, every fact quoted from its source</span><span class="zh" lang="zh-CN">校园周边的日常去处，中英双语讲清楚，每条事实都引自原始来源</span></p>
@@ -843,7 +1016,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
           </div>
         </li>
         <li>
-          <a class="tbx-shot" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/datamap.jpg" width="1340" height="838" alt="" loading="lazy" decoding="async"></a>
+          <a class="tbx-shot" href="https://webgrs.github.io/datamap/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/datamap.jpg" width="1340" height="838" alt="" loading="lazy" decoding="async" style="--fx:70%;--fy:62%;--z:1.4"></a>
           <div class="tbx-tx">
             <h3>DataMap</h3>
             <p class="tbx-ds"><span class="en">Paste a column of numbers, get a choropleth</span><span class="zh" lang="zh-CN">粘贴一列数字，得到一张分级统计地图</span></p>
@@ -2053,7 +2226,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
           </div>
         </li>
         <li>
-          <a class="mini-shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/tophat-watch.jpg" width="1400" height="700" alt="" loading="lazy" decoding="async"></a>
+          <a class="mini-shot" href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/tophat-watch.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async"></a>
           <div class="mini-tx">
             <p class="mini-kd"><span class="en">Chrome extension</span><span class="zh" lang="zh-CN">Chrome 扩展</span></p>
             <h4>tophat-watch</h4>
@@ -2061,7 +2234,8 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
             <p class="links"><a href="https://github.com/WEBGRS/tophat-watch" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
           </div>
         </li>
-        <li class="noshot">
+        <li>
+          <a class="mini-shot" href="https://news.madisonstudents.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/uw-digest.jpg" width="1400" height="875" alt="" loading="lazy" decoding="async"></a>
           <div class="mini-tx">
             <p class="mini-kd"><span class="en">Web app + email</span><span class="zh" lang="zh-CN">网页应用 · 邮件</span></p>
             <h4>UW Digest</h4>
@@ -2069,19 +2243,21 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
             <p class="links"><a href="https://news.madisonstudents.com/" target="_blank" rel="noopener"><span class="en">Live site</span><span class="zh" lang="zh-CN">在线站点</span></a><a href="https://github.com/WEBGRS/uw-digest" target="_blank" rel="noopener"><span class="en">Source</span><span class="zh" lang="zh-CN">源码</span></a></p>
           </div>
         </li>
-        <li class="noshot">
+        <li>
+          <div class="mini-shot"><img src="assets/webgrs-guard.jpg" width="1400" height="875" alt="Admin overview for the course site: requests, sessions, human-check rate, requests per day and by type" loading="lazy" decoding="async"></div>
           <div class="mini-tx">
             <p class="mini-kd"><span class="en">Cloudflare Worker module</span><span class="zh" lang="zh-CN">Cloudflare Worker 模块</span></p>
             <h4>webgrs-guard</h4>
             <p class="mini-ds"><span class="en">Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a request log, a feedback inbox and a visitor-stats page.</span><span class="zh" lang="zh-CN">我的数据站共用的请求防护：Turnstile 会话、每日配额、限流、请求日志、反馈收件箱和访客统计页。</span></p>
           </div>
         </li>
-        <li class="noshot">
+        <li>
+          <div class="mini-shot"><img src="assets/dafeiyu.jpg" width="1400" height="875" alt="The raising screen: the whale-girl portrait, mood, stats, the chat window and the day's actions" loading="lazy" decoding="async"></div>
           <div class="mini-tx">
             <p class="mini-kd"><span class="en">Game, TypeScript</span><span class="zh" lang="zh-CN">游戏 · TypeScript</span></p>
             <h4>Dafeiyu</h4>
             <p class="mini-ds"><span class="en">A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.</span><span class="zh" lang="zh-CN">一款养成游戏和一款类《吸血鬼幸存者》的肉鸽，建立在纯规则引擎和机器人模拟器之上。239 个测试，界面为中文。</span></p>
-            <p class="mini-cr"><span class="en">Fan-made and non-commercial; not affiliated with DeepSeek.</span><span class="zh" lang="zh-CN">同人作品，非商业；与 DeepSeek 无关。</span></p>
+            <p class="mini-cr"><span class="en">Fan-made and non-commercial; not affiliated with DeepSeek. Art derived from 溟月 by 上善无形, ZipZipPipe&rsquo;s maid redesign and the chibi by 这个刀子真甜, CC BY-NC-SA 4.0.</span><span class="zh" lang="zh-CN">同人作品，非商业；与 DeepSeek 无关。美术改编自上善无形的溟月、ZipZipPipe 的女仆版和这个刀子真甜的 Q 版，CC BY-NC-SA 4.0。</span></p>
           </div>
         </li>
       </ul>
@@ -2112,7 +2288,6 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
 }
     </script>
     <!-- /work:stack -->
-    <div class="net" aria-hidden="true"><canvas id="net"></canvas></div>
     <div class="wrap two">
       <canvas class="orb" id="orb" aria-hidden="true"></canvas>
       <div>
@@ -2125,6 +2300,7 @@ h2 .rev, .minor h3 .rev{display:inline-block; overflow:clip; overflow-clip-margi
         </dl>
       </div>
     </div>
+    <div class="net" aria-hidden="true"><canvas id="net"></canvas></div>
   </section>
 
   <section class="block contact" id="contact" aria-labelledby="contact-h">
@@ -2153,10 +2329,77 @@ const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const basic = () => root.hasAttribute('data-lite');
 
 // The text intro starts as the intro overlay leaves, or once the display face is ready
+// Opening: the contour lines are laid for OPENING s while the name is written, then the name's sign-off and a
+// ring spreading the rest of the map from campus run together, and everything settles CODA s later
+const OPENING = .8, CODA = .55;
 let goAt = 0, introFinished = false, introResolve;
 const introDone = new Promise(r => { introResolve = r; }).then(() => { introFinished = true; });
 const fontReady = Promise.race([Promise.all([document.fonts.load('900 100px "Bodoni Moda"'), document.fonts.load('900 100px "Big Shoulders Display"')]), new Promise(r => setTimeout(r, 800))]);
-introDone.then(() => requestAnimationFrame(() => { root.classList.add('go'); goAt = performance.now(); }));
+// The name's letters are one path in the wordmark; split it so each letter can make its own entrance
+(() => {
+  const svg = document.querySelector('.hero h1 .wm'), ink = svg && svg.querySelector('path[fill="var(--wm-ink)"]');
+  if (!ink) return;
+  const NS = 'http://www.w3.org/2000/svg', g = document.createElementNS(NS, 'g');
+  g.setAttribute('class', 'wls'); ink.before(g);
+  ink.getAttribute('d').split(/(?=M)/).map(s => s.trim()).filter(Boolean).forEach((d, i) => {
+    const q = document.createElementNS(NS, 'path');
+    q.setAttribute('d', d); q.setAttribute('fill', 'var(--wm-ink)'); q.setAttribute('fill-rule', 'evenodd'); q.setAttribute('pathLength', '1');
+    q.setAttribute('class', 'wl'); q.style.setProperty('--i', i); g.append(q);
+  });
+  ink.remove();
+  svg.querySelector('path[fill="var(--wm-dot)"]')?.classList.add('wd');
+  // The strokes of each letter as polygons on the wordmark's own corners, in writing order, with the way the
+  // pen moves through each (down, right, left) and how long it takes; a reshaped wordmark skips this
+  const CLIP = { down: 'inset(-2px -2px calc(100% + 4px) -2px)', right: 'inset(-2px calc(100% + 4px) -2px -2px)', left: 'inset(-2px -2px -2px calc(100% + 4px))' };
+  const STROKES = [
+    [['13.19,85 0,100 45,100 38.19,85 43.29,61 47.54,41 53.07,15 66.26,0 21.26,0 28.07,15', 'down', .16],
+     ['77.19,85 64,100 109,100 102.19,85 117.07,15 130.26,0 85.26,0 92.07,15 86.54,41 82.29,61', 'down', .16],
+     ['47.54,41 86.54,41 82.29,61 43.29,61', 'right', .1]],
+    [['151.73,26 183.26,0 221.26,0 240.94,25 241.44,25 237.4,44 213.94,25 184.94,25', 'left', .15],
+     ['151.73,26 184.94,25 175.24,33 168.01,67 174.31,75 141.53,74', 'down', .11],
+     ['141.53,74 174.31,75 198.31,75 204.38,70 232.38,70 231.53,74 200,100 162,100', 'right', .13],
+     ['188.38,70 192.63,50 236.63,50 232.38,70', 'left', .09]],
+    [['256.88,30 301.88,30 288.69,45 282.53,74 257.53,74 263.69,45', 'down', .12],
+     ['257.53,74 282.53,74 282.31,75 317.31,75 312,100 272,100 255.4,84 257.1,76', 'right', .12],
+     ['316.88,30 361.88,30 348.69,45 340.19,85 347,100 312,100 317.31,75 323.69,45', 'down', .14]]
+  ];
+  const ls = g.querySelectorAll('.wl'), pcs = document.createElementNS(NS, 'g');
+  pcs.setAttribute('class', 'pcs'); g.before(pcs);
+  if (ls.length !== 3 || !ls[0].getAttribute('d').startsWith('M13.19 85')) { svg.style.setProperty('--end', '.1s'); return; }
+  // Strokes follow one another like a hand writing, each starting a little before the last one ends;
+  // the next letter starts once the one before is half written
+  let start = .05, end = 0;
+  STROKES.forEach((set) => {
+    let at = start;
+    set.forEach(([pts, dir, dur]) => {
+      const q = document.createElementNS(NS, 'polygon');
+      q.setAttribute('points', pts); q.setAttribute('class', 'pc'); q.setAttribute('fill', 'var(--wm-ink)');
+      [['--c0', CLIP[dir]], ['--d', at.toFixed(3) + 's'], ['--t', dur + 's']].forEach(([n, v]) => q.style.setProperty(n, v));
+      pcs.append(q); end = Math.max(end, at + dur); at += dur * .7;
+    });
+    start += (end - start) / 2;
+  });
+  const signAt = Math.max(end + .1, OPENING);
+  svg.style.setProperty('--fin', signAt.toFixed(2) + 's'); root.style.setProperty('--name-end', (signAt + .08).toFixed(2) + 's');
+  // Finish: a sun slash signs under the name, and a glint runs across the letters behind it
+  const defs = document.createElementNS(NS, 'defs');
+  defs.innerHTML = `<clipPath id="wmname">${[...ls].map(l => `<path d="${l.getAttribute('d')}"/>`).join('')}</clipPath>
+    <linearGradient id="wmglint"><stop offset="0" stop-color="#FDE68A" stop-opacity="0"/><stop offset=".45" stop-color="#FACC15" stop-opacity=".9"/><stop offset=".55" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#FDE68A" stop-opacity="0"/></linearGradient>`;
+  svg.prepend(defs);
+  const fin = document.createElementNS(NS, 'g'); fin.setAttribute('class', 'wfin');
+  fin.innerHTML = '<g clip-path="url(#wmname)"><rect class="wgl" x="-70" y="-10" width="56" height="124" fill="url(#wmglint)"/></g><polygon class="wsl" points="9,108 372,104 370.6,110.5 7.6,114.5"/>';
+  svg.append(fin);
+  svg.style.setProperty('--end', end.toFixed(2) + 's');
+})();
+// The name and the map start drawing on the same frame: once the page is in view and the map is ready
+// (or after a short wait, if it is slow)
+const goReady = introDone.then(() => Promise.race([terrain.heroReady, new Promise(r => setTimeout(r, 1800))]))
+  .then(() => new Promise(r => requestAnimationFrame(() => { root.classList.add('go'); goAt = performance.now(); r(); })));
+// Settles once the name has been written and signed; heavy work waits for it so the writing never stalls
+const nameWritten = goReady.then(() => {
+  const e = parseFloat(getComputedStyle(document.querySelector('.hero h1 .wm') || root).getPropertyValue('--fin')) || OPENING;
+  return new Promise(r => setTimeout(r, (e + CODA) * 1000 + 100));
+});
 
 // Language: both versions are in the page, <html lang> shows one. 'zh-CN' is Chinese, anything else English.
 const isZh = () => root.lang.startsWith('zh');
@@ -2345,13 +2588,13 @@ addEventListener('scroll', () => {
   if (Math.abs(d) > 6) { bar.classList.toggle('away', d > 0 && y > innerHeight * .8 && !bar.contains(document.activeElement)); lastY = y; }
 }, { passive: true });
 
-// Survey grid behind the small projects and the stack
+// The background after the deck, from the end of the deck to the bottom of the page
 (() => {
-  const film = document.getElementById('film'), contact = document.getElementById('contact');
-  if (!film || !contact) return;
-  let a = 0, b = 0, onNow = null, raf = 0;
-  const measure = () => { a = film.getBoundingClientRect().bottom + scrollY; b = contact.getBoundingClientRect().top + scrollY; check(); };
-  const check = () => { raf = 0; const m = scrollY + innerHeight / 2, on = m > a && m < b; if (on !== onNow) { onNow = on; root.classList.toggle('grid-on', on); } };
+  const film = document.getElementById('film');
+  if (!film) return;
+  let a = 0, onNow = null, raf = 0;
+  const measure = () => { a = film.getBoundingClientRect().bottom + scrollY; check(); };
+  const check = () => { raf = 0; const on = scrollY + innerHeight / 2 > a; if (on !== onNow) { onNow = on; root.classList.toggle('tail-on', on); } };
   addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(check); }, { passive: true });
   new ResizeObserver(measure).observe(document.body);
   measure();
@@ -2374,7 +2617,7 @@ const spy = new IntersectionObserver((es) => es.forEach(e => {
     const st = ['var(--paper) 0px']; let prev = 'var(--paper)';
     secs.forEach(id => {
       const t = y(id), c = `var(--tint-${id})`;
-      if (id === 'contact') { const kb = Math.round(document.querySelector('#now .two').getBoundingClientRect().bottom + scrollY); st.push(`var(--deep1) ${kb + 40}px`, `var(--deep2) ${t + 30}px`, `${c} ${t + 160}px`); }
+      if (id === 'contact') { const kb = Math.round(Math.max(...[...document.querySelectorAll('#now .two, #now .net')].map(e => e.getBoundingClientRect().bottom)) + scrollY); st.push(`var(--tint-now) ${kb - 160}px`, `var(--deep2) ${t + 140}px`, `${c} ${t + 420}px`); }
       // Toolbox starts right at the hero's edge, so its tint ramps in below that edge
       else if (id === 'tools') st.push(`${prev} ${t}px`, `${c} ${t + F}px`);
       else st.push(`${prev} ${t - F / 2}px`, `${c} ${t + F / 2}px`);
@@ -2674,7 +2917,7 @@ const makeContourGL = (c, force) => {
 precision highp float; precision highp sampler2D;
 in vec2 uv; out vec4 o;
 uniform sampler2D B, E, LI;
-uniform vec2 G, Cn; uniform vec3 V, P, T; uniform float PX, HD, Rv, Rmax;
+uniform vec2 G, Cn; uniform vec3 V, P, T; uniform float PX, HD, Rv, Rmax, Ko;
 uniform vec4 HL[${N}]; uniform float HA[${N}];
 float elev(vec2 q){
   vec2 c = clamp(q, vec2(0.), G - 1.001); ivec2 i = ivec2(floor(c)); vec2 f = c - vec2(i);
@@ -2704,9 +2947,20 @@ void main(){
     band = max(band, (1. - smoothstep(2.5 - fw, 2.5 + fw, abs(e - h.x))) * A * inside * .08);
   }
   col = mix(col, T, band); col = mix(col, T, hi);
-  float dist = distance(gl_FragCoord.xy, Cn), R = Rv * Rmax;
-  if (dist > R) col = P;
-  col = mix(col, T, smoothstep(1.6 * PX, 0., abs(dist - R)) * (1. - Rv) * .6);
+  // Opening: only the contour lines are laid, left to right, each level by its own pen starting at the left
+  // edge, all reaching the right edge as the opening ends (Rv = Ko); then a ring spreads from campus and the
+  // whole map (lakes, names, campus) arrives inside it while the fresh lines settle to their own shade
+  if (Rv < 1.) {
+    float x = uv.x + .06 * (uv.y - .5), rl = min(Rv / Ko, 1.), k = clamp((Rv - Ko) / (1. - Ko), 0., 1.);
+    vec4 li = texelFetch(LI, lp, 0);
+    float line = smoothstep(.12, .3, li.g);
+    float h = li.g > .12 ? fract(sin(floor(li.r / li.g * 255. / 11. + .5) * 12.9898) * 43758.5453) : .5;
+    float f = rl * (1.06 + h * .3), drawn = line * (1. - smoothstep(f - .02, f, x));
+    vec3 laid = mix(P, mix(col, T, c.a * max(.6 * (1. - smoothstep(0., .02, abs(x - f + .01))), .3 * (1. - smoothstep(0., .3, f - x)))), drawn);
+    float dist = distance(gl_FragCoord.xy, Cn), R = k * k * (3. - 2. * k) * Rmax;
+    col = mix(laid, col, 1. - smoothstep(R - 2. * PX, R, dist));
+    col = mix(col, T, smoothstep(1.6 * PX, 0., abs(dist - R)) * step(.001, k) * (1. - k) * .6);
+  }
   o = vec4(col, 1.);
 }`;
   // Compile without waiting; status is only read once the driver reports completion
@@ -2743,7 +2997,7 @@ void main(){
       if (par && !gl.getProgramParameter(prog, par.COMPLETION_STATUS_KHR)) return false;
       if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.info('[fx] shader', gl.getProgramInfoLog(prog)); failed = true; return null; }
       u = {};
-      for (const n of ['B', 'E', 'LI', 'G', 'Cn', 'V', 'P', 'T', 'PX', 'HD', 'Rv', 'Rmax', 'HL', 'HA']) u[n] = gl.getUniformLocation(prog, n);
+      for (const n of ['B', 'E', 'LI', 'G', 'Cn', 'V', 'P', 'T', 'PX', 'HD', 'Rv', 'Rmax', 'Ko', 'HL', 'HA']) u[n] = gl.getUniformLocation(prog, n);
       live = true; return true;
     },
     resize(w, h, d) {
@@ -2776,7 +3030,7 @@ void main(){
       gl.uniform2f(u.G, gw, gh); gl.uniform3f(u.V, view.s, view.ox, view.oy);
       gl.uniform3fv(u.P, paper); gl.uniform3fv(u.T, tint);
       gl.uniform1f(u.PX, pd); gl.uniform1f(u.HD, c.height);
-      gl.uniform1f(u.Rv, rv); gl.uniform1f(u.Rmax, Math.hypot(Math.max(fx, W - fx), Math.max(fy, H - fy)) * pd);
+      gl.uniform1f(u.Rv, rv); gl.uniform1f(u.Ko, OPENING / (OPENING + CODA)); gl.uniform1f(u.Rmax, Math.hypot(Math.max(fx, W - fx), Math.max(fy, H - fy)) * pd);
       gl.uniform2f(u.Cn, fx * pd, (H - fy) * pd);
       gl.uniform4fv(u.HL, hl); gl.uniform1fv(u.HA, ha);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -2954,6 +3208,15 @@ const terrain = (() => {
     if (n === 0) reveal = 1;
     if (n < 2 && ready && !paths) tracePaths();
   };
+  // The glint on the name runs right to left over the span of time the opening ring takes to cross it
+  const syncGlint = () => {
+    const wm = document.querySelector('.hero h1 .wm'); if (!wm || !glmap) return;
+    const b = wm.getBoundingClientRect(), [fx, fy] = focusPx(), Rm = Math.hypot(Math.max(fx, W - fx), Math.max(fy, H - fy)), cy = b.top + b.height / 2;
+    // When the ring (radius eased by smoothstep over CODA) reaches x on the name's middle line
+    const at = (x) => { const r = Math.min(1, Math.hypot(x - fx, cy - fy) / Rm); let lo = 0, hi = 1; for (let i = 0; i < 20; i++) { const m = (lo + hi) / 2; if (m * m * (3 - 2 * m) < r) lo = m; else hi = m; } return OPENING + lo * CODA; };
+    const t1 = at(b.right + b.width * .12), t2 = at(b.left - b.width * .12);
+    wm.style.setProperty('--gl-at', t1.toFixed(3) + 's'); wm.style.setProperty('--gl-dur', Math.max(.15, t2 - t1).toFixed(3) + 's');
+  };
   // The 2D path strokes highlights from contour paths traced on this thread
   const tracePaths = () => { paths = core.trace({ s, ox, oy, W, H }); };
   const present = () => {
@@ -2965,6 +3228,7 @@ const terrain = (() => {
     if (tier < 2) { paths = null; idle(tracePaths); }
     if (tier === 0) reveal = 1;
     if (!glmap) draw2D(performance.now());
+    syncGlint();
     heroOk();
     kick();
   };
@@ -3031,13 +3295,13 @@ const terrain = (() => {
 
   // Frame loop: runs only while something is moving, and only on screen
   let raf = 0, last = 0, tx = null, ty = null, moved = false, heroOn = true, glDirty = false;
-  const kick = (dirty) => { if (dirty) glDirty = true; if (!raf && ready && heroOn && !document.hidden && (introFinished || reveal >= 1)) { last = performance.now(); raf = requestAnimationFrame(frame); } };
-  introDone.then(() => kick());
+  const kick = (dirty) => { if (dirty) glDirty = true; if (!raf && ready && heroOn && !document.hidden && (goAt || reveal >= 1)) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+  goReady.then(() => kick());
   const frame = (t) => {
     raf = 0;
     const dt = Math.min(.05, Math.max(.001, (t - last) / 1000)); last = t;
     // The reveal clock starts on the first drawn frame, so a slow first upload cannot make it jump
-    if (reveal < 1) { if (!revealT0) revealT0 = t; const p = Math.max(0, Math.min(1, (t - revealT0) / 1900)); reveal = 1 - Math.pow(1 - p, 4); }
+    if (reveal < 1) { if (!revealT0) revealT0 = t; reveal = Math.max(0, Math.min(1, (t - revealT0) / ((OPENING + CODA) * 1000))); }
     if (moved && tx !== null && g) {
       moved = false;
       const e = at((tx - ox) / s, (ty - oy) / s);
@@ -3136,9 +3400,10 @@ const terrain = (() => {
 
   // Start once the grid and the display face are ready; the text intro does not wait for this
   Promise.all([fontReady, gridReady]).then(async () => {
+    // Without the loader the name is being written now; build the map once it is, so the writing never stalls
     await renderHero();
     home();
-    setTimeout(() => { decode(roA, { step: 30 }); decode(roB, { step: 14, settle: 200 }); }, Math.max(0, goAt + 1350 - performance.now()));
+    goReady.then(() => setTimeout(() => { decode(roA, { step: 30 }); decode(roB, { step: 14, settle: 200 }); }, Math.max(0, goAt + OPENING * 1000 - performance.now())));
     // The background sheet is out of sight at first, so paint it after the intro settles
     setTimeout(() => idle(paintBg), 2000);
   });
@@ -3336,26 +3601,28 @@ const onScreenLoop = (el, draw) => {
   document.addEventListener('visibilitychange', start);
 };
 
-// Intro: a loader over a pale aurora while fonts and terrain load, then the page slides in
+// Intro: a loader over a pale aurora while the fonts load, then the page slides in; it does not wait for
+// the terrain, the map unfolds on the page by itself once it is ready
 (() => {
   const el = document.getElementById('intro');
   if (!el) { fontReady.then(introResolve); return; }
   try { sessionStorage.setItem('intro', '1'); } catch {}
   const bar = el.querySelector('.ld-bar i'), num = el.querySelector('.ld-n'), cv = el.querySelector('.aur');
   const t0 = performance.now();
-  let target = 6, shown = 0, last = t0, leaving = false;
-  fontReady.then(() => { target = Math.max(target, 38); });
+  let target = 6, shown = 0, last = t0, leaving = false, fonts = false;
+  fontReady.then(() => { target = Math.max(target, 38); fonts = true; });
   terrain.gridReady.then(() => { target = Math.max(target, 72); });
   terrain.heroReady.then(() => { target = 100; });
   setTimeout(() => { target = 100; }, 4500);
   const aur = makeAurora(cv);
   const tick = (t) => {
     const dt = Math.min(.05, (t - last) / 1000); last = t;
-    // The count eases toward what has actually loaded, never faster than the work
-    shown = Math.min(target, shown + Math.max(22, (target - shown) * 3.5) * dt);
+    // The count eases toward what has loaded; once the fonts are in and the mark has played, it runs out to 100
+    if (fonts && t - t0 > 1500) target = 100;
+    shown = Math.min(target, shown + Math.max(22, (target - shown) * (target === 100 ? 9 : 3.5)) * dt);
     bar.style.transform = `scaleX(${(shown / 100).toFixed(3)})`; num.textContent = Math.floor(shown) + '%';
     if (aur) aur.draw(t);
-    if (!leaving && shown >= 100 && t - t0 > 2100) {
+    if (!leaving && shown >= 100) {
       leaving = true; el.classList.add('out'); root.classList.remove('intro-on'); introResolve();
       setTimeout(() => { el.remove(); if (aur) aur.lose(); }, 1000);
     }
@@ -3491,85 +3758,322 @@ const onScreenLoop = (el, draw) => {
   if (still) requestAnimationFrame(() => draw(0, .016)); else onScreenLoop(cv, draw);
 })();
 
-// Tools and data sources as a constellation: anything used in the same project is linked
+// Smaller projects: a carousel that moves on by itself every few seconds and loops; it waits while
+// pointed at, focused or off screen, then carries on
+(() => {
+  const list = document.querySelector('.minor .mini'), head = document.querySelector('.minor .shead');
+  if (!list || !head) return;
+  const items = [...list.children], n = items.length; if (n < 3) return;
+  const T = 4500, K = 2, zh = root.lang.startsWith('zh');
+  const car = document.createElement('div'); car.className = 'car';
+  car.setAttribute('role', 'region'); car.setAttribute('aria-roledescription', zh ? '轮播' : 'carousel'); car.setAttribute('aria-label', zh ? '其他小项目' : 'Smaller projects');
+  const vp = document.createElement('div'); vp.className = 'car-vp';
+  list.before(car); car.append(vp); vp.append(list);
+  // Copies at both ends make the loop seamless; they are hidden from assistive tech and the tab order
+  const copy = (li) => { const c = li.cloneNode(true); c.setAttribute('aria-hidden', 'true'); c.classList.remove('mv'); c.querySelectorAll('a, button').forEach(a => a.tabIndex = -1); return c; };
+  items.forEach(li => { li.dataset.name = li.querySelector('h4')?.textContent || ''; });
+  items.slice(-K).reverse().forEach(li => list.prepend(copy(li)));
+  items.slice(0, K).forEach(li => list.append(copy(li)));
+  items.forEach((li, i) => { li.setAttribute('role', 'group'); li.setAttribute('aria-label', `${i + 1} / ${n}`); });
+
+  const arrow = (d) => `<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="${d}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const ctl = document.createElement('div'); ctl.className = 'car-ctl';
+  ctl.innerHTML = `<button class="ar" type="button" aria-label="${zh ? '上一个' : 'Previous'}">${arrow('M10 3 5 8l5 5')}</button><span class="car-dots"></span><button class="ar" type="button" aria-label="${zh ? '下一个' : 'Next'}">${arrow('M6 3l5 5-5 5')}</button>`;
+  head.append(ctl);
+  const [prev, next] = ctl.querySelectorAll('.ar'), dotsEl = ctl.querySelector('.car-dots');
+  const dots = items.map((li, i) => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.setAttribute('aria-label', (zh ? '显示 ' : 'Show ') + (li.querySelector('h4')?.textContent || i + 1));
+    b.addEventListener('click', () => go(i + K));
+    dotsEl.append(b); return b;
+  });
+
+  let idx = K, step = 0, timer = 0, hover = false, focus = false, seen = false;
+  const auto = !(reduce || basic());
+  const layout = () => {
+    const per = matchMedia('(min-width: 900px)').matches ? 2 : 1, gap = per > 1 ? 24 : 16, w = car.clientWidth;
+    const cw = (w - gap * (per - 1)) / per; step = cw + gap;
+    list.style.setProperty('--cw', cw + 'px'); list.style.gap = gap + 'px';
+    place(false);
+  };
+  const place = (anim) => {
+    list.style.transition = anim ? '' : 'none';
+    list.style.transform = `translateX(${-idx * step}px)`;
+    if (!anim) { list.offsetWidth; return; }
+    const a = ((idx - K) % n + n) % n;
+    dots.forEach((d, i) => d.setAttribute('aria-current', i === a ? 'true' : 'false'));
+    // Restart the progress fill on the current dot
+    ctl.classList.remove('tick'); ctl.offsetWidth; if (running()) ctl.classList.add('tick');
+  };
+  const running = () => auto && seen && !hover && !focus && !document.hidden;
+  const schedule = () => { clearTimeout(timer); ctl.classList.toggle('tick', running()); if (running()) timer = setTimeout(() => go(idx + 1), T); };
+  const go = (i) => { idx = i; place(true); schedule(); };
+  list.addEventListener('transitionend', (e) => {
+    if (e.target !== list) return;
+    if (idx >= n + K) { idx -= n; place(false); }
+    else if (idx < K) { idx += n; place(false); }
+  });
+  prev.addEventListener('click', () => go(idx - 1));
+  next.addEventListener('click', () => go(idx + 1));
+  car.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') go(idx - 1); if (e.key === 'ArrowRight') go(idx + 1); });
+  [car, ctl].forEach(el => { el.addEventListener('pointerenter', (e) => { if (e.pointerType !== 'touch') { hover = true; schedule(); } }); el.addEventListener('pointerleave', () => { hover = false; schedule(); }); });
+  car.addEventListener('focusin', () => { focus = true; schedule(); });
+  car.addEventListener('focusout', (e) => { if (!car.contains(e.relatedTarget)) { focus = false; schedule(); } });
+  // Swipe on touch screens
+  let sx = null;
+  vp.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') sx = e.clientX; });
+  vp.addEventListener('pointerup', (e) => { if (sx === null) return; const dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 40) go(idx + (dx < 0 ? 1 : -1)); });
+  new IntersectionObserver(([e]) => { seen = e.isIntersecting; schedule(); }, { threshold: .4 }).observe(car);
+  document.addEventListener('visibilitychange', schedule);
+  new ResizeObserver(layout).observe(car);
+  layout(); place(true);
+})();
+
+// Stack list as tilted columns flowing up and down behind the globe. On phones, where the globe is left
+// out, the plain list shows instead; the list always stays in the page for screen readers.
+(() => {
+  const dl = document.querySelector('#now dl.kv'), net = document.querySelector('#now .net');
+  if (!dl || !net) return;
+  const split = (s) => s.split(/[,、，]\s*(?![^()（）]*[)）])/).map(x => x.trim()).filter(Boolean);
+  const txt = (el, l) => (el.querySelector('.' + l) || el).textContent.trim();
+  const rows = [...dl.querySelectorAll('dt')].map(dt => { const dd = dt.nextElementSibling; return ['en', 'zh'].map(l => ({ k: txt(dt, l), v: split(txt(dd, l)) })); });
+  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const both = (f) => `<span class="en">${f(0)}</span><span class="zh" lang="zh-CN">${f(1)}</span>`;
+  // Each column holds its words four times and slides by half its height, so the loop never shows a seam
+  const col = (r, i) => {
+    const words = both(l => r[l].v.map(x => `<span class="it">${esc(x)}</span><i class="sep"></i>`).join(''));
+    return `<div class="col c${i}"><p class="hd">${both(l => esc(r[l].k))}</p><div class="win"><div class="vtrk" style="--dur:${28 + i * 5}s">${words.repeat(4)}</div></div></div>`;
+  };
+  const box = document.createElement('div'); box.className = 'sb-fall'; box.setAttribute('aria-hidden', 'true');
+  box.innerHTML = `<div class="cols">${rows.map(col).join('')}</div>`;
+  net.prepend(box);
+  dl.classList.add('has-fall');
+})();
+
+// Stack globe: projects and the tools they use on a slowly turning sphere of fine dots. Resting on a
+// node or its name grows the globe round that node where it is and lights its links, then the node
+// drifts slowly to the front; the focus holds until the pointer leaves the globe. Drag to turn it.
 (() => {
   const cv = document.getElementById('net'); if (!cv) return;
   const ctx = cv.getContext('2d'), still = reduce || basic();
-  // Written by docs/build.py from docs/work/*.json, ordered so projects that share a tool sit next to each other
   let PROJ = {};
   try { PROJ = JSON.parse(document.getElementById('stack-data').textContent); } catch (e) { return; }
   const keys = Object.keys(PROJ), names = [...new Set(Object.values(PROJ).flat())];
-  const nodes = names.map((n) => ({ n, projs: keys.filter(p => PROJ[p].includes(n)), x: 0, y: 0, hx: 0, hy: 0, ph: Math.random() * 6.28 }));
-  const edges = [];
-  keys.forEach(p => { const l = PROJ[p]; for (let a = 0; a < l.length; a++) for (let b = a + 1; b < l.length; b++) edges.push([nodes[names.indexOf(l[a])], nodes[names.indexOf(l[b])], p]); });
-  let W = 0, H = 0, mx = -1e4, my = -1e4, col = null;
-  const centers = {};
-  const layout = () => {
-    const r = fit(cv, 2); W = r.W; H = r.H; ctx.setTransform(r.d, 0, 0, r.d, 0, 0);
-    // One row up to nine projects, then rows of equal length
-    const narrow = W < 760, cols = narrow ? 2 : Math.ceil(keys.length / Math.ceil(keys.length / 9)), rows = Math.ceil(keys.length / cols);
-    keys.forEach((p, k) => {
-      const c = k % cols, rr = Math.floor(k / cols);
-      centers[p] = [(c + .5) / cols * W, narrow || rows > 1 ? (rr + .5) / rows * H : H * (.5 + .14 * Math.sin(k * 1.9))];
-    });
-    const rx = W / cols * .34, ry = H / rows * .3, shared = {};
-    nodes.forEach(nd => { if (nd.projs.length > 1) (shared[nd.projs.join()] ||= []).push(nd); });
-    nodes.forEach(nd => {
-      const cs = nd.projs.map(p => centers[p]);
-      if (cs.length > 1) {
-        const grp = shared[nd.projs.join()], k = grp.indexOf(nd);
-        nd.hx = cs.reduce((a, c) => a + c[0], 0) / cs.length + (k - (grp.length - 1) / 2) * 78;
-        nd.hy = cs.reduce((a, c) => a + c[1], 0) / cs.length - ry * .9 + (k % 2) * 16;
-      }
-      else {
-        const l = PROJ[nd.projs[0]], ang = l.indexOf(nd.n) / l.length * 6.283 + .6;
-        nd.hx = Math.max(10, Math.min(W - 10, cs[0][0] + Math.cos(ang) * rx)); nd.hy = cs[0][1] + Math.sin(ang) * ry;
-      }
-      if (!nd.x) { nd.x = nd.hx; nd.y = nd.hy; }
-    });
+  const add = (a, b, k = 1) => a.map((x, i) => x + b[i] * k), norm = (v) => { const l = Math.hypot(...v) || 1; return v.map(x => x / l); };
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const fib = (i, m) => { const y = 1 - 2 * (i + .5) / m, r = Math.sqrt(1 - y * y), a = i * 2.39996; return [Math.cos(a) * r, y, Math.sin(a) * r]; };
+  // Projects spread evenly; a shared tool sits between its projects, a tool of one project fans out round it
+  const nodes = keys.map((k, i) => ({ n: k, proj: true, p: fib(i, keys.length), nb: new Set() }));
+  names.forEach((t, j) => {
+    const ps = nodes.filter(o => o.proj && PROJ[o.n].includes(t));
+    let p;
+    if (ps.length === 1) {
+      const c = ps[0].p, t1 = norm(cross(c, Math.abs(c[1]) > .9 ? [1, 0, 0] : [0, 1, 0])), t2 = cross(c, t1);
+      const own = PROJ[ps[0].n].filter(x => nodes.filter(o => o.proj && PROJ[o.n].includes(x)).length === 1), a = own.indexOf(t) / own.length * 6.283 + j;
+      p = norm(add(c, add(t1.map(x => x * Math.cos(a)), t2.map(x => x * Math.sin(a))), .34));
+    } else {
+      p = ps.reduce((s, o) => add(s, o.p), [0, 0, 0]);
+      p = norm(Math.hypot(...p) < .2 ? add(p, fib(j, names.length), .6) : add(p, fib(j, names.length), .12));
+    }
+    const o = { n: t, proj: false, p, nb: new Set(ps), hub: ps.length >= 3 };
+    ps.forEach(q => q.nb.add(o)); nodes.push(o);
+  });
+  const edges = nodes.filter(o => !o.proj).flatMap(o => [...o.nb].map(q => ({ a: q, b: o, l: 0 })));
+  nodes.forEach(o => { o.w = 1; o.f = 0; o.la = 0; });
+  // Fine dots over the whole sphere, there only to give it a surface
+  const DUST = Array.from({ length: 1100 }, (_, i) => fib(i, 1100));
+
+  // EASE: how fast the rest of the globe fades out round a focused node, and back in after
+  const DWELL = 120, LETGO = 300, PULL = 110, EASE = 2.6, TURN = .9;
+  let gx = 0, gy = 0, gR = 0, ox = 0, oy = 0, lastMove = -1e4;
+  let W = 0, H = 0, yaw = .4, pitch = -.25, zoom = 1, spin = .08, att = 0, fm = 0, ax = 0, ay = 0, focus = null, focusT = 0, cand = null, candT = 0, awayT = 0, mx = -1e4, my = -1e4, drag = null, col = null, moved = false;
+  const rot = (p) => {
+    const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    const x = p[0] * cy + p[2] * sy, z1 = -p[0] * sy + p[2] * cy;
+    return [x, p[1] * cp - z1 * sp, p[1] * sp + z1 * cp];
+  };
+  const wrapA = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+  const pick = () => {
+    for (const o of nodes) if (o.box && mx >= o.box[0] && mx <= o.box[2] && my >= o.box[1] && my <= o.box[3]) return o;
+    let best = null, bd = 20;
+    for (const o of nodes) { if (o.z < -.15) continue; const d = Math.hypot(o.sx - mx, o.sy - my); if (d < bd) { bd = d; best = o; } }
+    return best;
   };
   const draw = (t, dt) => {
-    if (!W) layout();
-    if (!col) col = { line: cssv('--contour'), acc: isDark() ? cssv('--water') : '3,105,161', ink: cssv('--ink'), mut: cssv('--muted') };
-    for (const nd of nodes) {
-      let tx = nd.hx + Math.sin(t / 1700 + nd.ph) * 6, ty = nd.hy + Math.cos(t / 2100 + nd.ph * 1.3) * 5;
-      const dx = nd.x - mx, dy = nd.y - my, d = Math.hypot(dx, dy);
-      if (d < 90) { tx += dx / (d || 1) * (90 - d) * .45; ty += dy / (d || 1) * (90 - d) * .45; }
-      nd.x = damp(nd.x, tx, 6, dt); nd.y = damp(nd.y, ty, 6, dt);
+    const f = fit(cv, 2); W = f.W; H = f.H; ctx.setTransform(f.d, 0, 0, f.d, 0, 0);
+    if (!col) col = { line: cssv('--contour'), acc: isDark() ? cssv('--water') : '3,105,161', dark: isDark() };
+    // Focus: a node (or its name) must be rested on for a moment; it holds until the pointer leaves the globe
+    if (moved && !drag) { moved = false; lastMove = t; const h = mx > -1e3 ? pick() : null; if (h !== cand) { cand = h; candT = t; } }
+    if (cand && cand !== focus && t - candT > DWELL) { focus = cand; focusT = t; }
+    const over = mx > -1e3 && Math.hypot(mx - gx, my - gy) < gR * 1.15;
+    if (focus) { if (over) awayT = 0; else if (!awayT) awayT = t; else if (t - awayT > LETGO) { focus = cand = null; awayT = 0; } }
+    // A focused node first stays where it is, then drifts slowly to the front; otherwise a slow spin
+    if (focus) {
+      const ty = Math.atan2(-focus.p[0], focus.p[2]), z1 = -focus.p[0] * Math.sin(ty) + focus.p[2] * Math.cos(ty), tp = Math.atan2(focus.p[1], z1);
+      const k = 1 - Math.exp(-TURN * Math.min(1, Math.max(0, (t - focusT - 400) / 900)) * dt);
+      yaw += wrapA(ty - yaw) * k; pitch += (tp - pitch) * k;
+    } else if (!drag && !still) { yaw += spin * dt; pitch += (-.25 - pitch) * (1 - Math.exp(-.6 * dt)); }
+    zoom = damp(zoom, focus ? 1.2 : 1, 2.4, dt);
+    const R0 = Math.min(W * .32, H * .4), R = R0 * zoom;
+    // The globe grows round the focused node, so the node stays under the pointer; the offset dies away as it reaches the front
+    let wx = 0, wy = 0;
+    if (focus) { const [x, y, z] = rot(focus.p), s = 3.2 / (3.2 - z); wx = -x * s * (R - R0); wy = y * s * (R - R0); }
+    ox = damp(ox, wx, 8, dt); oy = damp(oy, wy, 8, dt);
+    const cx = W / 2 + ox, cy = H / 2 + oy; gx = cx; gy = cy; gR = R;
+    // While the pointer moves over the globe the spin slows down a little, and nearby dots lean toward the pointer
+    spin = damp(spin, over && t - lastMove < 500 ? .035 : .08, 3, dt); att = damp(att, over ? 1 : 0, 5, dt);
+    if (over) { ax = damp(ax, mx, 12, dt); ay = damp(ay, my, 12, dt); }
+    const pull = (x, y, k) => { if (att < .01) return [x, y]; const dx = ax - x, dy = ay - y, d = Math.hypot(dx, dy); if (d > PULL) return [x, y]; const f = (1 - d / PULL) ** 2 * k * att; return [x + dx * f, y + dy * f]; };
+    const proj = (p) => { const [x, y, z] = rot(p), s = 3.2 / (3.2 - z); return [cx + x * R * s, cy - y * R * s, z, s]; };
+    for (const o of nodes) { const [px, py, z, s] = proj(o.p), [sx, sy] = o === focus ? [px, py] : pull(px, py, .22); o.sx = sx; o.sy = sy; o.z = z; o.s = s; }
+    const on = (o) => !focus || o === focus || focus.nb.has(o);
+    // Every change of focus is eased: the rest fades out slowly, and fades back in slowly once it lets go
+    fm = damp(fm, focus ? 1 : 0, EASE, dt);
+    for (const o of nodes) { o.w = damp(o.w, on(o) ? 1 : 0, EASE, dt); o.f = damp(o.f, o === focus ? 1 : 0, EASE * 1.5, dt); }
+    ctx.clearRect(0, 0, W, H);
+    // A pale body, lit from the upper left, so the globe stands clear of the words behind it
+    const bg = ctx.createRadialGradient(cx - R * .35, cy - R * .4, R * .1, cx, cy, R * 1.04);
+    bg.addColorStop(0, col.dark ? 'rgba(30,64,96,.7)' : 'rgba(255,255,255,.82)'); bg.addColorStop(1, col.dark ? 'rgba(14,34,54,.45)' : 'rgba(240,249,255,.5)');
+    ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(cx, cy, R * 1.03, 0, 7); ctx.fill();
+    ctx.strokeStyle = `rgba(${col.line},.22)`; ctx.lineWidth = 1; ctx.stroke();
+    for (const p of DUST) {
+      const [px, py, z, s] = proj(p), [sx, sy] = pull(px, py, .5);
+      ctx.fillStyle = `rgba(${col.line},${((.12 + .55 * (z + 1) / 2) * (1 - .4 * fm)).toFixed(3)})`;
+      ctx.fillRect(sx - .9 * s, sy - .9 * s, 1.8 * s, 1.8 * s);
     }
-    let hot = null, best = 34;
-    for (const nd of nodes) { const d = Math.hypot(nd.x - mx, nd.y - my); if (d < best) { best = d; hot = nd; } }
-    const lit = (p) => hot && hot.projs.includes(p);
-    ctx.clearRect(0, 0, W, H); ctx.lineWidth = 1;
-    for (const [a, b, p] of edges) { ctx.strokeStyle = lit(p) ? `rgba(${col.acc},.8)` : `rgba(${col.line},.13)`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
-    for (const nd of nodes) { const d = Math.hypot(nd.x - mx, nd.y - my); if (d < 130) { ctx.strokeStyle = `rgba(${col.acc},${((1 - d / 130) * .45).toFixed(3)})`; ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(nd.x, nd.y); ctx.stroke(); } }
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const e of edges) {
+      const { a, b } = e, dz = (a.z + b.z) / 2;
+      e.l = damp(e.l, focus && (a === focus || b === focus) ? 1 : 0, EASE, dt);
+      const al = ((.08 + .18 * (dz + 1) / 2) * (1 - fm) + .04 * fm) * (1 - e.l);
+      ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy);
+      ctx.strokeStyle = `rgba(${col.line},${al.toFixed(3)})`; ctx.lineWidth = 1; ctx.stroke();
+      if (e.l > .01) { ctx.strokeStyle = `rgba(${col.acc},${(.85 * e.l).toFixed(3)})`; ctx.lineWidth = 1.6; ctx.stroke(); }
+    }
+    const order = [...nodes].sort((a, b) => a.z - b.z);
+    for (const o of order) {
+      const dep = (o.z + 1) / 2, fade = .12 * dep + (.3 + .58 * dep) * o.w, r = (o.proj ? 4.8 : 2.8) * o.s * (1 + .5 * o.f);
+      ctx.globalAlpha = fade;
+      ctx.fillStyle = o.proj ? (col.dark ? '#F1F3F7' : '#0B1A2C') : `rgb(${col.acc})`;
+      ctx.beginPath(); ctx.arc(o.sx, o.sy, r, 0, 7); ctx.fill();
+      if (o.f > .01) { ctx.globalAlpha = fade * o.f; ctx.fillStyle = '#FACC15'; ctx.fill(); ctx.globalAlpha = fade; }
+      if (o.proj || o.f > .5) { ctx.lineWidth = 1.5; ctx.strokeStyle = col.dark ? '#081726' : '#fff'; ctx.stroke(); }
+    }
+    ctx.globalAlpha = 1;
+    // Names: the focused node and its neighbours, else projects and shared tools on the near side; nearest first,
+    // no overlaps. Each name eases toward shown or hidden, so none blinks in or out
     const placed = [], free = (b) => !placed.some(q => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
-    for (const p of keys) {
-      const [x, y] = centers[p]; ctx.font = `italic ${lit(p) ? 600 : 500} 12px "Instrument Sans", sans-serif`;
-      const w = ctx.measureText(p).width; placed.push([x - w / 2 - 3, y - 8, x + w / 2 + 3, y + 8]);
-      ctx.fillStyle = `rgba(${col.acc},${lit(p) ? 1 : .6})`; ctx.fillText(p, x, y);
+    const want = focus ? on : (o) => o.z > -.05 && (o.proj || (o.hub && o.z > .35));
+    const pri = [...order].reverse(); if (focus) pri.unshift(...pri.splice(pri.indexOf(focus), 1));
+    ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    for (const o of pri) {
+      const big = o.f > .5 || o.proj;
+      ctx.font = `${big ? 700 : 560} ${big ? 13 : 11.5}px "Instrument Sans", sans-serif`;
+      const w = ctx.measureText(o.n).width, lx = o.sx > cx ? o.sx - 9 - w : o.sx + 9, box = [lx - 3, o.sy - 9, lx + w + 3, o.sy + 9];
+      let tgt = 0;
+      if (want(o) && free(box)) { placed.push(box); tgt = focus ? 1 : .35 + .65 * (o.z + 1) / 2; }
+      o.la = damp(o.la, tgt, EASE, dt); o.box = o.la > .3 ? box : null;
+      if (o.la < .01) continue;
+      ctx.globalAlpha = o.la; ctx.lineWidth = 6;
+      ctx.strokeStyle = col.dark ? '#081726' : 'rgba(255,255,255,.92)'; ctx.strokeText(o.n, lx, o.sy);
+      if (o.f > .01) { ctx.globalAlpha = o.la * o.f; ctx.strokeStyle = '#FACC15'; ctx.strokeText(o.n, lx, o.sy); ctx.globalAlpha = o.la; }
+      ctx.fillStyle = o.f > .5 || !col.dark ? '#0B1A2C' : '#F1F3F7'; ctx.fillText(o.n, lx, o.sy);
     }
-    // Labels of the hovered cluster first; any other label that would collide is skipped
-    const order = hot ? [...nodes].sort((a, b) => (hot.projs.some(p => b.projs.includes(p)) ? 1 : 0) - (hot.projs.some(p => a.projs.includes(p)) ? 1 : 0)) : nodes;
-    for (const nd of order) {
-      const on = hot && (hot === nd || hot.projs.some(p => nd.projs.includes(p)));
-      ctx.fillStyle = on ? `rgb(${col.acc})` : `rgba(${col.line},.5)`; ctx.beginPath(); ctx.arc(nd.x, nd.y, on ? 3.4 : 2.6, 0, 7); ctx.fill();
-      // Labels point away from their cluster's centre, which carries the project name
-      // ...and inward near the edges, so nothing is clipped
-      const left = nd.x > W - 110 || (nd.x > 110 && nd.projs.length === 1 && nd.x < centers[nd.projs[0]][0]);
-      ctx.textAlign = left ? 'right' : 'left';
-      ctx.font = `${on ? 600 : 500} 11.5px "Instrument Sans", sans-serif`;
-      const w = ctx.measureText(nd.n).width, lx = left ? nd.x - 7 - w : nd.x + 7, box = [lx - 2, nd.y - 8, lx + w + 2, nd.y + 8];
-      if (!free(box)) continue;
-      placed.push(box); ctx.fillStyle = on ? col.ink : col.mut; ctx.fillText(nd.n, nd.x + (left ? -7 : 7), nd.y);
-    }
+    ctx.globalAlpha = 1;
   };
-  cv.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
-  cv.addEventListener('pointerleave', () => { mx = my = -1e4; });
-  addEventListener('resize', () => { W = 0; });
+  cv.addEventListener('pointermove', (e) => {
+    const r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; moved = true;
+    if (drag) { yaw += (e.clientX - drag[0]) * .006; pitch = Math.max(-1.2, Math.min(1.2, pitch + (e.clientY - drag[1]) * .006)); drag = [e.clientX, e.clientY]; }
+  });
+  cv.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY]; focus = cand = null; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointerup', () => { drag = null; });
+  cv.addEventListener('pointerleave', () => { mx = my = -1e4; moved = true; });
   addEventListener('themechange', () => { col = null; });
-  if (still) requestAnimationFrame(() => draw(0, 1)); else onScreenLoop(cv, draw);
+  // ?lab: where each node is on screen and which one has the focus, for test scripts
+  if (new URLSearchParams(location.search).has('lab')) window.globeState = () => ({ focus: focus && focus.n, fm, nodes: nodes.map(o => ({ n: o.n, x: o.sx, y: o.sy, z: o.z, w: o.w, la: o.la })) });
+  onScreenLoop(cv, draw);
+})();
+
+// Background after the project deck: caustics from the surface on the lake floor. The canvas lies in the
+// page, so it scrolls with it; each frame shades only the band on screen. Brighter round the pointer, a click sends a ring.
+(() => {
+  const cv = document.getElementById('tail'), film = document.getElementById('film');
+  if (!cv || !film) return;
+  const gl = cv.getContext('webgl', { premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'low-power' });
+  if (!gl) { cv.remove(); return; }
+  const still = reduce || basic();
+  const sh = (tp, src) => { const o = gl.createShader(tp); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }'));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `precision highp float;
+uniform vec2 uR, uM; uniform float uT, uS, uDent; uniform vec4 uP; uniform vec3 uC; uniform float uA;
+float cau(vec2 uv, float time){
+  vec2 p = mod(uv * 6.2832, 6.2832) - 250., i = p; float c = 1., inten = .005;
+  for (int n = 0; n < 5; n++) {
+    float t = time * (1. - (3.5 / float(n + 1)));
+    i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+    c += 1. / length(vec2(p.x / (sin(i.x + t) / inten), p.y / (cos(i.y + t) / inten)));
+  }
+  c /= 5.; c = 1.17 - pow(c, 1.4); return pow(abs(c), 8.);
+}
+void main(){
+  vec2 px = vec2(gl_FragCoord.x, uR.y - gl_FragCoord.y) / uS;
+  vec2 d = px - uM; float r2 = dot(d, d);
+  float k = length(px - uP.xy) - uP.z;
+  vec2 w = uP.w * 14. * sin(k * .045) * exp(-k * k / 7000.) * normalize(px - uP.xy + .001);
+  float c = cau((px + w) / 640., uT * .32);
+  // Deeper is busier: near the top only the brightest threads show, toward the bottom the full net
+  float deep = smoothstep(0., uR.y / uS * .8, px.y), lo = mix(.42, .08, deep);
+  float a = smoothstep(lo, lo + .45, c) * uA * mix(.35, 1., deep) * (.6 + 1.1 * exp(-r2 / 70000.) * uDent);
+  gl_FragColor = vec4(uC * a, a);
+}`));
+  gl.bindAttribLocation(pr, 0, 'p'); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { cv.remove(); return; }
+  gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.enable(gl.SCISSOR_TEST);
+  const u = (n) => gl.getUniformLocation(pr, n);
+  const S = .6, FADE = 320;
+  // The canvas starts a little above the end of the deck (its top edge fades in) and runs to the bottom of the page
+  let top = 0, H = 0, W = 0, seen = false, mx = -1e4, my = -1e4, tx = -1e4, ty = -1e4, dent = 0, tdent = 0, ping = null, raf = 0, last = 0, T = 0;
+  const measure = () => {
+    top = Math.round(film.getBoundingClientRect().bottom + scrollY - FADE);
+    W = document.documentElement.clientWidth; H = Math.min(9000, Math.max(1, document.documentElement.scrollHeight - top));
+    cv.style.top = top + 'px'; cv.style.height = H + 'px';
+    const w = Math.round(W * S), h = Math.round(H * S);
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+  };
+  const draw = () => {
+    // Shade only the rows on screen, with a margin for the scroll that runs ahead of this frame
+    const y0 = Math.max(0, scrollY - top - 200), y1 = Math.min(H, scrollY - top + innerHeight + 200);
+    if (y1 <= y0) return;
+    gl.viewport(0, 0, cv.width, cv.height);
+    gl.scissor(0, Math.floor((H - y1) * S), cv.width, Math.ceil((y1 - y0) * S));
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(u('uR'), cv.width, cv.height); gl.uniform1f(u('uS'), S); gl.uniform1f(u('uT'), T); gl.uniform2f(u('uM'), mx, my); gl.uniform1f(u('uDent'), dent);
+    gl.uniform4f(u('uP'), ping ? ping.x : 0, ping ? ping.y : 0, ping ? ping.r : 0, ping ? ping.a : 0);
+    gl.uniform3fv(u('uC'), isDark() ? [.49, .83, .99] : [.06, .55, .85]); gl.uniform1f(u('uA'), isDark() ? .42 : .5);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  };
+  const tick = (t) => {
+    raf = 0; const dt = Math.min(.05, (t - last) / 1000 || .016); last = t; T += dt;
+    if (mx < -1e3) { mx = tx; my = ty; } else { mx = damp(mx, tx, 8, dt); my = damp(my, ty, 8, dt); }
+    dent = damp(dent, tdent, 4, dt);
+    if (ping) { ping.age += dt; ping.r += 520 * dt; ping.a = Math.exp(-ping.age * 1.3); if (ping.a < .01) ping = null; }
+    draw(); if (seen && !document.hidden) raf = requestAnimationFrame(tick);
+  };
+  const kick = () => { if (still) { draw(); return; } if (!raf && seen && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+  new ResizeObserver(() => { measure(); kick(); }).observe(document.body);
+  new IntersectionObserver(([e]) => { seen = e.isIntersecting; kick(); }).observe(cv);
+  addEventListener('themechange', () => draw());
+  if (still) addEventListener('scroll', () => draw(), { passive: true });
+  document.addEventListener('visibilitychange', kick);
+  measure();
+  if (still) return;
+  addEventListener('pointermove', (e) => { if (e.pointerType === 'touch') return; tx = e.pageX; ty = e.pageY - top; tdent = 1; }, { passive: true });
+  document.addEventListener('pointerleave', () => { tdent = 0; });
+  addEventListener('pointerdown', (e) => { if (seen && !e.target.closest('a, button, input, #net')) ping = { x: e.pageX, y: e.pageY - top, r: 0, a: 1, age: 0 }; }, { passive: true });
 })();
 
 // Liquid sphere (raymarched), half past the right edge of the Now list. Its light follows the pointer.
@@ -3691,7 +4195,9 @@ void main(){
     });
     film.style.setProperty('--fit', f.toFixed(3)); pages.forEach(pg => pg.style.removeProperty('--fit'));
   };
-  fitPages(); document.fonts.ready.then(fitPages);
+  // The refit once the fonts are in measures every page many times over (over half a second), so it waits
+  // until the name is written and the map has unfolded; the deck is out of sight until then
+  fitPages(); Promise.all([document.fonts.ready, nameWritten]).then(() => setTimeout(fitPages, 2300));
   let fitT = 0; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitPages, 150); });
 
   // The screenshot frame: two image layers that swap for a dissolve while the frame glides
@@ -3761,7 +4267,8 @@ void main(){
   // The next project's colour washes across from the side the orb is heading to
   float edge = mix(1.5, -1.5, uSw), m = smoothstep(edge - .45, edge + .45, dot(vP, uDir) + .12 * sin(an * 4. + t));
   vec3 co = mix(uCo, uCo2, m), fo = mix(uFr, uFr2, m);
-  vec3 col = mix(co, fo, .16 * band) * (.52 + .48 * df) + sp * .55 + fr * fo * .5 + back * fo * .35;
+  vec3 base = mix(co, fo, .16 * band);
+  vec3 col = mix(pow(base, vec3(1.8)), base, .3 + .7 * df) + sp * .55 + fr * fo * .5 + back * fo * .35;
   float a = min(1., uAO * (.85 + .7 * fr) + sp * .5) * cov;
   gl_FragColor = vec4(col * a, a);
 }`, ['q']);
@@ -3771,8 +4278,8 @@ void main(){
 uniform vec2 uOrb; uniform float uOrbR, uAsp, uPh, uEx, uSide, uPx; varying float vA;
 void main(){
   float dir = r.w > .5 ? 1. : -1.;
-  float an = r.y * 6.2832 + uPh * (.16 + .26 * r.z) * dir - dir * k * (.5 + .45 * r.x) * (1. + .9 * uEx);
-  float R = uOrbR * (1.1 + .42 * r.x + .18 * uEx), tilt = .3 + .5 * r.z, roll = (r.w - .5) * 1.4;
+  float an = r.y * 6.2832 + uPh * (.16 + .26 * r.z) * dir - dir * k * (.28 + .2 * r.x) * (1. + .9 * uEx);
+  float R = uOrbR * (1.04 + .16 * r.x + .1 * uEx), tilt = .3 + .5 * r.z, roll = (r.w - .5) * 1.4;
   vec3 q = vec3(cos(an) * R, sin(an) * R * sin(tilt), sin(an) * R * cos(tilt));
   float c = cos(roll), s = sin(roll); q.xy = mat2(c, s, -s, c) * q.xy;
   vA = uSide * q.z >= 0. ? (.45 + .35 * r.z) * pow(1. - k, 1.6) : 0.;
@@ -3791,7 +4298,7 @@ void main(){
   const off = () => { for (let i = 0; i < 2; i++) gl.disableVertexAttribArray(i); };
   const bQ = buf(new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]));
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const NM = tier === 2 ? 34 : 20, TS = 24, tR = [], tK = [], hR = [], hK = [];
+  const NM = tier === 2 ? 14 : 9, TS = 24, tR = [], tK = [], hR = [], hK = [];
   for (let m = 0; m < NM; m++) { const q = [rnd(), rnd(), rnd(), rnd()]; for (let j = 0; j < TS; j++) { tR.push(...q, ...q); tK.push(j / TS, (j + 1) / TS); } hR.push(...q); hK.push(0); }
   const bTR = buf(new Float32Array(tR)), bTK = buf(new Float32Array(tK)), bHR = buf(new Float32Array(hR)), bHK = buf(new Float32Array(hK));
 
@@ -3976,7 +4483,10 @@ void main(){
   skip.addEventListener('click', () => { const m = document.querySelector('.minor') || film.nextElementSibling; glide(m.getBoundingClientRect().top + scrollY - 90, 1100); });
   dock.append(skip);
   document.body.append(dock);
-  film.addEventListener('filmpage', (e) => btns.forEach((b, k) => b.setAttribute('aria-current', k === e.detail ? 'true' : 'false')));
+  film.addEventListener('filmpage', (e) => {
+    btns.forEach((b, k) => b.setAttribute('aria-current', k === e.detail ? 'true' : 'false'));
+    const f = caps[e.detail]?.dataset.f; if (f) film.style.setProperty('--stage-c', '#' + f);
+  });
   // ?lab: hooks for checking pages from a test script
   if (new URLSearchParams(location.search).has('lab')) {
     window.filmState = () => ({ cur, tr: tr && [tr.from, tr.to], y: Math.round(scrollY), slot: Math.round(slot(Math.max(0, cur))), P });

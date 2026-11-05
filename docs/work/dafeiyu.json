@@ -5,7 +5,13 @@
   "tier": "minor",
   "kind": "Game, TypeScript",
   "summary": "A raising game and a Survivors-style roguelike on a pure rules engine and bot simulator. 239 tests; Chinese UI.",
-  "credit": "Fan-made and non-commercial; not affiliated with DeepSeek.",
+  "credit": "Fan-made and non-commercial; not affiliated with DeepSeek. Art derived from 溟月 by 上善无形, ZipZipPipe&rsquo;s maid redesign and the chibi by 这个刀子真甜, CC BY-NC-SA 4.0.",
+  "shot": {
+    "src": "assets/dafeiyu.jpg",
+    "w": 1400,
+    "h": 875,
+    "alt": "The raising screen: the whale-girl portrait, mood, stats, the chat window and the day's actions"
+  },
   "stack": [
     "TypeScript",
     "React",

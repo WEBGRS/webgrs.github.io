@@ -2,7 +2,7 @@
 #   python docs/build.py            write the regions
 #   python docs/build.py --check    exit 1 if a file is out of date (nothing is written)
 # "tool": N on a project puts it in the Toolbox under the hero (N = position); it needs a Live site link, a GitHub
-# Source link and a screenshot.
+# Source link and a screenshot. "tool_crop": [x%, y%, zoom] picks the detail its thumbnail shows.
 # Each region sits between <!-- work:NAME --> and <!-- /work:NAME -->; everything else is hand-written.
 # Every project has an English file (<slug>.json) and a Chinese one (<slug>.zh.json). The page carries both; CSS shows
 # the one that matches <html lang>. Figures are drawn once per language (strings in work/_figs.zh.json).
@@ -158,7 +158,10 @@ def tool_cards(specs):
         ln = dict(d["links"])
         live, src = ln["Live site"], ln["Source"]
         sh, name = d["shot"], esc(d["name"])
-        img = f'<img src="{attr(sh["src"])}" width="{sh["w"]}" height="{sh["h"]}" alt="" loading="lazy" decoding="async">'
+        # "tool_crop": [x%, y%, zoom] shows one detail of the screenshot instead of the whole page
+        crop = d.get("tool_crop")
+        st = f' style="--fx:{crop[0]}%;--fy:{crop[1]}%;--z:{crop[2]}"' if crop else ""
+        img = f'<img src="{attr(sh["src"])}" width="{sh["w"]}" height="{sh["h"]}" alt="" loading="lazy" decoding="async"{st}>'
         out.append("        <li>")
         out.append(f'          <a class="tbx-shot" href="{attr(live)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">{img}</a>')
         out.append('          <div class="tbx-tx">')

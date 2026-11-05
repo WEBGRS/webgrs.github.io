@@ -4,6 +4,7 @@
   "order": 40,
   "tier": "major",
   "tool": 5,
+  "tool_crop": [70, 62, 1.4],
   "kind": "Web app",
   "summary": "Paste a column of numbers, get a choropleth",
   "color": ["FACC15", "FEF08A"],

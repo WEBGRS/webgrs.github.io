@@ -4,6 +4,7 @@
   "order": 18,
   "tier": "major",
   "tool": 4,
+  "tool_crop": [66, 50, 2.2],
   "kind": "Web app, data",
   "summary": "The everyday places around campus, explained in English and Chinese, every fact quoted from its source",
   "color": ["FACC15", "FEF08A"],

@@ -5,6 +5,12 @@
   "tier": "minor",
   "kind": "Cloudflare Worker module",
   "summary": "Shared request guard for my data sites: Turnstile sessions, daily quotas, rate limits, a request log, a feedback inbox and a visitor-stats page.",
+  "shot": {
+    "src": "assets/webgrs-guard.jpg",
+    "w": 1400,
+    "h": 875,
+    "alt": "Admin overview for the course site: requests, sessions, human-check rate, requests per day and by type"
+  },
   "stack": [
     "Cloudflare Workers",
     "Cloudflare D1",

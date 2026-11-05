@@ -5,6 +5,10 @@
   "tier": "minor",
   "kind": "Web app + email",
   "summary": "Daily UW–Madison news from 14 feeds, ranked for students and summarized in English and Chinese by Claude, with email subscriptions.",
+  "shot": {
+    "src": "assets/uw-digest.jpg", "w": 1400, "h": 875,
+    "alt": "UW Digest front page: masthead, section tabs and the most-important list"
+  },
   "links": [["Live site", "https://news.madisonstudents.com/"], ["Source", "https://github.com/WEBGRS/uw-digest"]],
   "stack": [
     "Claude Code",
