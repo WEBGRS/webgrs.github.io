@@ -4407,7 +4407,11 @@ void main(){
   let top = 0, span = 1;
   const measure = () => { top = film.getBoundingClientRect().top + scrollY; span = Math.max(1, film.offsetHeight - innerHeight); };
   new ResizeObserver(measure).observe(film);
+  // Content above the deck (fonts, images) can still move it after init
+  new ResizeObserver(measure).observe(document.body);
   addEventListener('resize', measure);
+  addEventListener('load', measure);
+  if (document.fonts) document.fonts.ready.then(measure);
   const PD = Math.max(1, P - 1);
   const slot = (i) => top + span * i / PD;
   const nearest = (y) => Math.max(0, Math.min(P - 1, Math.round((y - top) / (span / PD))));
@@ -4419,10 +4423,9 @@ void main(){
     const step = (t) => { const q = Math.min(1, (t - t0) / D); scrollTo({ top: from + (to - from) * io(q), behavior: 'instant' }); glideRaf = q < 1 ? requestAnimationFrame(step) : 0; };
     glideRaf = requestAnimationFrame(step);
   };
-  const busy = () => !!tr || !!glideRaf || holding;
   const hold = () => { holding = true; clearTimeout(quiet); quiet = setTimeout(() => { holding = false; }, 240); };
   goTo = (j, move = true) => {
-    j = Math.max(0, Math.min(P - 1, j));
+    measure(); j = Math.max(0, Math.min(P - 1, j));
     if (move) glide(slot(j), Math.min(1400, 520 + Math.abs(slot(j) - scrollY) * .3));
     if (tr) { pending = j; return; }
     if (j !== cur) start(cur, j);
@@ -4432,7 +4435,12 @@ void main(){
     if (dir > 0) { if (y < top - 24) return y >= top - vh * .4 ? 0 : null; if (y >= end - 2) return null; return Math.min(P - 1, nearest(y) + 1); }
     if (y > end + 24) return y <= end + vh * .4 ? P - 1 : null; if (y <= top + 2) return null; return Math.max(0, nearest(y) - 1);
   };
+  // On a page slot, not stopped part-way between them
+  const aligned = (y) => y >= top - 2 && y <= slot(P - 1) + 2 && Math.abs(y - slot(nearest(y))) <= 2;
+  // A page turn in progress only blocks input once the stage is lined up; otherwise glide it into place
+  const busy = () => !!glideRaf || holding || (!!tr && aligned(scrollY));
   const input = (e, dir) => {
+    measure();
     if (!zone(scrollY)) return;
     if (busy()) { e.preventDefault(); hold(); return; }
     const to = target(dir); if (to === null) return;
@@ -4452,6 +4460,7 @@ void main(){
     const dy = y0 - e.touches[0].clientY;
     if (decided || Math.abs(dy) < 10) return;
     decided = true;
+    measure();
     if (!zone(scrollY)) return;
     const to = target(Math.sign(dy)); if (to === null) return;
     mine = true; e.preventDefault(); goTo(to);
