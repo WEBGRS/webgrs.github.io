@@ -15,7 +15,7 @@ H. Gu's portfolio site, live at **<https://webgrs.github.io>**. It's a single `i
 | Section | What it shows |
 |---|---|
 | Hero | A contour map of Madison drawn from real elevation data, with the name and a one-line intro |
-| Toolbox | The live web tools, each with a screenshot, an Open button and a Star button |
+| Toolbox | The live web tools, each with a screenshot, an Open button and a Star button. On wide screens the cards assemble once per session under design-tool selection boxes and cursors |
 | Selected work | Major projects, each a few pages with its screenshot, notes and figures drawn from real code or data; smaller projects as compact cards below |
 | Stack | The tools and data sources, linked by project |
 | Contact | Email and GitHub on deep water, with the two lakes redrawn as particles |

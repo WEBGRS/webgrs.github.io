@@ -755,6 +755,24 @@ h2::after, .minor .shead h3::after{content:""; display:inline-block; width:.21em
   .js h2:has(.rev.in)::after, .js h2:has(.rev.done)::after, .js .minor .shead h3:has(.rev.in)::after, .js .minor .shead h3:has(.rev.done)::after{animation:stop-in .5s cubic-bezier(.3,1.6,.5,1) .65s both}
   @keyframes stop-in{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
 }
+/* Toolbox build-in */
+.bfx-wait>li{opacity:0}
+@media print{.bfx-wait>li{opacity:1}}
+#tools-h.bfx-hold::after{animation:none!important; transform:scale(0)!important}
+#tools-h.bfx-set::after{animation:none!important; transform:none!important}
+#bfx{position:absolute; left:0; top:0; width:0; height:0; z-index:20; pointer-events:none; contain:layout style}
+#bfx i, #bfx b, #bfx svg{position:absolute; left:0; top:0; display:block; transform-origin:0 0}
+#bfx svg{overflow:visible}
+#bfx .g{width:0; height:0}
+#bfx .e{width:1px; height:1px; background:var(--accent)}
+#bfx .h{width:7px; height:7px; margin:-3.5px 0 0 -3.5px; background:var(--paper); box-shadow:inset 0 0 0 1.5px var(--accent)}
+#bfx b{font:600 11px/17px var(--font); padding:0 6px; border-radius:2px; white-space:nowrap; font-variant-numeric:tabular-nums}
+#bfx .n{background:var(--accent); color:var(--paper)}
+#bfx .d{background:var(--signal); color:#0B1A2C}
+#bfx .r{background:#E11D48; color:#fff}
+#bfx .ghost{background:var(--plate); box-shadow:inset 0 0 0 1px var(--edge)}
+#bfx .guide{background:#E11D48}
+#bfx .sl{background:var(--signal); clip-path:polygon(36% 0,100% 0,64% 100%,0 100%); transform-origin:50% 100%}
 
 /* Hero: a map-label halo round the name, and the two lines on a white plate */
 .wm{overflow:visible}
@@ -2395,6 +2413,8 @@ const fontReady = Promise.race([Promise.all([document.fonts.load('900 100px "Bod
 // (or after a short wait, if it is slow)
 const goReady = introDone.then(() => Promise.race([terrain.heroReady, new Promise(r => setTimeout(r, 1800))]))
   .then(() => new Promise(r => requestAnimationFrame(() => { root.classList.add('go'); goAt = performance.now(); r(); })));
+// Runs the deferred deck refit early; the toolbox build-in calls it first so the two never overlap
+let refitNow = () => {};
 // Settles once the name has been written and signed; heavy work waits for it so the writing never stalls
 const nameWritten = goReady.then(() => {
   const e = parseFloat(getComputedStyle(document.querySelector('.hero h1 .wm') || root).getPropertyValue('--fin')) || OPENING;
@@ -4197,7 +4217,10 @@ void main(){
   };
   // The refit once the fonts are in measures every page many times over (over half a second), so it waits
   // until the name is written and the map has unfolded; the deck is out of sight until then
-  fitPages(); Promise.all([document.fonts.ready, nameWritten]).then(() => setTimeout(fitPages, 2300));
+  fitPages();
+  let refitT = 0, refitted = false;
+  refitNow = () => { if (refitted) return; refitted = true; clearTimeout(refitT); fitPages(); };
+  Promise.all([document.fonts.ready, nameWritten]).then(() => { if (!refitted) refitT = setTimeout(refitNow, 2300); });
   let fitT = 0; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitPages, 150); });
 
   // The screenshot frame: two image layers that swap for a dissolve while the frame glides
@@ -4503,6 +4526,364 @@ void main(){
   }
 })();
 
+
+// Toolbox build-in, once per session: selection boxes and cursors assemble the cards, align a stray one, sign the title
+(() => {
+  const sec = document.getElementById('tools'), list = sec.querySelector('.tbx'), head = sec.querySelector('#tools-h');
+  const SEEN = 'bfx';
+  let seen = false;
+  try { seen = sessionStorage.getItem(SEEN) === '1'; } catch (e) {}
+  if (seen || reduce || basic() || innerWidth < 900) return;
+
+  const OFF = { x: 14, y: -9 }; // how far the stray card lands
+  const OUT = 240;              // overlay fade out
+  const EASE = 'cubic-bezier(.2,.8,.2,1)';
+  const EASES = [EASE, 'cubic-bezier(.5,0,.2,1)', 'cubic-bezier(.3,1.35,.5,1)', 'cubic-bezier(.1,.6,.3,1)'];
+  const COLS = ['#0369A1', '#0EA5E9', '#0B1A2C', '#38BDF8', '#E0A100', '#0284C7'];
+  const ARROW = '<path d="M2 2 L19 10 L11 12.5 L7.5 20 Z" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/>';
+
+  let layer = null, timer = 0, playing = false;
+  const ov = (tag, cls) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    layer.appendChild(n);
+    return n;
+  };
+  const anim = (el, kf, opt) => el.animate(kf, Object.assign({ fill: 'both', easing: EASE, id: 'bfx' }, opt));
+  const rectOf = (el, d) => {
+    const r = el.getBoundingClientRect();
+    return { x: r.left + scrollX + (d ? d.x : 0), y: r.top + scrollY + (d ? d.y : 0), w: r.width, h: r.height };
+  };
+  const pad = (r, p) => ({ x: r.x - p, y: r.y - p, w: r.w + p * 2, h: r.h + p * 2 });
+  // Real position of the title's yellow mark
+  function slashRect() {
+    const p = document.createElement('span');
+    p.style.cssText = 'display:inline-block;width:.21em;height:.2em;margin-left:.06em';
+    head.appendChild(p);
+    const r = rectOf(p);
+    p.remove();
+    return r;
+  }
+
+  const boxTf = (r) => [
+    `translate(${r.x}px,${r.y}px) scaleX(${r.w})`,
+    `translate(${r.x}px,${r.y + r.h}px) scaleX(${r.w})`,
+    `translate(${r.x}px,${r.y}px) scaleY(${r.h})`,
+    `translate(${r.x + r.w}px,${r.y}px) scaleY(${r.h})`,
+    `translate(${r.x}px,${r.y}px)`,
+    `translate(${r.x + r.w}px,${r.y}px)`,
+    `translate(${r.x}px,${r.y + r.h}px)`,
+    `translate(${r.x + r.w}px,${r.y + r.h}px)`,
+  ];
+  const nameTf = (r) => `translate(${r.x - 1}px,${r.y - 21}px)`;
+  const dimTf = (r) => `translate(${r.x + r.w / 2 - 30}px,${r.y + r.h + 4}px)`;
+  const size = (r) => `${Math.round(r.w)} × ${Math.round(r.h)}`;
+
+  function tag(cls, text, tf, from, to) {
+    const el = ov('b', cls);
+    el.textContent = text;
+    el.style.transform = tf;
+    anim(el, [{ opacity: 0 }, { opacity: 1, offset: .08 }, { opacity: 1, offset: .92 }, { opacity: 0 }], { duration: to - from, delay: from, easing: 'linear' });
+  }
+
+  // One selection box visiting stops: [{r,label,at,dur}]
+  function box(stops, endAt) {
+    // One group, so all 8 parts share a single fade
+    const group = ov('i', 'g');
+    const parts = [];
+    for (let i = 0; i < 8; i++) {
+      const p = document.createElement('i');
+      p.className = i < 4 ? 'e' : 'h';
+      group.appendChild(p);
+      parts.push(p);
+    }
+    const start = stops[0].at, total = endAt - start;
+    const track = parts.map(() => []);
+    const push = (t, r, ease) => boxTf(r).forEach((tf, k) => {
+      const f = { offset: Math.min(1, t / total), transform: tf };
+      if (ease) f.easing = ease;
+      track[k].push(f);
+    });
+    push(0, stops[0].r);
+    let prev = stops[0].r;
+    stops.forEach((s, i) => {
+      if (!i) return;
+      push(s.at - start, prev, s.ease || EASE);
+      push(s.at - start + s.dur, s.r);
+      prev = s.r;
+    });
+    push(total, prev);
+    parts.forEach((el, k) => anim(el, track[k], { duration: total, delay: start, easing: 'linear' }));
+    anim(group, [{ opacity: 0 }, { opacity: 1, offset: .05 }, { opacity: 1, offset: .94 }, { opacity: 0 }], { duration: total, delay: start, easing: 'linear' });
+    stops.forEach((s, i) => {
+      const from = s.at + (i ? s.dur : 0);
+      const to = i + 1 < stops.length ? stops[i + 1].at : endAt;
+      tag('n', s.label, nameTf(s.r), from, to);
+      tag('d', size(s.r), dimTf(s.r), from, to);
+    });
+  }
+
+  // Cursor following timed points; fadeAt keeps it visible until then
+  function cursor(color, path, fadeAt) {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', '0 0 22 24');
+    s.setAttribute('width', '18');
+    s.setAttribute('height', '20');
+    s.setAttribute('fill', color);
+    s.innerHTML = fadeAt ? ARROW.replace('#fff', '#0B1A2C') : ARROW;
+    layer.appendChild(s);
+    const total = path[path.length - 1].at;
+    const tf = (p) => `translate(${p.x}px,${p.y}px) rotate(${p.a}deg)`;
+    const kf = [];
+    let last = 0;
+    path.forEach((p, i) => {
+      if (i) kf.push({ offset: (last = Math.max(last, (p.at - p.dur) / total)), transform: tf(path[i - 1]), easing: p.ease || EASE });
+      kf.push({ offset: (last = Math.max(last, p.at / total)), transform: tf(p), easing: EASE });
+    });
+    anim(s, kf, { duration: total, easing: 'linear' });
+    anim(s, [{ opacity: 0 }, { opacity: 1, offset: .06 }, { opacity: 1, offset: fadeAt ? fadeAt / total : .92 }, { opacity: 0 }], { duration: total, easing: 'linear' });
+  }
+
+  function finish() {
+    clearTimeout(timer);
+    playing = false;
+    document.getAnimations().forEach((a) => { if (a.id === 'bfx') a.cancel(); });
+    if (layer) { layer.remove(); layer = null; }
+    list.classList.remove('bfx-wait');
+    head.classList.remove('bfx-hold');
+    head.classList.add('bfx-set');
+    removeEventListener('resize', finish);
+  }
+
+  // A different, messy plan each run: who starts when, and each card's own order and pace
+  function makePlan(n, rnd) {
+    const between = (a, b) => a + rnd() * (b - a);
+    const order = [...Array(n).keys()];
+    for (let i = n - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+    let t = 0;
+    const cards = [];
+    order.forEach((idx, o) => {
+      // Bursts of near-simultaneous starts, broken by hesitations
+      if (o) t += rnd() < .4 ? between(70, 200) : between(480, 980);
+      const pace = between(.72, 1.3);
+      const seq = ['img', 'title', 'desc', 'act'];
+      if (rnd() < .3) [seq[0], seq[1]] = [seq[1], seq[0]];
+      if (rnd() < .3) [seq[2], seq[3]] = [seq[3], seq[2]];
+      if (rnd() < .15) [seq[1], seq[2]] = [seq[2], seq[1]];
+      let s = between(60, 220);
+      const steps = {};
+      seq.forEach((k) => {
+        const hop = between(120, 260) * pace;
+        steps[k] = { at: t + s, hop };
+        s += hop + between(60, 460) * pace;
+      });
+      const len = s + between(120, 320) * pace;
+      cards[idx] = { idx, T: t, pace, seq, steps, len };
+    });
+    const lastEnd = Math.max(...cards.map((c) => c.T + c.len));
+    return { cards, stray: order[n - 1], lastEnd };
+  }
+
+  function build() {
+    playing = true;
+    layer = document.createElement('div');
+    layer.id = 'bfx';
+    layer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(layer);
+
+    const cards = [...list.children];
+    const secR = rectOf(sec);
+    let seed = Math.floor(Math.random() * 2147483000) + 1;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let i = 0; i < 6; i++) rnd();
+    const between = (a, b) => a + rnd() * (b - a);
+    const plan = makePlan(cards.length, rnd);
+
+    const tSnap = plan.lastEnd + 80;          // stray card gets noticed
+    const tPush = tSnap + between(320, 520);  // and pushed home
+    const tCarry = tPush + between(520, 700); // yellow mark sets off
+    const tLand = tCarry + 640;               // and lands
+    const end = tLand + 320;
+    const spotsAll = [];
+
+    cards.forEach((li, i) => {
+      const c = plan.cards[i];
+      const T = c.T;
+      const stray = i === plan.stray ? OFF : null;
+      const shot = li.querySelector('.tbx-shot');
+      const img = shot.querySelector('img');
+      const h3 = li.querySelector('h3');
+      const ds = li.querySelector('.tbx-ds');
+      const go = li.querySelector('.tbx-go');
+      const rTrue = rectOf(li);
+      const rC = rectOf(li, stray), rS = rectOf(shot, stray), rH = rectOf(h3, stray), rD = rectOf(ds, stray), rG = rectOf(go, stray);
+
+      anim(li, [{ opacity: 0 }, { opacity: 1 }], { duration: between(120, 260), delay: T + 40, easing: 'linear' });
+
+      // Reveal each part when its step comes
+      const sI = c.steps.img, sT = c.steps.title, sD = c.steps.desc, sA = c.steps.act;
+      const grow = between(240, 460) * c.pace;
+      const gh = ov('i', 'ghost');
+      gh.style.width = rS.w + 'px';
+      gh.style.height = rS.h + 'px';
+      anim(gh, [{ transform: `translate(${rS.x}px,${rS.y}px) scale(0,0)` }, { transform: `translate(${rS.x}px,${rS.y}px) scale(1,1)` }], { duration: grow, delay: sI.at, easing: EASES[Math.floor(rnd() * 2)] });
+      const fadeAt = sI.at + grow - 20;
+      anim(gh, [{ opacity: 1 }, { opacity: 0 }], { duration: 240, delay: fadeAt, easing: 'linear' });
+      anim(img, [{ opacity: 0 }, { opacity: 1 }], { duration: 240, delay: fadeAt, easing: 'linear' });
+
+      const wipe = [{ clipPath: 'inset(-4px 100% -4px 0)' }, { clipPath: 'inset(-4px 0 -4px 0)' }];
+      anim(h3, wipe, { duration: between(180, 340) * c.pace, delay: sT.at + 30 });
+      anim(ds, wipe, { duration: between(300, 560) * c.pace, delay: sD.at + 30, easing: 'linear' });
+      anim(go, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: between(180, 300), delay: sA.at + 30 });
+
+      // Inner box walks the parts in this card's own order
+      const part = {
+        img: { r: rS, label: 'Image' },
+        title: { r: pad(rH, 3), label: 'Title' },
+        desc: { r: pad(rD, 3), label: 'Description' },
+        act: { r: pad(rG, 3), label: 'Actions' },
+      };
+      box(c.seq.map((k, n) => Object.assign({}, part[k], { at: c.steps[k].at, dur: n ? c.steps[k].hop : 0, ease: EASES[Math.floor(rnd() * EASES.length)] })), T + c.len);
+
+      const title = h3.textContent.trim();
+      if (stray) {
+        // Lands off the grid, then gets pushed home
+        const hold = tPush + 340;
+        anim(li, [
+          { offset: 0, transform: `translate(${OFF.x}px,${OFF.y}px)` },
+          { offset: tPush / hold, transform: `translate(${OFF.x}px,${OFF.y}px)`, easing: 'cubic-bezier(.3,1.6,.5,1)' },
+          { offset: 1, transform: 'none' },
+        ], { duration: hold, easing: 'linear' });
+        box([
+          { r: pad(rC, 3), label: title, at: T, dur: 0 },
+          { r: pad(rTrue, 3), label: 'Aligned', at: tPush, dur: 340 },
+        ], tCarry);
+        // Red guides at the column and row it should sit on
+        const near = rectOf(cards[i - 1] || cards[i + 1]);
+        const gv = ov('i', 'guide');
+        gv.style.cssText = `width:1.5px;height:${rTrue.h + 120}px`;
+        const gh2 = ov('i', 'guide');
+        gh2.style.cssText = `height:1.5px;width:${rTrue.w + near.w + 60}px`;
+        const fade = [{ opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: 1, offset: .8 }, { opacity: 0 }];
+        gv.style.transform = `translate(${rTrue.x}px,${rTrue.y - 60}px)`;
+        gh2.style.transform = `translate(${Math.min(near.x, rTrue.x) - 30}px,${rTrue.y}px)`;
+        anim(gv, fade, { duration: tCarry - tSnap, delay: tSnap, easing: 'linear' });
+        anim(gh2, fade, { duration: tCarry - tSnap, delay: tSnap, easing: 'linear' });
+        tag('r', `${OFF.x}, ${OFF.y} px off`, `translate(${rTrue.x + rTrue.w - 70}px,${rTrue.y - 44}px)`, tSnap, tPush + 240);
+      } else {
+        box([{ r: pad(rC, 3), label: title, at: T, dur: 0 }], T + c.len);
+      }
+
+      // Places a cursor can land while this card is being worked on
+      spotsAll.push({
+        from: T, to: T + c.len,
+        pts: [
+          { x: rS.x + rS.w + 6, y: rS.y + rS.h * .5 },
+          { x: rH.x + rH.w + 8, y: rH.y + 8 },
+          { x: rD.x + rD.w * .7, y: rD.y + rD.h + 2 },
+          { x: rG.x + rG.w * .6, y: rG.y + rG.h + 4 },
+          { x: rC.x + rC.w * rnd(), y: rC.y - 8 },
+        ],
+      });
+    });
+
+    // Each cursor runs its own errands at its own pace
+    COLS.forEach((col) => {
+      const p = [{ at: 0, dur: 0, x: secR.x + secR.w * between(.15, .85), y: secR.y + between(40, 100), a: between(-20, 20) }];
+      let t = between(60, 520);
+      while (t < tSnap - 150) {
+        const busy = spotsAll.filter((s) => s.from <= t && t <= s.to);
+        const pool = busy.length ? busy : spotsAll;
+        const s = pool[Math.floor(rnd() * pool.length)];
+        const pt = s.pts[Math.floor(rnd() * s.pts.length)];
+        const dur = between(170, 620);
+        t += dur;
+        p.push({ at: t, dur, x: pt.x + between(-12, 20), y: pt.y + between(-10, 16), a: between(-40, 40), ease: EASES[Math.floor(rnd() * EASES.length)] });
+        // Dawdle, sometimes a while
+        t += rnd() < .25 ? between(380, 800) : between(20, 240);
+      }
+      const l = p[p.length - 1];
+      p.push({ at: Math.max(t, tSnap) + 320, dur: 320, x: l.x + between(-70, 70), y: l.y + between(20, 60), a: l.a });
+      cursor(col, p);
+    });
+
+    // The carrier: pushes the stray card, takes the yellow mark to the title, then fades
+    const rLast = rectOf(cards[plan.stray], OFF);
+    const sr = slashRect();
+    const park = { x: sr.x + sr.w + 3, y: sr.y - 5 };
+    const pick = { x: rLast.x + rLast.w - 30, y: rLast.y - 34 };
+    const mid = { x: (pick.x + park.x) / 2, y: Math.min(pick.y, park.y) - 70 };
+    cursor('#FACC15', [
+      { at: 0, dur: 0, x: rLast.x + rLast.w + 60, y: rLast.y + 120, a: 10 },
+      { at: tSnap + 200, dur: 360, x: rLast.x + rLast.w + 60, y: rLast.y + 120, a: 10 },
+      { at: tPush, dur: 180, x: rLast.x + rLast.w + 2, y: rLast.y + 120, a: 30 },
+      { at: tPush + 340, dur: 340, x: rLast.x + rLast.w + 2 - OFF.x, y: rLast.y + 120 - OFF.y, a: 30 },
+      { at: tCarry, dur: 260, x: pick.x, y: pick.y, a: -10 },
+      { at: tCarry + 320, dur: 320, x: mid.x, y: mid.y, a: -24 },
+      { at: tLand, dur: 320, x: park.x, y: park.y, a: 0 },
+      { at: end, dur: 1, x: park.x, y: park.y, a: 0 },
+    ], tLand + 80);
+
+    // Yellow mark travels with it, then stamps down
+    const sl = ov('i', 'sl');
+    sl.style.width = sr.w + 'px';
+    sl.style.height = sr.h + 'px';
+    const at = (p) => `translate(${p.x - sr.w - 2}px,${p.y + 18}px)`;
+    const here = `translate(${sr.x}px,${sr.y}px)`;
+    const fly = tLand - tCarry;
+    anim(sl, [
+      { offset: 0, transform: at(pick) },
+      { offset: .5, transform: at(mid) },
+      { offset: 1, transform: here },
+    ], { duration: fly, delay: tCarry, easing: 'ease-in-out' });
+    anim(sl, [{ opacity: 0 }, { opacity: 1 }], { duration: 120, delay: tCarry - 60, easing: 'linear' });
+    const stamp = ov('i', 'sl');
+    stamp.style.width = sr.w + 'px';
+    stamp.style.height = sr.h + 'px';
+    stamp.style.opacity = '0';
+    anim(stamp, [
+      { opacity: 1, transform: `${here} scale(1.45,.62)` },
+      { opacity: 1, transform: `${here} scale(.92,1.12)`, offset: .55 },
+      { opacity: 1, transform: `${here} scale(1,1)` },
+    ], { duration: 300, delay: tLand, easing: 'ease-out', fill: 'forwards' });
+    anim(sl, [{ visibility: 'visible' }, { visibility: 'hidden' }], { duration: 1, delay: tLand, easing: 'steps(1,end)' });
+
+    list.classList.remove('bfx-wait');
+    addEventListener('resize', finish);
+    timer = setTimeout(finish, end + OUT);
+    try { sessionStorage.setItem(SEEN, '1'); } catch (e) {}
+  }
+
+  // Any failure leaves the plain cards
+  const play = () => { try { build(); } catch (e) { console.warn(e); finish(); } };
+  head.classList.add('bfx-hold');
+  list.classList.add('bfx-wait');
+  // Clicking or tabbing into the section skips the show
+  sec.addEventListener('pointerdown', () => { if (playing) finish(); });
+  sec.addEventListener('focusin', () => { if (playing) finish(); });
+
+  // Start once the row is in view and the scroll has settled
+  const io = new IntersectionObserver((es) => {
+    // A wrapped grid can be too tall to ever show 60%
+    if (!es.some((e) => e.intersectionRatio >= .6 || e.intersectionRect.height >= innerHeight * .5)) return;
+    io.disconnect();
+    let quiet = 0;
+    const started = performance.now();
+    const go = () => {
+      removeEventListener('scroll', hit);
+      clearTimeout(quiet);
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { refitNow(); play(); });
+    };
+    const hit = () => {
+      clearTimeout(quiet);
+      if (performance.now() - started > 900) return go();
+      quiet = setTimeout(go, 180);
+    };
+    addEventListener('scroll', hit, { passive: true });
+    hit();
+  }, { threshold: [.1, .2, .3, .4, .5, .6] });
+  introDone.then(() => io.observe(list));
+})();
 
 // Phone motion layer: blocks rise in as they arrive; screenshots unroll. Skipped on weak devices and reduced motion.
 (() => {

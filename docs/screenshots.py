@@ -14,7 +14,7 @@ ARGS = ["--lang=en-US", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"
 def page(b, theme):
     pg = b.new_page(viewport={"width": 1440, "height": 900}, locale="en-US")
     # Dark is opt-in via the toggle, stored in localStorage; skip the once-per-session intro
-    pg.add_init_script(f"localStorage.setItem('theme', '{theme}'); sessionStorage.setItem('intro', '1')")
+    pg.add_init_script(f"localStorage.setItem('theme', '{theme}'); sessionStorage.setItem('intro', '1'); sessionStorage.setItem('bfx', '1')")
     pg.goto(URL)
     pg.wait_for_timeout(4000)
     return pg
